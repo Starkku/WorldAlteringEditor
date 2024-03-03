@@ -83,6 +83,8 @@ namespace TSMapEditor
         public const int UITopBarMenuHeight = 23;
 
         public static int UITreeViewLineHeight = 20;
+        public static int UIDefaultSidebarWidth = 250;
+        public static int UITileSetListWidth = 180;
 
         public static int MapPreviewMaxWidth = 800;
         public static int MapPreviewMaxHeight = 400;
@@ -169,6 +171,8 @@ namespace TSMapEditor
             IniFile uiConstantsIni = new IniFile(Environment.CurrentDirectory + "/Config/UI/UIConstants.ini");
 
             UITreeViewLineHeight = uiConstantsIni.GetIntValue("UI", nameof(UITreeViewLineHeight), UITreeViewLineHeight);
+            UIDefaultSidebarWidth = uiConstantsIni.GetIntValue("UI", nameof(UIDefaultSidebarWidth), UIDefaultSidebarWidth);
+            UITileSetListWidth = uiConstantsIni.GetIntValue("UI", nameof(UITileSetListWidth), UITileSetListWidth);
         }
     }
 }

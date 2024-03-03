@@ -13,7 +13,7 @@ namespace TSMapEditor.UI
 {
     public class TileSelector : XNAControl
     {
-        private const int TileSetListWidth = 180;
+        private int TileSetListWidth;
         private const int ResizeDragThreshold = 30;
 
         public TileSelector(WindowManager windowManager, Map map, TheaterGraphics theaterGraphics,
@@ -53,6 +53,8 @@ namespace TSMapEditor.UI
 
         public override void Initialize()
         {
+            TileSetListWidth = Constants.UITileSetListWidth;
+
             Name = nameof(TileSelector);
 
             tbSearch = new EditorSuggestionTextBox(WindowManager);

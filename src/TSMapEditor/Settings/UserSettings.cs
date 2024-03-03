@@ -105,7 +105,7 @@ namespace TSMapEditor.Settings
         public BoolSetting UseBoldFont = new BoolSetting(General, nameof(UseBoldFont), false);
         public BoolSetting SmartScriptActionCloning = new BoolSetting(General, nameof(SmartScriptActionCloning), true);
         public IntSetting AutoSaveInterval = new IntSetting(General, nameof(AutoSaveInterval), 300);
-        public IntSetting SidebarWidth = new IntSetting(General, nameof(SidebarWidth), 250);
+        public IntSetting SidebarWidth = new IntSetting(General, "SidebarWidth", Constants.UIDefaultSidebarWidth);
 
         public BoolSetting MultithreadedTextureLoading = new BoolSetting(General, nameof(MultithreadedTextureLoading), true);
         public BoolSetting LogFileLoading = new BoolSetting(General, nameof(LogFileLoading), false);

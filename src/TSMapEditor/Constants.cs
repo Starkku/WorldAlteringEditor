@@ -82,6 +82,8 @@ namespace TSMapEditor
         public const int UITopBarMenuHeight = 23;
 
         public static int UITreeViewLineHeight = 20;
+        public static int UIDefaultSidebarWidth = 250;
+        public static int UITileSetListWidth = 180;
 
         public static double UIAccidentalClickPreventionTime = 0.2;
 
@@ -192,6 +194,8 @@ namespace TSMapEditor
             IniFile uiConstantsIni = Helpers.ReadConfigINI("UI/UIConstants.ini");
 
             UITreeViewLineHeight = uiConstantsIni.GetIntValue("UI", nameof(UITreeViewLineHeight), UITreeViewLineHeight);
+            UIDefaultSidebarWidth = uiConstantsIni.GetIntValue("UI", nameof(UIDefaultSidebarWidth), UIDefaultSidebarWidth);
+            UITileSetListWidth = uiConstantsIni.GetIntValue("UI", nameof(UITileSetListWidth), UITileSetListWidth);
         }
     }
 }

@@ -9,14 +9,14 @@ namespace TSMapEditor.UI.Windows.MainMenuWindows
 {
     public class CreateNewMapEventArgs : EventArgs
     {
-        public CreateNewMapEventArgs(string theater, Point2D mapSize, byte startingLevel)
+        public CreateNewMapEventArgs(int theaterIndex, Point2D mapSize, byte startingLevel)
         {
-            Theater = theater;
+            TheaterIndex = theaterIndex;
             MapSize = mapSize;
             StartingLevel = startingLevel;
         }
 
-        public string Theater { get; }
+        public int TheaterIndex { get; }
         public Point2D MapSize { get; }
         public byte StartingLevel { get; }
     }
@@ -125,7 +125,7 @@ namespace TSMapEditor.UI.Windows.MainMenuWindows
                 return;
             }
 
-            OnCreateNewMap?.Invoke(this, new CreateNewMapEventArgs(ddTheater.SelectedItem.Text, 
+            OnCreateNewMap?.Invoke(this, new CreateNewMapEventArgs(ddTheater.SelectedIndex, 
                 new Point2D(tbWidth.Value, tbHeight.Value), Constants.IsFlatWorld ? (byte)0 : (byte)ddStartingLevel.SelectedItem.Tag));
             WindowManager.RemoveControl(this);
         }

@@ -209,7 +209,7 @@ namespace TSMapEditor.Models
             EditorConfig.EarlyInit();
         }
 
-        public void InitNew(GameConfigINIFiles gameConfigINIFiles, string theaterName, Point2D size, byte startingLevel)
+        public void InitNew(GameConfigINIFiles gameConfigINIFiles, int theaterIndex, Point2D size, byte startingLevel)
         {
             const int marginY = 6;
             const int marginX = 4;
@@ -218,6 +218,7 @@ namespace TSMapEditor.Models
             InitializeRules(gameConfigINIFiles);
             LoadedINI = new IniFileEx();
             var baseMap = new IniFileEx(Environment.CurrentDirectory + "/Config/BaseMap.ini", ccFileManager);
+            var theaterName = EditorConfig.Theaters.Count > theaterIndex ? EditorConfig.Theaters[theaterIndex].UIName : string.Empty;
             baseMap.FileName = string.Empty;
             baseMap.SetStringValue("Map", "Theater", theaterName);
             baseMap.SetStringValue("Map", "Size", $"0,0,{size.X},{size.Y}");

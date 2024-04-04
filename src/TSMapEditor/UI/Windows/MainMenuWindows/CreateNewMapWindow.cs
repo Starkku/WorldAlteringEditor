@@ -6,21 +6,21 @@ using System;
 using System.Globalization;
 using TSMapEditor.UI.Controls;
 
-namespace TSMapEditor.UI.Windows.MainMenuWindows;
-
-public class CreateNewMapEventArgs : EventArgs
+namespace TSMapEditor.UI.Windows.MainMenuWindows
 {
-    public CreateNewMapEventArgs(string theater, Point2D mapSize, byte startingLevel)
+    public class CreateNewMapEventArgs : EventArgs
     {
-        Theater = theater;
-        MapSize = mapSize;
-        StartingLevel = startingLevel;
-    }
+        public CreateNewMapEventArgs(int theaterIndex, Point2D mapSize, byte startingLevel)
+        {
+            TheaterIndex = theaterIndex;
+            MapSize = mapSize;
+            StartingLevel = startingLevel;
+        }
 
-    public string Theater { get; }
-    public Point2D MapSize { get; }
-    public byte StartingLevel { get; }
-}
+        public int TheaterIndex { get; }
+        public Point2D MapSize { get; }
+        public byte StartingLevel { get; }
+    }
 
 public class CreateNewMapWindow : INItializableWindow
 {
@@ -129,8 +129,9 @@ public class CreateNewMapWindow : INItializableWindow
             return;
         }
 
-        OnCreateNewMap?.Invoke(this, new CreateNewMapEventArgs(ddTheater.SelectedItem.Text, 
-            new Point2D(tbWidth.Value, tbHeight.Value), Constants.IsFlatWorld ? (byte)0 : (byte)ddStartingLevel.SelectedItem.Tag));
-        WindowManager.RemoveControl(this);
+            OnCreateNewMap?.Invoke(this, new CreateNewMapEventArgs(ddTheater.SelectedIndex, 
+                new Point2D(tbWidth.Value, tbHeight.Value), Constants.IsFlatWorld ? (byte)0 : (byte)ddStartingLevel.SelectedItem.Tag));
+            WindowManager.RemoveControl(this);
+        }
     }
 }

@@ -55,7 +55,7 @@ namespace TSMapEditor.UI.Windows.MainMenuWindows
                 if (newMapParameters == null)
                     throw new NullReferenceException("Null new map parameters encountered when creating a new map!");
 
-                map.InitNew(gameConfigIniFiles, newMapParameters.Theater, newMapParameters.MapSize, newMapParameters.StartingLevel);
+                map.InitNew(gameConfigIniFiles, newMapParameters.TheaterIndex, newMapParameters.MapSize, newMapParameters.StartingLevel);
             }
             else
             {

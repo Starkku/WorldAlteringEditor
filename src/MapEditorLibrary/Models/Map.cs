@@ -257,7 +257,7 @@ public class Map : IMap
         EditorConfig.EarlyInit();
     }
 
-    public void InitNew(GameConfigINIFiles gameConfigINIFiles, string theaterName, Point2D size, byte startingLevel)
+    public void InitNew(GameConfigINIFiles gameConfigINIFiles, int theaterIndex, Point2D size, byte startingLevel)
     {
         const int marginY = 6;
         const int marginX = 4;
@@ -266,6 +266,7 @@ public class Map : IMap
         InitializeRules(gameConfigINIFiles);
         LoadedINI = new IniFileEx();
         var baseMap = Helpers.ReadConfigINIEx("BaseMap.ini", FileManager);
+        var theaterName = EditorConfig.Theaters.GetElementIfInRange(theaterIndex)?.UIName ?? string.Empty;
         baseMap.RemoveSection("INISystem");
         baseMap.FilePath = string.Empty;
         baseMap.SetStringValue("Map", "Theater", theaterName);

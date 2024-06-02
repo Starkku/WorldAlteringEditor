@@ -26,10 +26,26 @@ namespace TSMapEditor.Mutations.Classes
 
         public override void Perform()
         {
-            TileImage tileGraphics = MutationTarget.TheaterGraphics.GetTileGraphics(targetTile.TileIndex);
-            MGTMPImage subCellImage = tileGraphics.TMPImages[targetTile.SubTileIndex];
-
             var originalData = new List<OriginalCellTerrainData>();
+            var tilesToProcess = GetFillAreaTiles(targetTile, MutationTarget.Map, MutationTarget.TheaterGraphics);
+
+            // Process tiles
+            foreach (Point2D cellCoords in tilesToProcess)
+            {
+                var cell = MutationTarget.Map.GetTile(cellCoords);
+                originalData.Add(new OriginalCellTerrainData(cellCoords, cell.TileIndex, cell.SubTileIndex, cell.Level));
+
+                cell.ChangeTileIndex(tile.TileID, 0);
+            }
+
+            undoData = originalData.ToArray();
+            MutationTarget.InvalidateMap();
+        }
+
+        public static IEnumerable<Point2D> GetFillAreaTiles(MapTile targetTile, Map map, TheaterGraphics theaterGraphics)
+        {
+            TileImage tileGraphics = theaterGraphics.GetTileGraphics(targetTile.TileIndex);
+            MGTMPImage subCellImage = tileGraphics.TMPImages[targetTile.SubTileIndex];
 
             byte terrainType = subCellImage.TmpImage.TerrainType;
             int tileSetId = tileGraphics.TileSetId;
@@ -40,7 +56,9 @@ namespace TSMapEditor.Mutations.Classes
             tileCheckHashSet.Add(targetTile.CoordsToPoint().GetHashCode());
 
             var tilesToSkip = new HashSet<int>();         // tiles that have been confirmed as not being part of the area to fill
-            var tilesToProcess = new List<Point2D>();     // tiles that have been confirmed as being part of the area to fill
+
+            // tiles that have been confirmed as being part of the area to fill
+            var tilesToProcess = new List<Point2D>();
 
             while (tilesToCheck.First != null)
             {
@@ -50,14 +68,14 @@ namespace TSMapEditor.Mutations.Classes
                 if (tilesToSkip.Contains(coords.GetHashCode()))
                     continue;
 
-                var cell = MutationTarget.Map.GetTile(coords);
+                var cell = map.GetTile(coords);
                 if (cell == null)
                 {
                     tilesToSkip.Add(coords.GetHashCode());
                     continue;
                 }
 
-                tileGraphics = MutationTarget.TheaterGraphics.GetTileGraphics(cell.TileIndex);
+                tileGraphics = theaterGraphics.GetTileGraphics(cell.TileIndex);
                 if (tileGraphics.TileSetId != tileSetId)
                 {
                     tilesToSkip.Add(coords.GetHashCode());
@@ -70,7 +88,7 @@ namespace TSMapEditor.Mutations.Classes
                     tilesToSkip.Add(coords.GetHashCode());
                     continue;
                 }
-                    
+
                 // Mark this cell as one to process and nearby tiles as ones to check
                 tilesToProcess.Add(coords);
 
@@ -87,22 +105,12 @@ namespace TSMapEditor.Mutations.Classes
                         {
                             tileCheckHashSet.Add(hash);
                             tilesToCheck.AddLast(newCellCoords);
-                        }    
+                        }
                     }
                 }
             }
 
-            // Process tiles
-            foreach (Point2D cellCoords in tilesToProcess)
-            {
-                var cell = MutationTarget.Map.GetTile(cellCoords);
-                originalData.Add(new OriginalCellTerrainData(cellCoords, cell.TileIndex, cell.SubTileIndex, cell.Level));
-
-                cell.ChangeTileIndex(tile.TileID, 0);
-            }
-
-            undoData = originalData.ToArray();
-            MutationTarget.InvalidateMap();
+            return tilesToProcess;
         }
 
         public override void Undo()

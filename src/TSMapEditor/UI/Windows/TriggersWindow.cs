@@ -103,6 +103,7 @@ namespace TSMapEditor.UI.Windows
         private SelectSpeechWindow selectSpeechWindow;
         private SelectSoundWindow selectSoundWindow;
         private SelectParticleSystemTypeWindow selectParticleSystemTypeWindow;
+	private SelectSuperWeaponTypeWindow selectSuperWeaponTypeWindow;
 
         private XNAContextMenu actionContextMenu;
         private XNAContextMenu eventContextMenu;
@@ -306,6 +307,11 @@ namespace TSMapEditor.UI.Windows
             particleSystemTypeDarkeningPanel.Hidden += ParticleSystemTypeDarkeningPanel_Hidden;
 
             eventContextMenu = new EditorContextMenu(WindowManager);
+
+            selectSuperWeaponTypeWindow = new SelectSuperWeaponTypeWindow(WindowManager, map);
+            var swDarkeningPanel = DarkeningPanel.InitializeAndAddToParentControlWithChild(WindowManager, Parent, selectSuperWeaponTypeWindow);
+            swDarkeningPanel.Hidden += SuperWeaponDarkeningPanel_Hidden;
+
             eventContextMenu.Name = nameof(eventContextMenu);
             eventContextMenu.Width = lbEvents.Width;
             eventContextMenu.AddItem("Move Up", EventContextMenu_MoveUp, () => editedTrigger != null && lbEvents.SelectedItem != null && lbEvents.SelectedIndex > 0);
@@ -907,10 +913,17 @@ namespace TSMapEditor.UI.Windows
                     ctxEventParameterPresetValues.Open(GetCursorPoint());
                     break;
                 case TriggerParamType.SuperWeapon:
-                    ctxEventParameterPresetValues.ClearItems();
-                    ctxEventParameterPresetValues.Width = 250;
-                    map.Rules.SuperWeaponTypes.ForEach(sw => ctxEventParameterPresetValues.AddItem(sw.GetDisplayString()));
-                    ctxEventParameterPresetValues.Open(GetCursorPoint());
+                    int swTypeIndex = Conversions.IntFromString(triggerEvent.Parameters[paramIndex], -1);
+                    selectSuperWeaponTypeWindow.IsForEvent = true;
+                    selectSuperWeaponTypeWindow.UseININameAsValue = false;
+                    if (swTypeIndex > -1 && swTypeIndex < map.Rules.SuperWeaponTypes.Count)
+                        selectSuperWeaponTypeWindow.Open(map.Rules.SuperWeaponTypes[swTypeIndex]);
+                    break;
+                case TriggerParamType.SuperWeaponID:
+                    string swTypeID = triggerEvent.Parameters[paramIndex];
+                    selectSuperWeaponTypeWindow.IsForEvent = true;
+                    selectSuperWeaponTypeWindow.UseININameAsValue = true;
+                    selectSuperWeaponTypeWindow.Open(map.Rules.SuperWeaponTypes.Find(swType => swType.ININame.Equals(swTypeID, StringComparison.Ordinal)));
                     break;
                 case TriggerParamType.TeamType:
                     TeamType existingTeamType = map.TeamTypes.Find(tt => tt.ININame == triggerEvent.Parameters[paramIndex]);
@@ -1028,10 +1041,18 @@ namespace TSMapEditor.UI.Windows
                     selectStringWindow.Open(existingString);
                     break;
                 case TriggerParamType.SuperWeapon:
-                    ctxActionParameterPresetValues.ClearItems();
-                    ctxActionParameterPresetValues.Width = 250;
-                    map.Rules.SuperWeaponTypes.ForEach(sw => ctxActionParameterPresetValues.AddItem(sw.GetDisplayString()));
-                    ctxActionParameterPresetValues.Open(GetCursorPoint());
+                    int swTypeIndex = Conversions.IntFromString(triggerAction.Parameters[paramIndex], -1);
+                    selectSuperWeaponTypeWindow.IsForEvent = false;
+                    selectSuperWeaponTypeWindow.UseININameAsValue = false;
+                    if (swTypeIndex > -1 && swTypeIndex < map.Rules.SuperWeaponTypes.Count)
+                        selectSuperWeaponTypeWindow.Open(map.Rules.SuperWeaponTypes[swTypeIndex]);
+                    break;
+                case TriggerParamType.SuperWeaponID:
+                    string swTypeID = triggerAction.Parameters[paramIndex];
+                    selectSuperWeaponTypeWindow.IsForEvent = false;
+                    selectSuperWeaponTypeWindow.UseININameAsValue = true;
+                    if (!string.IsNullOrEmpty(swTypeID))
+                        selectSuperWeaponTypeWindow.Open(map.Rules.SuperWeaponTypes.Find(swType => swType.ININame.Equals(swTypeID, StringComparison.Ordinal)));
                     break;
                 case TriggerParamType.ParticleSystem:
                     ParticleSystemType existingParticleSystemType = map.Rules.ParticleSystemTypes.Find(pst => pst.Index == Conversions.IntFromString(triggerAction.Parameters[paramIndex], -1));
@@ -1240,6 +1261,19 @@ namespace TSMapEditor.UI.Windows
                 return;
 
             AssignParamValue(selectParticleSystemTypeWindow.IsForEvent, selectParticleSystemTypeWindow.SelectedObject.Index);
+        }
+
+        private void SuperWeaponDarkeningPanel_Hidden(object sender, EventArgs e)
+        {
+            if (selectSuperWeaponTypeWindow.SelectedObject == null)
+                return;
+
+            var swType = selectSuperWeaponTypeWindow.SelectedObject;
+
+            if (selectSuperWeaponTypeWindow.UseININameAsValue)
+                AssignParamValue(selectSuperWeaponTypeWindow.IsForEvent, swType.ININame);
+            else
+                AssignParamValue(selectSuperWeaponTypeWindow.IsForEvent, swType.Index);
         }
 
         private void AssignParamValue(bool isForEvent, int paramValue)
@@ -2218,6 +2252,13 @@ namespace TSMapEditor.UI.Windows
                         return intValue + " - nonexistent particle system";
 
                     return intValue + " " + map.Rules.ParticleSystemTypes[intValue].ININame;
+                case TriggerParamType.SuperWeaponID:
+                    var swType = map.Rules.SuperWeaponTypes.Find(sw => sw.ININame.Equals(paramValue, StringComparison.Ordinal));
+
+                    if (swType == null)
+                        return paramValue;
+
+                    return swType.GetDisplayStringWithoutIndex();
                 case TriggerParamType.Speech:
                     EvaSpeech speech;
 

@@ -77,6 +77,12 @@ namespace TSMapEditor.UI.Windows
                     house.HouseType = houseTypes.Find(ht => ht.ININame == house.ININame);
                     if (house.HouseType == null)
                         house.HouseType = houseTypes[0];
+
+                    if (house.HouseType != null)
+                    {
+                        house.Color = house.HouseType.Color;
+                        house.XNAColor = house.HouseType.XNAColor;
+                    }
                 }
             }
 

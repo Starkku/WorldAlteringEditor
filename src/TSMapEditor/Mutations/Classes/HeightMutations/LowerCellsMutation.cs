@@ -45,7 +45,7 @@ namespace TSMapEditor.Mutations.Classes.HeightMutations
             else
             {
                 var targetTile = MutationTarget.Map.GetTile(targetCellCoords);
-                var tilesToProcess = FillTerrainAreaMutation.GetFillAreaTiles(targetTile, MutationTarget.Map, MutationTarget.TheaterGraphics);
+                var tilesToProcess = Helpers.GetFillAreaTiles(targetTile, MutationTarget.Map, MutationTarget.TheaterGraphics);
 
                 // Process tiles
                 foreach (Point2D cellCoords in tilesToProcess)

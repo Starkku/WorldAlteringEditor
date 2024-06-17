@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Text;
 using System.Linq;
 using TSMapEditor.CCEngine;
 using TSMapEditor.Extensions;
@@ -189,9 +190,9 @@ namespace TSMapEditor
                 int c = str[i];
 
                 if (c is < 'A' or > 'Z')
-                    throw new InvalidOperationException("Waypoints may only contain characters A through Z, invalid input: " + str);
+                    throw new InvalidOperationException("Waypoints may only contain characters A through Z, invalid input: " + str); ;
 
-                n += (c - '@') * j; // '@' = 'A' - 1
+                n += (c - 64) * j;
             }
 
             return (n - 1);
@@ -199,25 +200,21 @@ namespace TSMapEditor
 
         public static string WaypointNumberToAlphabeticalString(int waypointNumber)
         {
-            Span<char> buffer = stackalloc char[8];
-            const int charCount = 26;
-
-           if (waypointNumber < 0)
+            if (waypointNumber < 0)
                 return string.Empty;
 
             waypointNumber++;
-            int pos = buffer.Length;
+            StringBuilder sb = new StringBuilder();
 
             while (waypointNumber > 0)
             {
-                pos--;
-                int m = waypointNumber % charCount;
-                if (m == 0) m = charCount;
-                buffer[pos] = (char)(m + '@'); // '@' = 'A' - 1
-                waypointNumber = (waypointNumber - m) / charCount;
+                int m = waypointNumber % 26;
+                if (m == 0) m = 26;
+                sb.Insert(0, (char)(m + '@')); // '@' = 'A' - 1
+                waypointNumber = (waypointNumber - m) / 26;
             }
 
-            return buffer.Slice(pos).ToString();
+            return sb.ToString();
         }
 
         private static Point2D[] visualDirectionToPointTable = new Point2D[]

@@ -46,6 +46,10 @@ namespace TSMapEditor.Mutations.Classes.HeightMutations
             else
             {
                 var targetTile = MutationTarget.Map.GetTile(targetCellCoords);
+
+                if (targetTile == null || targetTile.Level >= Constants.MaxMapHeightLevel)
+                    return;
+
                 var tilesToProcess = Helpers.GetFillAreaTiles(targetTile, MutationTarget.Map, MutationTarget.TheaterGraphics);
 
                 // Process tiles

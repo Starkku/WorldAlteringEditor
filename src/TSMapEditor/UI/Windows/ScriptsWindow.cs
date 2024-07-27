@@ -641,7 +641,7 @@ namespace TSMapEditor.UI.Windows
 
             if (action == null)
             {
-                return;
+                return null;
             }
 
             action.PresetOptions.ForEach(p => btnEditorPresetValues.ContextMenu.AddItem(new XNAContextMenuItem() { Text = p.GetOptionText() }));

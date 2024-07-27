@@ -3,6 +3,7 @@ using System;
 using TSMapEditor.GameMath;
 using TSMapEditor.Models;
 using TSMapEditor.Models.Enums;
+using SharpDX.Mathematics.Interop;
 
 namespace TSMapEditor.Rendering.ObjectRenderers
 {
@@ -129,6 +130,22 @@ namespace TSMapEditor.Rendering.ObjectRenderers
             DrawShadow(gameObject);
             DrawShapeImage(gameObject, drawParams.ShapeImage, gameObject.FrameIndex, Color.White,
                 true, remapColor, affectedByLighting, affectedByAmbient, drawPoint);
+        }
+
+        protected override bool ShouldRenderReplacementText(Overlay gameObject)
+        {
+            OverlayType overlay = gameObject.OverlayType;
+
+            foreach (var bridge in Map.EditorConfig.Bridges)
+            {
+                if (bridge.Kind == BridgeKind.Low &&
+                    (bridge.EastWest.Pieces.Contains(overlay) || bridge.NorthSouth.Pieces.Contains(overlay)
+                    || bridge.EastWest.Start == overlay || bridge.EastWest.End == overlay
+                    || bridge.NorthSouth.Start == overlay || bridge.NorthSouth.End == overlay))
+                    return false;
+            }
+
+            return base.ShouldRenderReplacementText(gameObject);
         }
     }
 }

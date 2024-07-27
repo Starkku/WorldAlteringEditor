@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using SharpDX.Mathematics.Interop;
 using TSMapEditor.GameMath;
 using TSMapEditor.Models;
 
@@ -58,6 +59,22 @@ namespace TSMapEditor.Rendering.ObjectRenderers
             DrawShadow(gameObject, drawParams, drawPoint, heightOffset);
             DrawShapeImage(gameObject, drawParams.ShapeImage, gameObject.FrameIndex, Color.White,
                 false, true, remapColor, affectedByLighting, affectedByAmbient, drawPoint, heightOffset);
+        }
+
+        protected override bool ShouldRenderReplacementText(Overlay gameObject)
+        {
+            int overlayIndex = gameObject.OverlayType.Index;
+
+            foreach (var bridge in Map.EditorConfig.Bridges)
+            {
+                if (bridge.Kind == BridgeKind.Low &&
+                    (bridge.EastWest.Pieces.Contains(overlayIndex) || bridge.NorthSouth.Pieces.Contains(overlayIndex)
+                    || bridge.EastWest.Start == overlayIndex || bridge.EastWest.End == overlayIndex
+                    || bridge.NorthSouth.Start == overlayIndex || bridge.NorthSouth.End == overlayIndex))
+                    return false;
+            }
+
+            return base.ShouldRenderReplacementText(gameObject);
         }
     }
 }

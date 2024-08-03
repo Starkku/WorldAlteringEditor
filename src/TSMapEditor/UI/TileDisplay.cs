@@ -192,7 +192,7 @@ namespace TSMapEditor.UI
             int x = Constants.UIEmptySideSpace;
             int currentLineHeight = 0;
 
-            for (int i = 0; i < tileSet.TilesInSet; i++)
+            for (int i = 0; i < tileSet.ActualLoadedTileCount; i++)
             {
                 int tileIndex = tileSet.StartTileIndex + i;
                 if (tileIndex > theaterGraphics.TileCount)

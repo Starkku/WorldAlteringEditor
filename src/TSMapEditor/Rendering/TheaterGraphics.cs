@@ -496,7 +496,8 @@ namespace TSMapEditor.Rendering
             {
                 TileSet tileSet = Theater.TileSets[tsId];
                 tileSet.StartTileIndex = currentTileIndex;
-                tileSet.LoadedTileCount = 0;
+                tileSet.TileCount = 0;
+                tileSet.ActualLoadedTileCount = 0;
 
                 Console.WriteLine("Loading " + tileSet.SetName);
 
@@ -505,6 +506,7 @@ namespace TSMapEditor.Rendering
                     // Console.WriteLine("#" + i);
 
                     var tileGraphics = new List<TileImage>();
+                    bool tileLoaded = false;
 
                     // Handle graphics variation (clear00.tem, clear00a.tem, clear00b.tem etc.)
                     for (int v = 0; v < 'g' - 'a'; v++)
@@ -550,9 +552,12 @@ namespace TSMapEditor.Rendering
                             tmpImages.Add(new MGTMPImage(graphicsDevice, tmpFile.GetImage(img), TheaterPalette, tsId));
                         }
                         tileGraphics.Add(new TileImage(tmpFile.CellsX, tmpFile.CellsY, tsId, i, currentTileIndex, tmpImages.ToArray()));
+
+                        tileLoaded = true;
                     }
 
-                    tileSet.LoadedTileCount++;
+                    tileSet.TileCount++;
+                    tileSet.ActualLoadedTileCount += tileLoaded ? 1 : 0;
                     currentTileIndex++;
                     terrainGraphicsList.Add(tileGraphics.ToArray());
                 }
@@ -568,24 +573,24 @@ namespace TSMapEditor.Rendering
                 if (tileSet.NonMarbleMadness > -1 || tileSet.MarbleMadness < 0 || tileSet.MarbleMadness >= Theater.TileSets.Count)
                 {
                     // This is a MM tileset or a tileset with no MM graphics
-                    for (int i = 0; i < tileSet.LoadedTileCount; i++)
+                    for (int i = 0; i < tileSet.TileCount; i++)
                     {
                         mmTerrainGraphicsList.Add(terrainGraphicsList[tileIndex + i]);
                         hasMMGraphics.Add(tileSet.NonMarbleMadness > -1);
                     }
 
-                    tileIndex += tileSet.LoadedTileCount;
+                    tileIndex += tileSet.TileCount;
                     continue;
                 }
 
                 // For non-MM tilesets with MM graphics, fetch the MM tileset
                 TileSet mmTileSet = Theater.TileSets[tileSet.MarbleMadness];
-                for (int i = 0; i < tileSet.LoadedTileCount; i++)
+                for (int i = 0; i < tileSet.TileCount; i++)
                 {
                     mmTerrainGraphicsList.Add(terrainGraphicsList[mmTileSet.StartTileIndex + i]);
                     hasMMGraphics.Add(true);
                 }
-                tileIndex += tileSet.LoadedTileCount;
+                tileIndex += tileSet.TileCount;
             }
 
             Logger.Log("Finished loading tile textures.");

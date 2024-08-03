@@ -32,16 +32,21 @@ namespace TSMapEditor.CCEngine
         public int StartTileIndex { get; set; }
 
         /// <summary>
+        /// Amount of tiles in this tile set.
+        /// </summary>
+        public int TileCount { get; set; }
+
+        /// <summary>
         /// The actual amount of tiles successfully loaded for this tile set.
         /// </summary>
-        public int LoadedTileCount { get; set; }
+        public int ActualLoadedTileCount { get; set; }
 
         /// <summary>
         /// Checks and returns a value that determines whether a tile with a specific
         /// index exists within this tile set.
         /// </summary>
         /// <param name="tileIndex">The index of the tile.</param>
-        public bool ContainsTile(int tileIndex) => tileIndex >= StartTileIndex && tileIndex < StartTileIndex + LoadedTileCount;
+        public bool ContainsTile(int tileIndex) => tileIndex >= StartTileIndex && tileIndex < StartTileIndex + TileCount;
 
         private static string[] only1x1TileSets = new string[] { "cliffs", "rivers", "shores", "dirt road" };
 

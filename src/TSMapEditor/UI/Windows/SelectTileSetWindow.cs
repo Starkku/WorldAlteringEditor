@@ -44,7 +44,7 @@ namespace TSMapEditor.UI.Windows
             for (int i = 0; i < map.TheaterInstance.Theater.TileSets.Count; i++)
             {
                 var tileset = map.TheaterInstance.Theater.TileSets[i];
-                if (tileset.NonMarbleMadness != -1 || tileset.LoadedTileCount == 0 || !tileset.AllowToPlace)
+                if (tileset.NonMarbleMadness != -1 || tileset.TileCount == 0 || !tileset.AllowToPlace)
                     continue;
 
                 lbObjectList.AddItem(new XNAListBoxItem() { Text = tileset.SetName, Tag = tileset });

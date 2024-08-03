@@ -306,7 +306,7 @@ namespace TSMapEditor.UI
                 if (tileSet.NonMarbleMadness > -1)
                     continue;
 
-                if (tileSet.AllowToPlace && tileSet.LoadedTileCount > 0)
+                if (tileSet.AllowToPlace && tileSet.TileCount > 0)
                 {
                     lbTileSetList.AddItem(new XNAListBoxItem()
                     {

@@ -103,7 +103,7 @@ namespace TSMapEditor.UI.Windows
         private SelectSpeechWindow selectSpeechWindow;
         private SelectSoundWindow selectSoundWindow;
         private SelectParticleSystemTypeWindow selectParticleSystemTypeWindow;
-	private SelectSuperWeaponTypeWindow selectSuperWeaponTypeWindow;
+        private SelectSuperWeaponTypeWindow selectSuperWeaponTypeWindow;
 
         private XNAContextMenu actionContextMenu;
         private XNAContextMenu eventContextMenu;

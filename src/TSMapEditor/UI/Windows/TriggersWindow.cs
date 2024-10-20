@@ -1015,6 +1015,12 @@ namespace TSMapEditor.UI.Windows
                     else
                         selectHouseWindow.Open(null);
                     break;
+                case TriggerParamType.Building:
+                    int buildingIndex = Conversions.IntFromString(triggerAction.Parameters[paramIndex], -1);
+                    BuildingType existingBuilding = buildingIndex < 0 || buildingIndex >= map.Rules.BuildingTypes.Count ? null : map.Rules.BuildingTypes[buildingIndex];
+                    selectBuildingTypeWindow.IsForEvent = false;
+                    selectBuildingTypeWindow.Open(existingBuilding);
+                    break;
                 case TriggerParamType.Text:
                     selectTutorialLineWindow.Open(new TutorialLine(Conversions.IntFromString(triggerAction.Parameters[paramIndex], -1), string.Empty));
                     break;
@@ -1148,7 +1154,10 @@ namespace TSMapEditor.UI.Windows
             if (selectBuildingTypeWindow.SelectedObject == null)
                 return;
 
-            AssignParamValue(selectBuildingTypeWindow.IsForEvent, selectBuildingTypeWindow.SelectedObject.Index);
+            if (selectBuildingTypeWindow.IsForEvent)
+                AssignParamValue(true, selectBuildingTypeWindow.SelectedObject.Index);
+            else
+                AssignParamValue(false, selectBuildingTypeWindow.SelectedObject.ININame);
         }
 
         private void ThemeDarkeningPanel_Hidden(object sender, EventArgs e)

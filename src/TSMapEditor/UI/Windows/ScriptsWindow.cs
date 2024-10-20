@@ -58,7 +58,7 @@ namespace TSMapEditor.UI.Windows
 
         private SelectScriptActionWindow selectScriptActionWindow;
         private EditorContextMenu actionListContextMenu;
-	private SelectScriptActionPresetOptionWindow selectScriptActionPresetOptionWindow;
+        private SelectScriptActionPresetOptionWindow selectScriptActionPresetOptionWindow;
 
         private SelectBuildingTargetWindow selectBuildingTargetWindow;
 

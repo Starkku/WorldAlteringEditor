@@ -94,11 +94,11 @@ namespace TSMapEditor.Rendering.ObjectRenderers
                 if (gameObject.Facing is > facingStartDrawAbove and <= facingEndDrawAbove)
                 {
                     if (gameObject.UnitType.ArtConfig.Voxel)
-                        RenderVoxelModel(gameObject, drawPoint + turretOffset, drawParams.TurretVoxel, affectedByLighting, Constants.DepthEpsilon * 2, false);
+                        RenderVoxelModel(gameObject, drawPoint + turretOffset, drawParams.TurretVoxel, affectedByLighting, Constants.DepthEpsilon * 4, false);
                     else
                         RenderTurretShape(gameObject, drawPoint, drawParams, Constants.DepthEpsilon);
                     
-                    RenderVoxelModel(gameObject, drawPoint + turretOffset, drawParams.BarrelVoxel, affectedByLighting, Constants.DepthEpsilon * 2, false);
+                    RenderVoxelModel(gameObject, drawPoint + turretOffset, drawParams.BarrelVoxel, affectedByLighting, Constants.DepthEpsilon * 4, false);
                 }
                 else
                 {

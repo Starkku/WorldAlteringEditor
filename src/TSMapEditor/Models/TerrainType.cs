@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using TSMapEditor.GameMath;
+using TSMapEditor.Models.ArtConfig;
 using TSMapEditor.Models.Enums;
 
 namespace TSMapEditor.Models
@@ -12,6 +13,8 @@ namespace TSMapEditor.Models
 
         public override RTTIType WhatAmI() => RTTIType.TerrainType;
 
+        public TerrainArtConfig ArtConfig { get; } = new TerrainArtConfig();
+
         public TerrainOccupation TemperateOccupationBits { get; set; }
         public TerrainOccupation SnowOccupationBits { get; set; }
 
@@ -23,15 +26,6 @@ namespace TSMapEditor.Models
         public bool SpawnsTiberium { get; set; }
 
         public int YDrawFudge { get; set; }
-
-        /// <summary>
-        /// Defined in Art.ini. If set to true,
-        /// the art for this terrain type is theater-specific;
-        /// if false, the art is a generic .SHP used for every theater.
-        /// </summary>
-        public bool Theater { get; set; }
-
-        public string Image { get; set; }
 
         /// <summary>
         /// Impassable cell data for automatically placing impassable overlay

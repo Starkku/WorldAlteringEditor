@@ -621,17 +621,19 @@ namespace TSMapEditor.Rendering
             TerrainObjectTextures = new ShapeImage[terrainTypes.Count];
             for (int i = 0; i < terrainTypes.Count; i++)
             {
-                string shpFileName = terrainTypes[i].Image != null ? terrainTypes[i].Image : terrainTypes[i].ININame;
+                var terrainType = terrainTypes[i];
+
+                string shpFileName = terrainType.ArtConfig.Image != null ? terrainType.ArtConfig.Image : terrainType.ININame;
                 string pngFileName = shpFileName + PNG_FILE_EXTENSION;
 
-                if (terrainTypes[i].Theater)
+                if (terrainType.ArtConfig.Theater)
                     shpFileName += Theater.FileExtension;
                 else
                     shpFileName += SHP_FILE_EXTENSION;
 
                 byte[] data = fileManager.LoadFile(pngFileName);
 
-                bool subjectToLighting = !terrainTypes[i].SpawnsTiberium || Constants.TiberiumTreesAffectedByLighting;
+                bool subjectToLighting = !terrainType.SpawnsTiberium || Constants.TiberiumTreesAffectedByLighting;
 
                 if (data != null)
                 {
@@ -650,8 +652,15 @@ namespace TSMapEditor.Rendering
 
                     var shpFile = new ShpFile(shpFileName);
                     shpFile.ParseFromBuffer(data);
+
+                    var palette = TheaterPalette;
+                    if (terrainType.SpawnsTiberium)
+                        palette = unitPalette;
+                    else if (!string.IsNullOrEmpty(terrainType.ArtConfig.Palette))
+                        palette = GetPaletteOrDefault(terrainType.ArtConfig.Palette + Theater.FileExtension[1..] + ".pal", palette, true);
+
                     TerrainObjectTextures[i] = new ShapeImage(graphicsDevice, shpFile, data,
-                        terrainTypes[i].SpawnsTiberium ? unitPalette : TheaterPalette, subjectToLighting);
+                        palette, subjectToLighting);
                 }
             }
 

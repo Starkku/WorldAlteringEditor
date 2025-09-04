@@ -293,29 +293,42 @@ namespace TSMapEditor.UI
 
                 sb.Clear();
                 int openParenCount = 0;
+                bool openQuote = false;
 
                 // Fetch single parameter, read until ',' or ')'
+                // Ignore these if there's a literal string marked with ""
                 while (true)
                 {
                     char c = PeekChar();
 
-                    if (c == ',')
+                    if (c == ',' && !openQuote)
                     {
                         break;
                     }
 
-                    if (c == '(')
+                    if (!openQuote)
                     {
-                        openParenCount++;
-                    }
-                    else if (c == ')')
-                    {
-                        openParenCount--;
-                        if (openParenCount < 0)
-                            break;
+                        if (c == '(')
+                        {
+                            openParenCount++;
+                        }
+                        else if (c == ')')
+                        {
+                            openParenCount--;
+                            if (openParenCount < 0)
+                                break;
+                        }
                     }
 
-                    sb.Append(c);
+                    if (c == '"')
+                    {
+                        openQuote = !openQuote;
+                    }
+                    else
+                    {
+                        sb.Append(c);
+                    }
+
                     ConsumeChar(c);
                 }
 

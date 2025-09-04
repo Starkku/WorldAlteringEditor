@@ -165,21 +165,15 @@ namespace TSMapEditor.Rendering
             menuHeight = (int)(menuHeight * dpi_ratio);
 
 #if WINDOWS
-            // If the user has a very large display, it's better to integer-upscale the main menu instead of DPI-scaling it.
-            const int margin = 100;
-            int scaleFactor = (int)dpi_ratio + 1;
-            while (true)
+            // If the user has a very large display at 100% DPI, it's probably best to integer-upscale the main menu.
+            if (dpi_ratio <= 1.0)
             {
-                if (Screen.PrimaryScreen.Bounds.Width > (menuRenderWidth + margin) * scaleFactor &&
-                    Screen.PrimaryScreen.Bounds.Height > (menuRenderHeight + margin) * scaleFactor)
+                const int minScaleRatio = 3;
+                if (Screen.PrimaryScreen.Bounds.Width >= menuRenderWidth * minScaleRatio &&
+                    Screen.PrimaryScreen.Bounds.Height >= menuRenderHeight * minScaleRatio)
                 {
-                    menuWidth = menuRenderWidth * scaleFactor;
-                    menuHeight = menuRenderHeight * scaleFactor;
-                    scaleFactor++;
-                }
-                else
-                {
-                    break;
+                    menuWidth = menuRenderWidth * 2;
+                    menuHeight = menuRenderHeight * 2;
                 }
             }
 #endif

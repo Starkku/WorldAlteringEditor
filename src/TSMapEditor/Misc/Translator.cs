@@ -120,7 +120,7 @@ namespace TSMapEditor.Misc
             if (UIStringTable.TryGetValue(identifier, out var result))
                 return result;
 
-            if (!MissingValues.ContainsKey(identifier))
+            if (defaultString != null && !MissingValues.ContainsKey(identifier))
                 MissingValues[identifier] = defaultString;
 
             return defaultString;

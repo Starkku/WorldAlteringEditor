@@ -331,7 +331,7 @@ namespace TSMapEditor.UI.Windows
             if (globalTeamType != null)
             {
                 stringBuilder.AppendLine(
-                    string.Format(Translate(this, "GlobalTeamTypeOverridden", "- This TeamType overrides a global TeamType {0}. As such, it maybe be used by global AI Triggers."),
+                    string.Format(Translate(this, "GlobalTeamTypeOverridden", "- This TeamType overrides a global TeamType {0}. As such, it may be used by global AI Triggers."),
                         globalTeamType.ININame));
             }
 

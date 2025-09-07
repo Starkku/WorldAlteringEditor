@@ -73,23 +73,23 @@ namespace TSMapEditor.UI.TopBar
 
             var fileContextMenu = new EditorContextMenu(WindowManager);
             fileContextMenu.Name = nameof(fileContextMenu);
-            fileContextMenu.AddItem("New", () => windowController.CreateNewMapWindow.Open(), null, null, null);
-            fileContextMenu.AddItem("Open", () => Open(), null, null, null);
+            fileContextMenu.AddItem(Translate(this, "File.New", "New"), () => windowController.CreateNewMapWindow.Open(), null, null, null);
+            fileContextMenu.AddItem(Translate(this, "File.Open", "Open"), () => Open(), null, null, null);
 
-            fileContextMenu.AddItem("Save", () => SaveMap());
-            fileContextMenu.AddItem("Save As", () => SaveAs(), null, null, null);
+            fileContextMenu.AddItem(Translate(this, "File.Save", "Save"), () => SaveMap());
+            fileContextMenu.AddItem(Translate(this, "File.SaveAs", "Save As"), () => SaveAs(), null, null, null);
             fileContextMenu.AddItem(" ", null, () => false, null, null);
-            fileContextMenu.AddItem("Reload Input File",
+            fileContextMenu.AddItem(Translate(this, "File.ReloadInputFile", "Reload Input File"),
                 () => InputFileReloadRequested?.Invoke(this, EventArgs.Empty),
                 () => !string.IsNullOrWhiteSpace(map.LoadedINI.FileName),
                 null, null);
             fileContextMenu.AddItem(" ", null, () => false, null, null);
-            fileContextMenu.AddItem("Extract Megamap...", () => windowController.MegamapGenerationOptionsWindow.Open(false));
-            fileContextMenu.AddItem("Generate Map Preview...", WriteMapPreviewConfirmation);
+            fileContextMenu.AddItem(Translate(this, "File.ExtractMegamap", "Extract Megamap..."), () => windowController.MegamapGenerationOptionsWindow.Open(false));
+            fileContextMenu.AddItem(Translate(this, "File.GenerateMapPreview", "Generate Map Preview..."), WriteMapPreviewConfirmation);
             fileContextMenu.AddItem(" ", null, () => false, null, null, null);
-            fileContextMenu.AddItem("Open With Text Editor", OpenWithTextEditor, () => !string.IsNullOrWhiteSpace(map.LoadedINI.FileName));
+            fileContextMenu.AddItem(Translate(this, "File.OpenWithTextEditor", "Open With Text Editor"), OpenWithTextEditor, () => !string.IsNullOrWhiteSpace(map.LoadedINI.FileName));
             fileContextMenu.AddItem(" ", null, () => false, null, null);
-            fileContextMenu.AddItem("Exit", WindowManager.CloseGame);
+            fileContextMenu.AddItem(Translate(this, "File.Exit", "Exit"), WindowManager.CloseGame);
 
             var fileButton = new MenuButton(WindowManager, fileContextMenu);
             fileButton.Name = nameof(fileButton);
@@ -299,11 +299,11 @@ namespace TSMapEditor.UI.TopBar
                 {
                     Logger.Log("Failed to save the map file. Returned error message: " + ex.Message);
 
-                    EditorMessageBox.Show(WindowManager, "Failed to save map",
-                        "Failed to write the map file. Please make sure that WAE has write access to the path." + Environment.NewLine + Environment.NewLine +
+                    EditorMessageBox.Show(WindowManager, Translate(this, "MapSaveFailedTitle", "Failed to save map"),
+                        string.Format(Translate(this, "MapSaveFailedDescription", "Failed to write the map file. Please make sure that WAE has write access to the path." + Environment.NewLine + Environment.NewLine +
                         "A common source of this error is trying to save the map to Program Files or another" + Environment.NewLine +
                         "write-protected directory without running WAE with administrative rights." + Environment.NewLine + Environment.NewLine +
-                        "Returned error was: " + ex.Message, Windows.MessageBoxButtons.OK);
+                        "Returned error was: {0}"), ex.Message), Windows.MessageBoxButtons.OK);
                 }
                 else
                 {
@@ -314,15 +314,15 @@ namespace TSMapEditor.UI.TopBar
 
         private void WriteMapPreviewConfirmation()
         {
-            var messageBox = EditorMessageBox.Show(WindowManager, "Confirmation",
-                "This will write the current minimap as the map preview to the map file." + Environment.NewLine + Environment.NewLine +
+            var messageBox = EditorMessageBox.Show(WindowManager, Translate(this, "GenerateMapPreviewConfirmationTitle", "Confirmation"),
+                Translate(this, "GenerateMapPreviewConfirmationDescription", "This will write the current minimap as the map preview to the map file." + Environment.NewLine + Environment.NewLine +
                 "This provides the map with a preview if it is used as a custom map" + Environment.NewLine + 
                 "in the CnCNet Client or in-game, but is not necessary if the map will" + Environment.NewLine +
                 "have an external preview. It will also significantly increase the size" + Environment.NewLine +
                 "of the map file." + Environment.NewLine + Environment.NewLine +
                 "Do you want to continue?" + Environment.NewLine + Environment.NewLine +
                 "Note: The preview won't be actually written to the map before" + Environment.NewLine + 
-                "you save the map.", Windows.MessageBoxButtons.YesNo);
+                "you save the map."), Windows.MessageBoxButtons.YesNo);
 
             messageBox.YesClickedAction = _ => windowController.MegamapGenerationOptionsWindow.Open(true);
         }
@@ -345,7 +345,9 @@ namespace TSMapEditor.UI.TopBar
 
                 if (textEditorPath == null)
                 {
-                    EditorMessageBox.Show(WindowManager, "No text editor found!", "No valid text editor has been configured and no default choice was found.", Windows.MessageBoxButtons.OK);
+                    EditorMessageBox.Show(WindowManager, 
+                        Translate(this, "NoTextEditorFoundTitle", "No text editor found!"), 
+                        Translate(this, "NoTextEditorFoundDescription", "No valid text editor has been configured and no default choice was found."), Windows.MessageBoxButtons.OK);
                     return;
                 }
             }
@@ -357,9 +359,11 @@ namespace TSMapEditor.UI.TopBar
             catch (Exception ex) when (ex is Win32Exception || ex is ObjectDisposedException)
             {
                 Logger.Log("Failed to launch text editor! Message: " + ex.Message);
-                EditorMessageBox.Show(WindowManager, "Failed to launch text editor",
-                    "An error occurred when trying to open the map file with the text editor." + Environment.NewLine + Environment.NewLine +
-                    "Received error was: " + ex.Message, Windows.MessageBoxButtons.OK);
+
+                EditorMessageBox.Show(WindowManager,
+                    Translate(this, "FailedToLaunchTextEditorTitle", "Failed to launch text editor"),
+                    string.Format(Translate(this, "FailedToLaunchTextEditorDescription", "An error occurred when trying to open the map file with the text editor." + Environment.NewLine + Environment.NewLine +
+                    "Received error was: {0}"), ex.Message), Windows.MessageBoxButtons.OK);
             }
         }
 
@@ -391,7 +395,7 @@ namespace TSMapEditor.UI.TopBar
             {
                 EditorMessageBox.Show(WindowManager, "Houses Required",
                     "The map has no houses set up. Houses need to be configured before base nodes can be added." + Environment.NewLine + Environment.NewLine +
-                    "You can configure Houses from Scripting -> Houses.", TSMapEditor.UI.Windows.MessageBoxButtons.OK);
+                    "You can configure Houses from Scripting -> Houses.", Windows.MessageBoxButtons.OK);
 
                 return;
             }

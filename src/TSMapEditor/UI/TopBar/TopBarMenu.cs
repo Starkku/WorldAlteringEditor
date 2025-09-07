@@ -236,13 +236,13 @@ namespace TSMapEditor.UI.TopBar
 
             var scriptingContextMenu = new EditorContextMenu(WindowManager);
             scriptingContextMenu.Name = nameof(scriptingContextMenu);
-            scriptingContextMenu.AddItem("Houses", () => windowController.HousesWindow.Open(), null, null, null);
-            scriptingContextMenu.AddItem("Triggers", () => windowController.TriggersWindow.Open(), null, null, null);
-            scriptingContextMenu.AddItem("TaskForces", () => windowController.TaskForcesWindow.Open(), null, null, null);
-            scriptingContextMenu.AddItem("Scripts", () => windowController.ScriptsWindow.Open(), null, null, null);
-            scriptingContextMenu.AddItem("TeamTypes", () => windowController.TeamTypesWindow.Open(), null, null, null);
-            scriptingContextMenu.AddItem("Local Variables", () => windowController.LocalVariablesWindow.Open(), null, null, null);
-            scriptingContextMenu.AddItem("AITriggers", () => windowController.AITriggersWindow.Open(), null, null, null, null);
+            scriptingContextMenu.AddItem(Translate(this, "Scipting.Houses", "Houses"), () => windowController.HousesWindow.Open(), null, null, null);
+            scriptingContextMenu.AddItem(Translate(this, "Scripting.Triggers", "Triggers"), () => windowController.TriggersWindow.Open(), null, null, null);
+            scriptingContextMenu.AddItem(Translate(this, "Scripting.TaskForces", "TaskForces"), () => windowController.TaskForcesWindow.Open(), null, null, null);
+            scriptingContextMenu.AddItem(Translate(this, "Scripting.Scripts", "Scripts"), () => windowController.ScriptsWindow.Open(), null, null, null);
+            scriptingContextMenu.AddItem(Translate(this, "Scripting.TeamTypes", "TeamTypes"), () => windowController.TeamTypesWindow.Open(), null, null, null);
+            scriptingContextMenu.AddItem(Translate(this, "Scripting.LocalVariables", "Local Variables"), () => windowController.LocalVariablesWindow.Open(), null, null, null);
+            scriptingContextMenu.AddItem(Translate(this, "Scripting.AITriggers", "AITriggers"), () => windowController.AITriggersWindow.Open(), null, null, null, null);
 
             var scriptingButton = new MenuButton(WindowManager, scriptingContextMenu);
             scriptingButton.Name = nameof(scriptingButton);

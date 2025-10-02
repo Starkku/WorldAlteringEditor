@@ -254,6 +254,7 @@ namespace TSMapEditor.UI.Windows
             map.HouseTypes.Add(clonedHouseType);
 
             House clonedHouse = (House)editedHouse.Clone();
+            clonedHouse.ID = map.Houses.Count;
             clonedHouse.HouseType = clonedHouseType;
             clonedHouse.ININame = editedHouse.ININame + cloneININame;
             clonedHouse.Allies.ForEach(ally =>

@@ -402,7 +402,7 @@ namespace TSMapEditor.Rendering
                 var task11 = Task.Factory.StartNew(() => ReadInfantryTextures(rules.InfantryTypes));
                 var task12 = Task.Factory.StartNew(() => ReadOverlayTextures(rules.OverlayTypes));
                 var task13 = Task.Factory.StartNew(() => ReadSmudgeTextures(rules.SmudgeTypes));
-                var task14 = Task.Factory.StartNew(() => ReadAnimTextures(rules.AnimTypes));
+                var task14 = Task.Factory.StartNew(() => ReadAnimTextures(rules.AnimTypes, rules.BuildingTypes));
                 var task15 = Task.Factory.StartNew(() => ReadAlphaImages(rules));
                 Task.WaitAll(task1, task2, task3, task4, task5, task6, task7, task8, task9, task10, task11, task12, task13, task14, task15);
             }
@@ -421,7 +421,7 @@ namespace TSMapEditor.Rendering
                 ReadInfantryTextures(rules.InfantryTypes);
                 ReadOverlayTextures(rules.OverlayTypes);
                 ReadSmudgeTextures(rules.SmudgeTypes);
-                ReadAnimTextures(rules.AnimTypes);
+                ReadAnimTextures(rules.AnimTypes, rules.BuildingTypes);
                 ReadAlphaImages(rules);
             }
 
@@ -443,21 +443,9 @@ namespace TSMapEditor.Rendering
             // Create texture color buffer and copy the data from the working buffer to the color buffer.
             byte[] finalColorBuffer = new byte[width * height];
 
-            unsafe
+            for (int ty = 0; ty < height; ty++)
             {
-                fixed (byte* colorBufferPtr = finalColorBuffer)
-                {
-                    fixed (byte* paramBufferPtr = buffer)
-                    {
-                        for (int ty = 0; ty < height; ty++)
-                        {
-                            for (int tx = 0; tx < width; tx++)
-                            {
-                                colorBufferPtr[ty * width + tx] = paramBufferPtr[ty * RenderingConstants.MaximumDX11TextureSize + tx];
-                            }
-                        }
-                    }
-                }
+                Buffer.BlockCopy(buffer, ty * RenderingConstants.MaximumDX11TextureSize, finalColorBuffer, ty * width, width);
             }
 
             // Create Texture2D instance and write data from the color buffer to it.
@@ -1020,7 +1008,7 @@ namespace TSMapEditor.Rendering
             Logger.Log("Finished loading building barrels' voxel models.");
         }
 
-        public void ReadAnimTextures(List<AnimType> animTypes)
+        public void ReadAnimTextures(List<AnimType> animTypes, List<BuildingType> buildingTypes)
         {
             Logger.Log("Loading animation textures.");
 
@@ -1031,6 +1019,10 @@ namespace TSMapEditor.Rendering
             for (int i = 0; i < animTypes.Count; i++)
             {
                 var animType = animTypes[i];
+
+                // Is this animation actually used as a building animation? If not, we can skip loading it.
+                if (!buildingTypes.Exists(btype => btype.ArtConfig.TurretAnim == animType || Array.Exists(btype.ArtConfig.Anims, atype => atype == animType) || Array.Exists(btype.ArtConfig.PowerUpAnims, atype => atype == animType)))
+                    continue;
 
                 string shpFileName = string.IsNullOrWhiteSpace(animType.ArtConfig.Image) ? animType.ININame : animType.ArtConfig.Image;
                 string loadedShpName = "";

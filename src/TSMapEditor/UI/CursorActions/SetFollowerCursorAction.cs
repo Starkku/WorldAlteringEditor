@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Rampastring.XNAUI;
 using Rampastring.XNAUI.Input;
+using System;
 using TSMapEditor.GameMath;
 using TSMapEditor.Models;
 using TSMapEditor.Mutations.Classes;
@@ -29,7 +30,7 @@ namespace TSMapEditor.UI.CursorActions
             Point2D cellTopLeftPoint = CellMath.CellTopLeftPointFromCellCoords_3D(cellCoords, CursorActionTarget.Map) - cameraTopLeftPoint;
             cellTopLeftPoint = cellTopLeftPoint.ScaleBy(CursorActionTarget.Camera.ZoomLevel);
 
-            const string text = "Left-click on a unit to set it as Follower\r\n\r\nPress ESC to clear follower";
+            string text = Translate("Text", "Left-click on a unit to set it as Follower" + Environment.NewLine + Environment.NewLine + "Press ESC to clear follower");
             var textDimensions = Renderer.GetTextDimensions(text, Constants.UIBoldFont);
             int x = cellTopLeftPoint.X + (int)(Constants.CellSizeX - textDimensions.X) / 2;
             int y = cellTopLeftPoint.Y + (int)(Constants.CellSizeY - textDimensions.Y) / 2;

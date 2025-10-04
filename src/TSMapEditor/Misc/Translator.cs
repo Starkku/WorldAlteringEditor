@@ -136,8 +136,19 @@ namespace TSMapEditor.Misc
 
         public void DumpMissingValues()
         {
-            string path = Path.Combine(Environment.CurrentDirectory, "MissingTranslationValues.ini");
-            File.Delete(path);
+            if (MissingValues.Count <= 0)
+            {
+                Logger.Log("No missing translation values detected.");
+                return;
+            }
+
+            string path = Path.Combine(Environment.CurrentDirectory, Constants.UserDataFolder, "MissingTranslationValues.ini");
+
+            if (!Directory.Exists(Path.GetDirectoryName(path)))
+                Directory.CreateDirectory(Path.GetDirectoryName(path));
+            else
+                File.Delete(path);
+
             var iniFile = new IniFile(path);
 
             foreach (var kvp in MissingValues)

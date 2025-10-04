@@ -45,7 +45,7 @@ namespace TSMapEditor.UI.Windows
             // Init color dropdown options
             ddWaypointColor = FindChild<XNADropDown>(nameof(ddWaypointColor));
             ddWaypointColor.AddItem(Translate(this, "None", "None"));
-            Array.ForEach(Waypoint.SupportedColors, sc => ddWaypointColor.AddItem(sc.Name, sc.Value));
+            Array.ForEach(Waypoint.SupportedColors, sc => ddWaypointColor.AddItem(Translate("NamedColors." + sc.Name, sc.Name), sc.Value));
         }
 
         private void BtnPlace_LeftClick(object sender, EventArgs e)

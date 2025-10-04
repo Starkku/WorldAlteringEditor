@@ -55,7 +55,7 @@ namespace TSMapEditor.UI.Windows
             ddColor.AddItem(Translate(this, "None", "None"));
             Array.ForEach(Trigger.SupportedColors, sc =>
             {
-                ddColor.AddItem(sc.Name, sc.Value);
+                ddColor.AddItem(Translate("NamedColors." + sc.Name, sc.Name), sc.Value);
             });            
 
             btnApply.LeftClick += BtnApply_LeftClick;

@@ -70,7 +70,7 @@ namespace TSMapEditor.UI.Windows
             if (stagingINI == null)
                 throw new InvalidOperationException("Staging INI is null!");
 
-            string successMessage = Translate(this, "Success", "INI code successfully added to map.");
+            string successMessage = Translate(this, "CodeApplied.DefaultSuccessMessage", "INI code successfully added to map.");
             successMessage = stagingINI.GetStringValue(EditorSection, "Success", successMessage);
             successMessage = Renderer.FixText(successMessage, Constants.UIDefaultFont, Width).Text;
 
@@ -79,7 +79,7 @@ namespace TSMapEditor.UI.Windows
             IniFile.ConsolidateIniFiles(map.LoadedINI, stagingINI);
 
             EditorMessageBox.Show(WindowManager, 
-                Translate(this, "CodeApplied", "Code Applied"),
+                Translate(this, "CodeApplied.Title", "Code Applied"),
                 successMessage, 
                 MessageBoxButtons.OK);
         }
@@ -94,8 +94,8 @@ namespace TSMapEditor.UI.Windows
             {
                 Logger.Log("Map INI code directory not found!");
                 EditorMessageBox.Show(WindowManager, 
-                    Translate(this, "Error", "Error"),
-                    string.Format(Translate(this, "DirectoryNotFound", 
+                    Translate(this, "DirectoryNotFound.Title", "Error"),
+                    string.Format(Translate(this, "DirectoryNotFound.Description", 
                         "Map INI code directory not found!" + Environment.NewLine + Environment.NewLine + "Expected path: {0}"), directoryPath),
                     MessageBoxButtons.OK);
                 return;

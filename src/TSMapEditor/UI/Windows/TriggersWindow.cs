@@ -157,7 +157,7 @@ namespace TSMapEditor.UI.Windows
             ddTriggerColor.AddItem(Translate(this, "Color.None", "None"));
             Array.ForEach(Trigger.SupportedColors, sc =>
             {
-                ddTriggerColor.AddItem(sc.Name, sc.Value);
+                ddTriggerColor.AddItem(Translate("NamedColors." + sc.Name, sc.Name), sc.Value);
             });
 
             lbEvents = FindChild<EditorListBox>(nameof(lbEvents));

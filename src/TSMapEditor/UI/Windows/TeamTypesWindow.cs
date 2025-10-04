@@ -114,7 +114,7 @@ namespace TSMapEditor.UI.Windows
             ddTeamTypeColor.AddItem(Translate(this, "HouseColor", "House Color"));
             foreach (var supportedColor in TeamType.SupportedColors)
             {
-                ddTeamTypeColor.AddItem(supportedColor.Name, supportedColor.Value);
+                ddTeamTypeColor.AddItem(Translate("NamedColors." + supportedColor.Name, supportedColor.Name), supportedColor.Value);
             }
             ddTeamTypeColor.SelectedIndexChanged += DdTeamTypeColor_SelectedIndexChanged;
 

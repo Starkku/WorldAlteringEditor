@@ -102,7 +102,7 @@ namespace TSMapEditor.UI.Windows
             ddScriptColor.AddItem(Translate(this, "None", "None"));
             Array.ForEach(Script.SupportedColors, supportedColor =>
             {
-                ddScriptColor.AddItem(supportedColor.Name, supportedColor.Value);
+                ddScriptColor.AddItem(Translate("NamedColors." + supportedColor.Name, supportedColor.Name), supportedColor.Value);
             });
 
             tbFilter.TextChanged += TbFilter_TextChanged;

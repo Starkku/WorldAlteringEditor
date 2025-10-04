@@ -125,7 +125,7 @@ namespace TSMapEditor.Misc
             // Reference translations always return the supplied default string, but still log missing values.
             if (IsReference)
             {
-                if (defaultString != null && !MissingValues.ContainsKey(identifier))
+                if (defaultString != null && !UIStringTable.ContainsKey(identifier) && !MissingValues.ContainsKey(identifier))
                     MissingValues[identifier] = defaultString;
 
                 return defaultString;

@@ -1827,7 +1827,7 @@ namespace TSMapEditor.Models
             // Check for more than 127 tunnel tubes
             if (Tubes.Count > MaxTubes)
             {
-                issueList.Add(string.Format(Translate(this, "CheckForIssues.MaxTubes", 
+                issueList.Add(string.Format(Translate(this, "CheckForIssues.MaxTubesExceeded", 
                     "The map has more than {0} tunnel tubes. This might cause issues when units cross the tunnels."), MaxTubes));
             }
 
@@ -1842,7 +1842,7 @@ namespace TSMapEditor.Models
 
                 if (followedUnits.Contains(unit.FollowerUnit))
                 {
-                    issueList.Add(string.Format(Translate(this, "CheckForIssues.MultipleUnitsFollow", 
+                    issueList.Add(string.Format(Translate(this, "CheckForIssues.UnitFollowsMultipleUnits", 
                         "Multiple units are configured to make unit {0} at {1} to follow them! " + Environment.NewLine +
                             "This can cause strange behaviour in the game. {2} at {3} is one of the followed units."),
                             unit.FollowerUnit.UnitType.ININame, unit.FollowerUnit.Position, unit.UnitType.ININame, unit.Position));
@@ -1853,13 +1853,17 @@ namespace TSMapEditor.Models
                 }
 
                 if (followsId < -1)
-                    issueList.Add(string.Format(Translate(this, "CheckForIssues.NegativeFollowID", 
+                {
+                    issueList.Add(string.Format(Translate(this, "CheckForIssues.NegativeFollowerID",
                         "Unit {0} at {1} has a follower ID below -1. It is unknown how the game reacts to this."),
-                            unit.UnitType.ININame, 1));
+                        unit.UnitType.ININame, 1));
+                }
                 else if (followsId == i)
-                    issueList.Add(string.Format(Translate(this, "CheckForIssues.UnitFollowSelf", 
+                {
+                    issueList.Add(string.Format(Translate(this, "CheckForIssues.UnitFollowSelf",
                         "Unit {0} at {1} follows itself! This can cause the game to crash or freeze!"),
-                            unit.UnitType.ININame, unit.Position));
+                        unit.UnitType.ININame, unit.Position));
+                }
             }
 
             var reportedTeams = new List<TeamType>();

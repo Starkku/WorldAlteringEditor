@@ -373,7 +373,7 @@ namespace TSMapEditor.Initialization
                             if (string.IsNullOrWhiteSpace(upgradeBuildingType.PowersUpBuilding) || !upgradeBuildingType.PowersUpBuilding.Equals(buildingType.ININame, StringComparison.OrdinalIgnoreCase))
                             {
                                 AddMapLoadError(string.Format(Translate("MapLoader.ReadBuildings.UpgradeInvalid", 
-                                    "Building {0} has an upgrade {1}, but \r\n{2} " +
+                                    "Building {0} has an upgrade {1}, but" + Environment.NewLine + "{2} " +
                                     "does not specify {3} in its PowersUpBuilding= key. Skipping adding upgrade to map."),
                                     buildingTypeId, upgradeBuildingType.ININame, upgradeBuildingType.ININame, buildingTypeId));
                                 continue;
@@ -918,7 +918,7 @@ namespace TSMapEditor.Initialization
                     {
                         string valueToSet = "A";
                         AddMapLoadError(string.Format(Translate("MapLoader.TriggerFix.InvalidTriggerAction",
-                            "Trigger '{0}' had action \"{1}\" with invalid value for uncustomizable parameter #{2}: \"{3}\". " +
+                            "Trigger \"{0}\" had action \"{1}\" with invalid value for uncustomizable parameter #{2}: \"{3}\". " +
                                 "It has been automatically corrected to \"{4}\"."),
                                 trigger.Name, triggerActionType.Name, lastParamIndex, action.Parameters[lastParamIndex], valueToSet));
                         action.Parameters[lastParamIndex] = valueToSet;
@@ -1066,7 +1066,7 @@ namespace TSMapEditor.Initialization
                 {
                     AddMapLoadError(string.Format(Translate("MapLoader.ReadAITriggerTypes.ConditionComparatorParseError", 
                         "Failed to parse comparator of AITriggerType {0} ({1})! Skipping loading of the AI trigger."),
-                            kvp.Key, aiTriggerType.Name));
+                        kvp.Key, aiTriggerType.Name));
                     continue;
                 }
                 aiTriggerType.Comparator = comparator.Value;
@@ -1087,7 +1087,7 @@ namespace TSMapEditor.Initialization
                     {
                         AddMapLoadError(string.Format(Translate("MapLoader.ReadAITriggerTypes.SecondaryTeamNotFound",
                             "AITriggerType {0} has a non-existent secondary team type \"{1}\""),
-                                kvp.Key, parts[14]));
+                            kvp.Key, parts[14]));
                     }
                 }
 

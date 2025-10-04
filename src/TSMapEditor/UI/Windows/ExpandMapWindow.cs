@@ -46,7 +46,7 @@ namespace TSMapEditor.UI.Windows
                 EditorMessageBox.Show(WindowManager, 
                     Translate(this, "InvalidWidth.Title", "Invalid width"),
                     string.Format(Translate(this, "InvalidWidth.Description", 
-                    "The given values would make the map's width {0}.\r\nIt should be between 1 and {1}."),
+                    "The given values would make the map's width {0}." + Environment.NewLine + "It should be between 1 and {1}."),
                         newWidth, Constants.MaxMapWidth),
                     MessageBoxButtons.OK);
 
@@ -59,7 +59,7 @@ namespace TSMapEditor.UI.Windows
                 EditorMessageBox.Show(WindowManager, 
                     Translate(this, "InvalidHeight.Title", "Invalid height"),
                     string.Format(Translate(this, "InvalidHeight.Description",
-                        "The given values would make the map's height {0}.\r\nIt should be between 0 and {1}."),
+                        "The given values would make the map's height {0}." + Environment.NewLine + "It should be between 0 and {1}."),
                             newHeight, Constants.MaxMapHeight),
                     MessageBoxButtons.OK);
 

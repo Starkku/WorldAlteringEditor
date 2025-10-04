@@ -408,10 +408,10 @@ namespace TSMapEditor.UI
 
                 EditorMessageBox.Show(WindowManager, 
                     Translate(this, "IssuesFound.Title", "Issues Found"),
-                    Translate(this, "IssuesFound.Description", 
+                    string.Format(Translate(this, "IssuesFound.Description", 
                         "The map has been saved, but one or more issues have been found in the map. Please consider resolving them." +
                         newline + newline +
-                        issuesString),
+                        "{0}"), issuesString),
                     MessageBoxButtons.OK);
             }
         }

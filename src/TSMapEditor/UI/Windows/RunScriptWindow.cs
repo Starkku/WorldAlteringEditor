@@ -79,7 +79,7 @@ namespace TSMapEditor.UI.Windows
                 confirmation = Renderer.FixText(confirmation, Constants.UIDefaultFont, Width).Text;
 
                 var messageBox = EditorMessageBox.Show(WindowManager, 
-                    Translate(this, "Confirm", "Are you sure?"),
+                    Translate(this, "ConfirmationTitle", "Are you sure?"),
                     confirmation, MessageBoxButtons.YesNo);
                 messageBox.YesClickedAction = (_) => ApplyCode();
 

@@ -338,16 +338,16 @@ namespace TSMapEditor.UI.Windows
             if (stringBuilder.Length == 0)
             {
                 EditorMessageBox.Show(WindowManager, 
-                    Translate(this, "NoRefs.Title", "No references found"),
-                    string.Format(Translate(this, "NoRefs.Description", "The selected TeamType \"{0}\" ({1}) is not used by any Triggers or AITriggers."),
+                    Translate(this, "NoReferences.Title", "No references found"),
+                    string.Format(Translate(this, "NoReferences.Description", "The selected TeamType \"{0}\" ({1}) is not used by any Triggers or AITriggers."),
                         editedTeamType.Name, editedTeamType.ININame),
                     MessageBoxButtons.OK);
             }
             else
             {
                 EditorMessageBox.Show(WindowManager, 
-                    Translate(this, "TeamTypeRefs.Title", "TeamType References"),
-                    string.Format(Translate(this, "TeamTypeRefs.Description", "The selected TeamType \"{0}\" ({1}) is used by the following scripting elements:" + Environment.NewLine + Environment.NewLine + "{2}"),
+                    Translate(this, "TeamTypeReferences.Title", "TeamType References"),
+                    string.Format(Translate(this, "TeamTypeReferences.Description", "The selected TeamType \"{0}\" ({1}) is used by the following scripting elements:" + Environment.NewLine + Environment.NewLine + "{2}"),
                         editedTeamType.Name, editedTeamType.ININame, stringBuilder.ToString()),
                     MessageBoxButtons.OK);
             }
@@ -378,8 +378,8 @@ namespace TSMapEditor.UI.Windows
             else
             {
                 var messageBox = EditorMessageBox.Show(WindowManager,
-                    Translate(this, "DeleteConfirm.Title", "Confirm"),
-                    string.Format(Translate(this, "DeleteConfirm.Description", "Are you sure you wish to delete '{0}'?" + Environment.NewLine + Environment.NewLine +
+                    Translate(this, "DeletionConfirmation.Title", "Confirm"),
+                    string.Format(Translate(this, "DeletionConfirmation.Description", "Are you sure you wish to delete '{0}'?" + Environment.NewLine + Environment.NewLine +
                         "You'll need to manually fix any Triggers and AITriggers using the TeamType." + Environment.NewLine + Environment.NewLine +
                         "(You can hold Shift to skip this confirmation dialog.)"),
                         editedTeamType.Name),

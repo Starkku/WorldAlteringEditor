@@ -113,7 +113,7 @@ namespace TSMapEditor.UI.Windows
             {
                 EditorMessageBox.Show(WindowManager, 
                     Translate(this, "ValidateMissingTriggerName.Title", "Missing Trigger Name"),
-                    Translate(this, "ValidateMissingTriggerName.Description", "Please enter a name for the triggers"),
+                    Translate(this, "ValidateMissingTriggerName.Description", "Please enter a name for the triggers."),
                     MessageBoxButtons.OK);
                 return false;
             }
@@ -122,7 +122,7 @@ namespace TSMapEditor.UI.Windows
             {
                 EditorMessageBox.Show(WindowManager, 
                     Translate(this, "InvalidTriggersNumber.Title", "Invalid Number of Triggers"),
-                    Translate(this, "InvalidTriggersNumber.Description", "Please enter a value of 2 or more"),
+                    Translate(this, "InvalidTriggersNumber.Description", "Please enter a value of 2 or more."),
                     MessageBoxButtons.OK);
                 return false;
             }
@@ -131,7 +131,7 @@ namespace TSMapEditor.UI.Windows
             {
                 EditorMessageBox.Show(WindowManager, 
                     Translate(this, "InvalidElapsedTime.Title", "Invalid Elapsed Time"),
-                    Translate(this, "InvalidElapsedTime.Description", "Please enter a value of 0 or more"),
+                    Translate(this, "InvalidElapsedTime.Description", "Please enter a value of 0 or more."),
                     MessageBoxButtons.OK);
                 return false;
             }
@@ -140,7 +140,7 @@ namespace TSMapEditor.UI.Windows
             {
                 EditorMessageBox.Show(WindowManager,
                     Translate(this, "InvalidRandomDelay.Title", "Invalid Random Delay"),
-                    Translate(this, "InvalidRandomDelay.Description", "Please enter a value of 10 or more"),
+                    Translate(this, "InvalidRandomDelay.Description", "Please enter a value of 10 or more."),
                     MessageBoxButtons.OK);
                 return false;
             }

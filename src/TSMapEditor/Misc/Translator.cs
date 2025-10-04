@@ -15,7 +15,7 @@ namespace TSMapEditor.Misc
 
         private static Dictionary<string, string> ObjectNames = new Dictionary<string, string>();
 
-        public Translation(string internalName, string directoryName, string uiName, int index)
+        public Translation(string internalName, string directoryName, string uiName, int index, bool isReference)
         {
             if (string.IsNullOrWhiteSpace(internalName))
                 throw new ArgumentException("Translation internal name cannot be empty.");
@@ -27,6 +27,7 @@ namespace TSMapEditor.Misc
             DirectoryName = directoryName;
             UIName = uiName;
             Index = index;
+            IsReference = isReference;
         }
 
         public Translation(IniSection definitionSection, int index)
@@ -40,9 +41,11 @@ namespace TSMapEditor.Misc
             if (string.IsNullOrWhiteSpace(DirectoryName))
                 throw new InvalidOperationException("DirectoryName cannot be empty for a translation. Translation section: " + definitionSection.SectionName);
 
-            UIName = definitionSection.GetStringValue("UIName", null);
+            UIName = definitionSection.GetStringValue(nameof(UIName), null);
             if (string.IsNullOrWhiteSpace(UIName))
                 throw new InvalidOperationException("UIName cannot be empty for a translation. Translation section: " + definitionSection.SectionName);
+
+            IsReference = definitionSection.GetBooleanValue(nameof(IsReference), false);
 
             if (definitionSection.KeyExists(nameof(IniFileEncoding)))
             {
@@ -61,6 +64,8 @@ namespace TSMapEditor.Misc
         public string UIName { get; }
 
         public int Index { get; }
+
+        public bool IsReference { get; }
 
         private string ProcessEscapes(string str)
         {
@@ -117,6 +122,15 @@ namespace TSMapEditor.Misc
 
         public string Translate(string identifier, string defaultString)
         {
+            // Reference translations always return the supplied default string, but still log missing values.
+            if (IsReference)
+            {
+                if (defaultString != null && !MissingValues.ContainsKey(identifier))
+                    MissingValues[identifier] = defaultString;
+
+                return defaultString;
+            }
+
             if (UIStringTable.TryGetValue(identifier, out var result))
                 return result;
 
@@ -235,7 +249,7 @@ namespace TSMapEditor.Misc
             }
             else
             {
-                var englishTranslation = new Translation("English", "en", "English", Translations.Count);
+                var englishTranslation = new Translation("English", "en", "English", Translations.Count, true);
                 AddTranslation(englishTranslation);
             }
         }

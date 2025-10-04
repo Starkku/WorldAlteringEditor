@@ -284,8 +284,8 @@ namespace TSMapEditor.UI.Windows
             else
             {
                 var messageBox = EditorMessageBox.Show(WindowManager,
-                    Translate(this, "DeleteConfirmTitle", "Confirm"),
-                    string.Format(Translate(this, "DeleteConfirmText", "Are you sure you wish to delete '{0}'?"+ Environment.NewLine + Environment.NewLine +
+                    Translate(this, "DeletionConfirmation.Title", "Confirm"),
+                    string.Format(Translate(this, "DeletionConfirmation.Description", "Are you sure you wish to delete '{0}'?"+ Environment.NewLine + Environment.NewLine +
                         "You'll need to manually fix any TeamTypes using the TaskForce."+ Environment.NewLine + Environment.NewLine +
                         "(You can hold Shift to skip this confirmation dialog.)"),
                         editedTaskForce.Name),
@@ -348,8 +348,7 @@ namespace TSMapEditor.UI.Windows
 
                 EditorMessageBox.Show(WindowManager, 
                     Translate(this, "ReferencesFound.Title", "TaskForce References"),
-                    string.Format(Translate(this, "ReferencesFound.Description", "The selected TaskForce \"{0}\" ({1}) is used by the following TeamTypes:" + Environment.NewLine + Environment.NewLine +
-                        "{2}"),
+                    string.Format(Translate(this, "ReferencesFound.Description", "{The selected TaskForce \"{0}\" ({1}) is used by the following TeamTypes:}" + Environment.NewLine + Environment.NewLine + "{2}"),
                         editedTaskForce.Name, editedTaskForce.ININame, stringBuilder.ToString()), 
                     MessageBoxButtons.OK);
             }

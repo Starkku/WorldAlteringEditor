@@ -157,14 +157,14 @@ namespace TSMapEditor.UI.Windows
             {
                 EditorMessageBox.Show(WindowManager,
                     Translate(this, "NoUsagesFound.Title", "No usages found"),
-                    string.Format(Translate(this, "NoUsagesMessage.Description", "No triggers or scripts make use of the selected local variable '{0}'"), editedLocalVariable.Name),
+                    string.Format(Translate(this, "NoUsagesFound.Description", "No triggers or scripts make use of the selected local variable '{0}'"), editedLocalVariable.Name),
                     MessageBoxButtons.OK);
             }
             else
             {
                 EditorMessageBox.Show(WindowManager,
                     Translate(this, "LocalVariableUsages.Title", "Local Variable Usages"),
-                    string.Format(Translate(this, "LocalVariablesUsages.Description", "The following usages were found for the selected local variable '{0}':"), editedLocalVariable.Name) + Environment.NewLine + Environment.NewLine +
+                    string.Format(Translate(this, "LocalVariableUsages.Description", "The following usages were found for the selected local variable '{0}':"), editedLocalVariable.Name) + Environment.NewLine + Environment.NewLine +
                     string.Join(Environment.NewLine, list.Select(e => "- " + e)),
                     MessageBoxButtons.OK);
             }

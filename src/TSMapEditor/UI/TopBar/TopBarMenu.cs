@@ -299,8 +299,8 @@ namespace TSMapEditor.UI.TopBar
                 {
                     Logger.Log("Failed to save the map file. Returned error message: " + ex.Message);
 
-                    EditorMessageBox.Show(WindowManager, Translate(this, "MapSaveFailedTitle", "Failed to save map"),
-                        string.Format(Translate(this, "MapSaveFailedDescription",
+                    EditorMessageBox.Show(WindowManager, Translate(this, "MapSaveFailed.Title", "Failed to save map"),
+                        string.Format(Translate(this, "MapSaveFailed.Description",
                             "Failed to write the map file. Please make sure that WAE has write access to the path." + Environment.NewLine + Environment.NewLine +
                             "A common source of this error is trying to save the map to Program Files or another" + Environment.NewLine +
                             "write-protected directory without running WAE with administrative rights." + Environment.NewLine + Environment.NewLine +
@@ -316,8 +316,8 @@ namespace TSMapEditor.UI.TopBar
 
         private void WriteMapPreviewConfirmation()
         {
-            var messageBox = EditorMessageBox.Show(WindowManager, Translate(this, "GenerateMapPreviewConfirmationTitle", "Confirmation"),
-                Translate(this, "GenerateMapPreviewConfirmationDescription", "This will write the current minimap as the map preview to the map file." + Environment.NewLine + Environment.NewLine +
+            var messageBox = EditorMessageBox.Show(WindowManager, Translate(this, "GenerateMapPreviewConfirmation.Title", "Confirmation"),
+                Translate(this, "GenerateMapPreviewConfirmation.Description", "This will write the current minimap as the map preview to the map file." + Environment.NewLine + Environment.NewLine +
                 "This provides the map with a preview if it is used as a custom map" + Environment.NewLine + 
                 "in the CnCNet Client or in-game, but is not necessary if the map will" + Environment.NewLine +
                 "have an external preview. It will also significantly increase the size" + Environment.NewLine +

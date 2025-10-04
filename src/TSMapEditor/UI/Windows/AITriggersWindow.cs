@@ -111,9 +111,9 @@ namespace TSMapEditor.UI.Windows
                 "setting for each AI trigger to Medium and Easy, respectively." + Environment.NewLine +
                 "This will set the current AI trigger's difficulty to Hard only." + Environment.NewLine + Environment.NewLine +
                 "In case the AI trigger references a Primary or Secondary TeamTypes," + Environment.NewLine +
-                "those TeamTypes and their TaskForoces would be duplicated for easier difficulties." + Environment.NewLine +
-                "If those duplicates already exist, this action will set the AI triggers to use those " + Environment.NewLine +
-                "TeamTypes instead." + Environment.NewLine + Environment.NewLine +
+                "those TeamTypes and their TaskForces will be duplicated for easier" + Environment.NewLine +
+                "difficulties. If those duplicates already exist, this action will set" + Environment.NewLine +
+                "the AI triggers to use those TeamTypes instead." + Environment.NewLine + Environment.NewLine +
                 "The script assumes that this AI Trigger has the words 'H' or 'Hard'" + Environment.NewLine +
                 "in their name and in their respective TeamTypes and TaskForces." + Environment.NewLine + Environment.NewLine +
                 "No un-do is available. Do you want to continue?"),

@@ -477,7 +477,7 @@ namespace TSMapEditor.UI.Windows
             var tag = map.Tags.Find(t => t.Trigger == editedTrigger);
             if (tag == null)
             {
-                stringBuilder.Append(string.Format(Translate(this, "NoRefs", "The selected trigger {0} has no associated tag. As such, it is not attached to any objects."), editedTrigger.Name));
+                stringBuilder.Append(string.Format(Translate(this, "NoAssociatedTag", "The selected trigger {0} has no associated tag. As such, it is not attached to any objects."), editedTrigger.Name));
             }
             else
             {
@@ -489,7 +489,7 @@ namespace TSMapEditor.UI.Windows
 
                 if (objectList.Count > 0)
                 {
-                    stringBuilder.Append(string.Format(Translate(this, "ObjectRefs", "The selected trigger '{0}' is linked to the following objects:\r\n"), editedTrigger.Name));
+                    stringBuilder.Append(string.Format(Translate(this, "ObjectReferences", "The selected trigger '{0}' is linked to the following objects:\r\n"), editedTrigger.Name));
 
                     objectList.ForEach(techno =>
                     {
@@ -520,7 +520,7 @@ namespace TSMapEditor.UI.Windows
                 {
                     foreach (var teamType in teamTypes)
                     {
-                        stringBuilder.Append(string.Format(Translate(this, "TeamTypeRefs", "The trigger is linked to TeamType '{0}' ({1})."), teamType.Name, teamType.ININame));
+                        stringBuilder.Append(string.Format(Translate(this, "TeamTypeReferences", "The trigger is linked to TeamType '{0}' ({1})."), teamType.Name, teamType.ININame));
                         stringBuilder.Append(Environment.NewLine);
                     }
                 }
@@ -565,8 +565,8 @@ namespace TSMapEditor.UI.Windows
             if (stringBuilder.Length == 0)
             {
                 EditorMessageBox.Show(WindowManager, 
-                    Translate(this, "LinkedObjectsTitle", "Linked Objects"),
-                    string.Format(Translate(this, "NotLinked", "The selected trigger '{0}' is not linked to any objects, CellTags or other triggers."), editedTrigger.Name),
+                    Translate(this, "LinkedObjects.Title", "Linked Objects"),
+                    string.Format(Translate(this, "NoLinkedObjects.Description", "The selected trigger '{0}' is not linked to any objects, CellTags or other triggers."), editedTrigger.Name),
                     MessageBoxButtons.OK);
             }
             else
@@ -574,7 +574,7 @@ namespace TSMapEditor.UI.Windows
                 if (stringBuilder[0] == Environment.NewLine[0])
                     stringBuilder.Remove(0, Environment.NewLine.Length);
 
-                EditorMessageBox.Show(WindowManager, Translate(this, "LinkedObjectsTitle", "Linked Objects"), stringBuilder.ToString(), MessageBoxButtons.OK);
+                EditorMessageBox.Show(WindowManager, Translate(this, "LinkedObjects.Title", "Linked Objects"), stringBuilder.ToString(), MessageBoxButtons.OK);
             }
 
             return;
@@ -606,7 +606,7 @@ namespace TSMapEditor.UI.Windows
             if (!map.EditorConfig.TriggerActionTypes.TryGetValue(TSDisableSpeechActionIndex, out TriggerActionType disableSpeechTriggerActionType))
             {
                 EditorMessageBox.Show(WindowManager, 
-                    Translate(this, "ActionTypeNotFoundTitle", "Trigger action type not found"), 
+                    Translate(this, "ActionTypeNotFound.Title", "Trigger action type not found"), 
                     string.Format(Translate(this, "DisableSpeechNotFound", "Could not find trigger action type for \"Disable Speech\" {0}"), TSDisableSpeechActionIndex), 
                     MessageBoxButtons.OK);
                 return;
@@ -615,7 +615,7 @@ namespace TSMapEditor.UI.Windows
             if (!map.EditorConfig.TriggerActionTypes.TryGetValue(TSEnableSpeechActionIndex, out TriggerActionType enableSpeechTriggerActionType))
             {
                 EditorMessageBox.Show(WindowManager, 
-                    Translate(this, "ActionTypeNotFoundTitle", "Trigger action type not found"), 
+                    Translate(this, "ActionTypeNotFound.Title", "Trigger action type not found"), 
                     string.Format(Translate(this, "EnableSpeechNotFound", "Could not find trigger action type for \"Enable Speech\" {0}"), TSEnableSpeechActionIndex), 
                     MessageBoxButtons.OK);
                 return;
@@ -632,8 +632,8 @@ namespace TSMapEditor.UI.Windows
         private void RegenerateIDs()
         {
             var messageBox = EditorMessageBox.Show(WindowManager, 
-                Translate(this, "RegenerateIDsTitle", "Are you sure?"),
-                Translate(this, "RegenerateIDsText", 
+                Translate(this, "RegenerateIDs.Title", "Are you sure?"),
+                Translate(this, "RegenerateIDs.Description", 
                     "This will re-generate the internal IDs (01000000, 01000001 etc.) for ALL* of your map's script elements" + Environment.NewLine +
                     "that start their ID with 0100 (all editor-generated script elements do)." + Environment.NewLine + Environment.NewLine +
                     "It might make the list more sensible in case there are deleted triggers. However, this feature is" + Environment.NewLine +
@@ -670,8 +670,8 @@ namespace TSMapEditor.UI.Windows
                 return;
 
             var messageBox = EditorMessageBox.Show(WindowManager,
-                Translate(this, "CloneForEasierDiffsNoDeps.Title", "Are you sure?"),
-                Translate(this, "CloneForEasierDiffsNoDeps.Description",
+                Translate(this, "CloneForEasierDiffsNoDependencies.Title", "Are you sure?"),
+                Translate(this, "CloneForEasierDiffsNoDependencies.Description",
                     "Cloning this trigger for easier difficulties will create duplicate instances" + Environment.NewLine +
                     "of this trigger for Medium and Easy difficulties, replacing Hard-mode globals" + Environment.NewLine +
                     "with respective globals of easier difficulties." + Environment.NewLine + Environment.NewLine +

@@ -11,12 +11,12 @@ using System.Text;
 using System.Threading;
 #if WINDOWS
 using System.Windows.Forms;
+using TSMapEditor.UI.IME;
 #endif
 using TSMapEditor.CCEngine;
 using TSMapEditor.Misc;
 using TSMapEditor.Settings;
 using TSMapEditor.UI;
-using TSMapEditor.UI.IME;
 
 #if !DEBUG
 using System.Windows.Forms;
@@ -195,8 +195,10 @@ namespace TSMapEditor.Rendering
                 PanelBorderColor = new Color(196, 196, 196)
             };
 
+#if WINDOWS
             IMEHandler imeHandler = IMEHandler.Create(this);
             windowManager.IMEHandler = imeHandler;
+#endif
 
             InitMainMenu();
         }

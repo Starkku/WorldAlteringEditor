@@ -1,3 +1,4 @@
+#if WINDOWS
 #nullable enable
 using System;
 using System.Collections.Concurrent;
@@ -209,3 +210,4 @@ public abstract class IMEHandler : IIMEHandler
 
     void IIMEHandler.OnTextChanged(XNATextBox sender) { }
 }
+#endif

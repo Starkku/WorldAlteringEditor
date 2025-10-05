@@ -1,4 +1,5 @@
-﻿#nullable enable
+﻿#if WINDOWS
+#nullable enable
 using System;
 
 using ImeSharp;
@@ -54,3 +55,4 @@ internal class WinFormsIMEHandler : IMEHandler
     public override void SetTextInputRectangle(Rectangle rect)
         => InputMethod.SetTextInputRect(rect.X, rect.Y, rect.Width, rect.Height);
 }
+#endif

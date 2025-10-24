@@ -226,12 +226,17 @@ namespace TSMapEditor.UI.Sidebar
                 SelectedNode = foundNode;
 
                 // Scroll the view to the found item
-                int totalHeight = GetTotalContentHeight();
-                if (accumulatedHeight + Height > totalHeight)
-                    accumulatedHeight = totalHeight - Height;
+                int contentHeight = GetTotalContentHeight();
+                if (accumulatedHeight + LineHeight + MARGIN > ViewTop + Height)
+                {
+                    ViewTop += accumulatedHeight + LineHeight + MARGIN - (ViewTop + Height);
+                }
+                else if (accumulatedHeight < ViewTop)
+                {
+                    ViewTop = accumulatedHeight - LineHeight;
+                }
 
                 RefreshScrollbar();
-                ViewTop = accumulatedHeight;
             }
         }
 

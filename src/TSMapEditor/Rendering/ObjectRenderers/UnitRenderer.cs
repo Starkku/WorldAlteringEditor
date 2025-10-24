@@ -53,15 +53,11 @@ namespace TSMapEditor.Rendering.ObjectRenderers
             float max = Math.Max(depthTop, depthBottom);
 
             // The unit's body is always drawn first, and at that point cachedDepth is -1f.
-            // For the body, use the depth values computed here, otherwise use the largest depth recorded so far.
-            if (cachedDepth.TopLeft < 0f)
+            // For the shadow and body, use the depth values computed here, otherwise use the largest depth recorded so far.
+            if (cachedDepth.TopLeft < max)
             {
                 cachedDepth = new DepthRectangle(max);
                 return new DepthRectangle(depthTop, depthBottom);
-            }
-            else if (cachedDepth.TopLeft < max)
-            {
-                cachedDepth = new DepthRectangle(max);
             }
 
             return cachedDepth;

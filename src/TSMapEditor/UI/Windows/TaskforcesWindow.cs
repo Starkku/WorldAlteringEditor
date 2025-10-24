@@ -348,7 +348,7 @@ namespace TSMapEditor.UI.Windows
 
                 EditorMessageBox.Show(WindowManager, 
                     Translate(this, "ReferencesFound.Title", "TaskForce References"),
-                    string.Format(Translate(this, "ReferencesFound.Description", "{The selected TaskForce \"{0}\" ({1}) is used by the following TeamTypes:}" + Environment.NewLine + Environment.NewLine + "{2}"),
+                    string.Format(Translate(this, "ReferencesFound.Description", "The selected TaskForce \"{0}\" ({1}) is used by the following TeamTypes:" + Environment.NewLine + Environment.NewLine + "{2}"),
                         editedTaskForce.Name, editedTaskForce.ININame, stringBuilder.ToString()), 
                     MessageBoxButtons.OK);
             }

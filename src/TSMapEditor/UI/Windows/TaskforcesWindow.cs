@@ -55,8 +55,8 @@ namespace TSMapEditor.UI.Windows
                 if (value != _taskForceSortMode)
                 {
                     _taskForceSortMode = value;
-                    ListTaskForces();
                 }
+                ListTaskForces();
             }
         }
 

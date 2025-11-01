@@ -83,9 +83,9 @@ namespace TSMapEditor.UI.Windows
             {
                 if (value != _teamTypeSortMode)
                 {
-                    _teamTypeSortMode = value;
-                    ListTeamTypes();
+                    _teamTypeSortMode = value;                    
                 }
+                ListTeamTypes();
             }
         }
 

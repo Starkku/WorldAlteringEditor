@@ -127,8 +127,8 @@ namespace TSMapEditor.UI.Windows
                 if (value != _triggerSortMode)
                 {
                     _triggerSortMode = value;
-                    ListTriggers();
                 }
+                ListTriggers();
             }
         }
 

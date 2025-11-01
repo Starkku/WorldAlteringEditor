@@ -2,11 +2,21 @@
 using Rampastring.XNAUI;
 using Rampastring.XNAUI.XNAControls;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using TSMapEditor.Models;
 using TSMapEditor.UI.Controls;
 
 namespace TSMapEditor.UI.Windows
 {
+    public enum AITriggerSortMode
+    {
+        ID,
+        Name,
+        Color,
+        ColorThenName,
+    }
+
     public class TeamTypeEventArgs : EventArgs
     {
         public TeamTypeEventArgs(TeamType teamType)
@@ -29,6 +39,7 @@ namespace TSMapEditor.UI.Windows
         public event EventHandler<TeamTypeEventArgs> TeamTypeOpened;
 
         private EditorListBox lbAITriggers;
+        private EditorSuggestionTextBox tbFilter;
         private XNADropDown ddActions;
         private EditorTextBox tbName;
         private XNADropDown ddSide;
@@ -50,6 +61,20 @@ namespace TSMapEditor.UI.Windows
         private SelectTechnoTypeWindow selectTechnoTypeWindow;
 
         private AITriggerType editedAITrigger;
+
+        private AITriggerSortMode _aiTriggerSortMode;
+        private AITriggerSortMode AiTriggerSortMode
+        {
+            get => _aiTriggerSortMode;
+            set
+            {
+                if (value != _aiTriggerSortMode)
+                {
+                    _aiTriggerSortMode = value;                    
+                }
+                ListAITriggers();
+            }
+        }
 
         public override void Initialize()
         {
@@ -74,6 +99,9 @@ namespace TSMapEditor.UI.Windows
             chkEnabledOnMedium = FindChild<XNACheckBox>(nameof(chkEnabledOnMedium));
             chkEnabledOnHard = FindChild<XNACheckBox>(nameof(chkEnabledOnHard));
 
+            tbFilter = FindChild<EditorSuggestionTextBox>(nameof(tbFilter));
+            tbFilter.TextChanged += TbFilter_TextChanged;
+
             FindChild<EditorButton>("btnNew").LeftClick += BtnNew_LeftClick;
             FindChild<EditorButton>("btnDelete").LeftClick += BtnDelete_LeftClick;
             FindChild<EditorButton>("btnClone").LeftClick += BtnClone_LeftClick;
@@ -94,7 +122,18 @@ namespace TSMapEditor.UI.Windows
             ddActions.AddItem(Translate(this, "Actions.Advanced", "Advanced..."));
             ddActions.AddItem(new XNADropDownItem() { Text = Translate(this, "Actions.CloneForEasierDiffs", "Clone for Easier Difficulties"), Tag = new Action(CloneForEasierDifficulties) });
             ddActions.SelectedIndex = 0;
-            ddActions.SelectedIndexChanged += DdActions_SelectedIndexChanged;            
+            ddActions.SelectedIndexChanged += DdActions_SelectedIndexChanged;
+
+            var sortContextMenu = new EditorContextMenu(WindowManager);
+            sortContextMenu.Name = nameof(sortContextMenu);
+            sortContextMenu.Width = lbAITriggers.Width;
+            sortContextMenu.AddItem(Translate(this, "SortByID", "Sort by ID"), () => AiTriggerSortMode = AITriggerSortMode.ID);
+            sortContextMenu.AddItem(Translate(this, "SortByName", "Sort by Name"), () => AiTriggerSortMode = AITriggerSortMode.Name);
+            sortContextMenu.AddItem(Translate(this, "SortByColor", "Sort by Color"), () => AiTriggerSortMode = AITriggerSortMode.Color);
+            sortContextMenu.AddItem(Translate(this, "SortByColorName", "Sort by Color, then by Name"), () => AiTriggerSortMode = AITriggerSortMode.ColorThenName);
+            AddChild(sortContextMenu);
+
+            FindChild<EditorButton>("btnSortOptions").LeftClick += (s, e) => sortContextMenu.Open(GetCursorPoint());
 
             lbAITriggers.SelectedIndexChanged += LbAITriggers_SelectedIndexChanged;
         }
@@ -393,6 +432,8 @@ namespace TSMapEditor.UI.Windows
             chkEnabledOnHard.CheckedChanged += ChkEnabledOnHard_CheckedChanged;
         }
 
+        private void TbFilter_TextChanged(object sender, EventArgs e) => ListAITriggers();
+
         private void TbName_TextChanged(object sender, EventArgs e)
         {
             editedAITrigger.Name = tbName.Text;
@@ -485,10 +526,44 @@ namespace TSMapEditor.UI.Windows
             ddSide.Items.Clear();
             ddHouseType.Items.Clear();
 
-            map.AITriggerTypes.ForEach(aitt =>
+            IEnumerable<AITriggerType> sortedAITriggers = map.AITriggerTypes;
+
+            var shouldViewTop = false; // when filtering the scroll bar should update so we use a flag here
+            if (tbFilter.Text != string.Empty && tbFilter.Text != tbFilter.Suggestion)
             {
-                lbAITriggers.AddItem(new XNAListBoxItem() { Text = aitt.Name, Tag = aitt, TextColor = GetAITriggerUIColor(aitt) });
-            });
+                sortedAITriggers = sortedAITriggers.Where(sortedAITrigger => sortedAITrigger.Name.Contains(tbFilter.Text, StringComparison.CurrentCultureIgnoreCase));
+                shouldViewTop = true;
+            }
+
+            switch (AiTriggerSortMode)
+            {
+                case AITriggerSortMode.Color:
+                    sortedAITriggers = sortedAITriggers.OrderBy(aiTrigger => GetAITriggerUIColor(aiTrigger).ToString()).ThenBy(aiTrigger => aiTrigger.ININame);
+                    break;
+                case AITriggerSortMode.Name:
+                    sortedAITriggers = sortedAITriggers.OrderBy(aiTrigger => aiTrigger.Name).ThenBy(aiTrigger => aiTrigger.ININame);
+                    break;
+                case AITriggerSortMode.ColorThenName:
+                    sortedAITriggers = sortedAITriggers.OrderBy(aiTrigger => GetAITriggerUIColor(aiTrigger).ToString()).ThenBy(aiTrigger => aiTrigger.Name);
+                    break;
+                case AITriggerSortMode.ID:
+                default:
+                    sortedAITriggers = sortedAITriggers.OrderBy(aiTrigger => aiTrigger.ININame);
+                    break;
+            }
+
+            foreach (AITriggerType aiTriggerType in sortedAITriggers)
+            {
+                lbAITriggers.AddItem(new XNAListBoxItem()
+                {
+                    Text = aiTriggerType.Name,
+                    Tag = aiTriggerType,
+                    TextColor = GetAITriggerUIColor(aiTriggerType)
+                });
+            }
+
+            if (shouldViewTop)
+                lbAITriggers.TopIndex = 0;
 
             ddSide.AddItem("0 all sides");
             for (int i = 0; i < map.Rules.Sides.Count; i++)

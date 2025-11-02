@@ -1156,6 +1156,9 @@ namespace TSMapEditor.UI.Windows
             if (lbActions.SelectedItem == null)
                 return;
 
+            if (lbActionParameters.SelectedItem == null)
+                return;
+
             GetTriggerActionAndParamIndex(out TriggerAction triggerAction, out int paramIndex);            
 
             var triggerActionType = GetTriggerActionType(triggerAction.ActionIndex);

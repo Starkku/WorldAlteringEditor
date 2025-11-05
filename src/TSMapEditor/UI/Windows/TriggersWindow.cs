@@ -534,9 +534,13 @@ namespace TSMapEditor.UI.Windows
             }
 
             // Check other triggers to see whether this trigger is referenced by them
-            var allReferringTriggers = map.Triggers.FindAll(trig => {
+            var allReferringTriggers = map.Triggers.FindAll(trig =>
+            {
                 foreach (var triggerAction in trig.Actions)
                 {
+                    if (!map.EditorConfig.TriggerEventTypes.ContainsKey(triggerAction.ActionIndex))
+                        continue;
+
                     var actionType = map.EditorConfig.TriggerActionTypes[triggerAction.ActionIndex];
 
                     for (int i = 0; i < triggerAction.Parameters.Length && i < actionType.Parameters.Length; i++)

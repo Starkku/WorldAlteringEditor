@@ -1950,6 +1950,7 @@ namespace TSMapEditor.UI.Windows
             if (lbActionParameters.SelectedItem == null || editedTrigger == null || lbActions.SelectedItem == null)
             {
                 tbActionParameterValue.Text = string.Empty;
+                btnActionGoToTarget.Disable();
                 return;
             }
 

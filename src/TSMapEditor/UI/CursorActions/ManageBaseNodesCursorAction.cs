@@ -72,6 +72,10 @@ namespace TSMapEditor.UI.CursorActions
                 ShiftBaseNodeEarlier(cellCoords);
                 e.Handled = true;
             }
+            else if (e.PressedKey == Microsoft.Xna.Framework.Input.Keys.M)
+            {
+                e.Handled = true;
+            }
         }
 
         public override void LeftDown(Point2D cellCoords)

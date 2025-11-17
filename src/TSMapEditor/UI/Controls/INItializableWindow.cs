@@ -75,7 +75,9 @@ namespace TSMapEditor.UI.Controls
             }
 
             Parser.Instance.SetPrimaryControl(this);
-            ReadINIForControl(this);
+            if (!ReadINIForControl(this))
+                throw new INIConfigException("No section '" + Name + "' found when parsing config file for INItializableWindow of the type!");
+
             ReadLateAttributesForControl(this);
 
             base.Initialize();

@@ -76,7 +76,7 @@ namespace TSMapEditor.Models
                     return true;
                 }
 
-                LoadedINI = new IniFileEx(LoadedINI.FileName, ccFileManager);
+                LoadedINI = new IniFileEx(LoadedINI.FileName, FileManager);
 
                 ReloadSections();
 
@@ -203,7 +203,7 @@ namespace TSMapEditor.Models
 
         private readonly Initializer initializer;
 
-        private readonly CCFileManager ccFileManager;
+        public CCFileManager FileManager { get; }
 
         public Map()
         {
@@ -218,7 +218,7 @@ namespace TSMapEditor.Models
 
             initializer = new Initializer(this);
 
-            this.ccFileManager = ccFileManager;
+            this.FileManager = ccFileManager;
         }
 
         private void InitEditorConfig()
@@ -235,7 +235,7 @@ namespace TSMapEditor.Models
             InitEditorConfig();
             InitializeRules(gameConfigINIFiles);
             LoadedINI = new IniFileEx();
-            var baseMap = Helpers.ReadConfigINIEx("BaseMap.ini", ccFileManager);
+            var baseMap = Helpers.ReadConfigINIEx("BaseMap.ini", FileManager);
             baseMap.RemoveSection("INISystem");
             baseMap.FileName = string.Empty;
             baseMap.SetStringValue("Map", "Theater", theaterName);
@@ -290,7 +290,7 @@ namespace TSMapEditor.Models
 
             Lighting.ReadFromIniFile(mapIni);
 
-            StringTable = new(ccFileManager.CsfFiles);
+            StringTable = new(FileManager.CsfFiles);
         }
 
         private void CreateGraphicalNodesFromBaseNodes()

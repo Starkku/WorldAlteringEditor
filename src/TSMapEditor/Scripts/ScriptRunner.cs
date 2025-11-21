@@ -3,6 +3,7 @@ using Rampastring.XNAUI;
 using System;
 using System.IO;
 using System.Reflection;
+using TSMapEditor.CCEngine;
 using TSMapEditor.Models;
 using TSMapEditor.Rendering;
 using TSMapEditor.UI;
@@ -19,8 +20,9 @@ namespace TSMapEditor.Scripts
         public EditorState EditorState;
         public WindowManager WindowManager;
         public WindowController WindowController;
+        public CCFileManager FileManager;
 
-        public ScriptDependencies(Map map, ICursorActionTarget cursorActionTarget, EditorState editorState, WindowManager windowManager, WindowController windowController)
+        public ScriptDependencies(Map map, ICursorActionTarget cursorActionTarget, EditorState editorState, WindowManager windowManager, WindowController windowController, CCFileManager fileManager)
         {
             Map = map;
             CursorActionTarget = cursorActionTarget;

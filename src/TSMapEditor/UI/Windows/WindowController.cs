@@ -173,7 +173,7 @@ namespace TSMapEditor.UI.Windows
             ApplyINICodeWindow = new ApplyINICodeWindow(windowParentControl.WindowManager, map);
             Windows.Add(ApplyINICodeWindow);
 
-            RunScriptWindow = new RunScriptWindow(windowParentControl.WindowManager, new Scripts.ScriptDependencies(map, cursorActionTarget, editorState, windowParentControl.WindowManager, this));
+            RunScriptWindow = new RunScriptWindow(windowParentControl.WindowManager, new Scripts.ScriptDependencies(map, cursorActionTarget, editorState, windowParentControl.WindowManager, this, map.FileManager));
             Windows.Add(RunScriptWindow);
 
             HotkeyConfigurationWindow = new HotkeyConfigurationWindow(windowParentControl.WindowManager);

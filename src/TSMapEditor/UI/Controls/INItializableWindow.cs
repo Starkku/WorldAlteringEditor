@@ -28,8 +28,6 @@ namespace TSMapEditor.UI.Controls
 
         protected string SubDirectory { get; set; } = "Windows";
 
-        public bool CenterByDefault { get; set; } = true;
-
         public T FindChild<T>(string childName, bool optional = false) where T : XNAControl
         {
             T child = FindChild<T>(Children, childName);
@@ -96,6 +94,19 @@ namespace TSMapEditor.UI.Controls
             }
 
             _initialized = true;
+
+            WindowManager.WindowSizeChangedByUser += WindowManager_WindowSizeChangedByUser;
+        }
+
+        private void WindowManager_WindowSizeChangedByUser(object sender, EventArgs e)
+        {
+            RefreshLayout();
+        }
+
+        public override void Kill()
+        {
+            WindowManager.WindowSizeChangedByUser -= WindowManager_WindowSizeChangedByUser;
+            base.Kill();
         }
 
         protected override void ParseControlINIAttribute(IniFile iniFile, string key, string value)
@@ -122,6 +133,8 @@ namespace TSMapEditor.UI.Controls
 
             if (CenterByDefault)
                 CenterOnParent();
+
+            ConstrainPosition();
         }
 
         private bool ReadINIForControl(XNAControl control, bool isForLayout = false)

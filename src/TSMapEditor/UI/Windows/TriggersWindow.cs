@@ -371,7 +371,6 @@ namespace TSMapEditor.UI.Windows
 
         private void WindowManager_WindowSizeChangedByUser(object sender, EventArgs e)
         {
-            RefreshLayout();
             ListTriggers();
         }
 

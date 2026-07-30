@@ -1,4 +1,8 @@
 ﻿#region Copyright notice
+/* Rampastring: I fixed a bug where decompression failed when there was
+   block that had 4 or fewer bytes in it. Otherwise, the below applies.*/
+
+/* Notice by zzattack, original author of the file */
 /* C# port of the crude minilzo source version 2.06 by Frank Razenberg
  
   Beware, you should never want to see C# code like this. You were warned.
@@ -277,13 +281,14 @@ namespace MiniLZO
         {
             byte* op;
             byte* ip;
-            uint t;
+            uint t = 0;
             byte* m_pos;
             byte* ip_end = @in + in_len;
             out_len = 0;
             op = @out;
             ip = @in;
             bool gt_first_literal_run = false;
+            bool gt_match = false;
             bool gt_match_done = false;
             if (*ip > 17)
             {
@@ -291,6 +296,8 @@ namespace MiniLZO
                 if (t < 4)
                 {
                     match_next(ref op, ref ip, ref t);
+                    // match_next has already loaded the next control byte into t.
+                    gt_match = true;
                 }
                 else
                 {
@@ -300,6 +307,12 @@ namespace MiniLZO
             }
             while (true)
             {
+                if (gt_match)
+                {
+                    gt_match = false;
+                    goto match;
+                }
+
                 if (gt_first_literal_run)
                 {
                     gt_first_literal_run = false;

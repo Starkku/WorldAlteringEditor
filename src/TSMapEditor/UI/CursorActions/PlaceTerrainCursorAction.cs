@@ -343,7 +343,8 @@ namespace TSMapEditor.UI.CursorActions
                 if (placeTerrainTileMutation.TargetCellCoords == adjustedCellCoords &&
                     placeTerrainTileMutation.Tile.TileID == Tile.TileID && // Compare TileID instead of Tile directly because tiles can be randomized if there's graphics variation
                     placeTerrainTileMutation.HeightOffset == heightOffset &&
-                    placeTerrainTileMutation.BrushSize == MutationTarget.BrushSize)
+                    placeTerrainTileMutation.BrushSize == MutationTarget.BrushSize &&
+                    placeTerrainTileMutation.OnlyPaintOnClearGround == MutationTarget.OnlyPaintOnClearGround)
                 {
                     return false;
                 }

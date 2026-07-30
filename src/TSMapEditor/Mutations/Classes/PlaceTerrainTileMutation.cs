@@ -18,12 +18,14 @@ namespace TSMapEditor.Mutations.Classes
             Tile = tile;
             HeightOffset = heightOffset;
             BrushSize = mutationTarget.BrushSize;
+            OnlyPaintOnClearGround = mutationTarget.OnlyPaintOnClearGround;
         }
 
         public Point2D TargetCellCoords { get; }
         public TileImage Tile { get; }
         public int HeightOffset { get; }
         public BrushSize BrushSize { get; }
+        public bool OnlyPaintOnClearGround { get; }
 
         private List<OriginalCellTerrainData> undoData;
 
@@ -50,7 +52,7 @@ namespace TSMapEditor.Mutations.Classes
                 int cy = TargetCellCoords.Y + (brushOffset.Y * Tile.Height) + i / Tile.Width;
 
                 var mapTile = MutationTarget.Map.GetTile(cx, cy);
-                if (mapTile != null && (!MutationTarget.OnlyPaintOnClearGround || mapTile.IsClearGround()) &&
+                if (mapTile != null && (!OnlyPaintOnClearGround || mapTile.IsClearGround()) &&
                     !undoData.Exists(otd => otd.CellCoords.X == cx && otd.CellCoords.Y == cy))
                 {
                     undoData.Add(new OriginalCellTerrainData(mapTile.CoordsToPoint(), mapTile.TileIndex, mapTile.SubTileIndex, mapTile.Level));
@@ -116,7 +118,7 @@ namespace TSMapEditor.Mutations.Classes
                     int cy = TargetCellCoords.Y + (offset.Y * Tile.Height) + i / Tile.Width;
 
                     var mapTile = MutationTarget.Map.GetTile(TargetCellCoords + new Point2D(offset.X * Tile.Width, offset.Y * Tile.Height) + subTileOffset.Value);
-                    if (mapTile != null && (!MutationTarget.OnlyPaintOnClearGround || mapTile.IsClearGround()))
+                    if (mapTile != null && (!OnlyPaintOnClearGround || mapTile.IsClearGround()))
                     {
                         mapTile.ChangeTileIndex(Tile.TileID, (byte)i);
                         mapTile.Level = (byte)Math.Min(originLevel + Tile.GetSubTile(i).TmpImage.Height, Constants.MaxMapHeightLevel);

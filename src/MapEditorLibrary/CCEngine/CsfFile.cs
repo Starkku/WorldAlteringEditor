@@ -1,4 +1,5 @@
 ﻿using MapEditorLibrary.Models;
+using System.Buffers.Binary;
 
 namespace MapEditorLibrary.CCEngine;
 
@@ -43,14 +44,16 @@ struct CsfFileHeader
         if (buffer.Length < SizeOf)
             throw new CsfLoadException(nameof(CsfFileHeader) + ": buffer is not long enough");
 
-        if (BitConverter.ToUInt32(buffer, 0) != CsfPrefix)
+        var span = new Span<byte>(buffer);
+
+        if (BinaryPrimitives.ReadUInt32LittleEndian(span)!= CsfPrefix)
             throw new CsfLoadException(nameof(CsfFileHeader) + ": FSC prefix not found");
 
-        Version = (CsfVersion)BitConverter.ToUInt32(buffer, 4);
-        NumberOfLabels = BitConverter.ToUInt32(buffer, 8);
-        NumberOfStrings = BitConverter.ToUInt32(buffer, 12);
-        Unused = BitConverter.ToUInt32(buffer, 16);
-        Language = (CsfLanguage)BitConverter.ToUInt32(buffer, 20);
+        Version = (CsfVersion)BinaryPrimitives.ReadUInt32LittleEndian(span.Slice(4));
+        NumberOfLabels = BinaryPrimitives.ReadUInt32LittleEndian(span.Slice(8));
+        NumberOfStrings = BinaryPrimitives.ReadUInt32LittleEndian(span.Slice(12));
+        Unused = BinaryPrimitives.ReadUInt32LittleEndian(span.Slice(16));
+        Language = (CsfLanguage)BinaryPrimitives.ReadUInt32LittleEndian(span.Slice(20));
     }
 
     public CsfVersion Version;
@@ -157,16 +160,17 @@ public class CsfFile
     /// <exception cref="CsfLoadException"></exception>
     public CsfString ParseLabel(MemoryStream memoryStream)
     {
-        var buffer = new byte[4];
-        memoryStream.Read(buffer, 0, 4);
+        Span<byte> buffer = stackalloc byte[4];
 
-        if (BitConverter.ToUInt32(buffer) != LblPrefix)
+        memoryStream.ReadExactly(buffer);
+
+        if (BinaryPrimitives.ReadUInt32LittleEndian(buffer) != LblPrefix)
             throw new CsfLoadException(nameof(CsfFile) + ": LBL prefix not found");
 
-        memoryStream.Read(buffer, 0, 4);
-        uint numberOfPairs = BitConverter.ToUInt32(buffer, 0);
-        memoryStream.Read(buffer, 0, 4);
-        uint labelLength = BitConverter.ToUInt32(buffer, 0);
+        memoryStream.ReadExactly(buffer);
+        uint numberOfPairs = BinaryPrimitives.ReadUInt32LittleEndian(buffer);
+        memoryStream.ReadExactly(buffer);
+        uint labelLength = BinaryPrimitives.ReadUInt32LittleEndian(buffer);
 
         var labelBuffer = new byte[labelLength];
         memoryStream.Read(labelBuffer, 0, labelBuffer.Length);
@@ -187,17 +191,17 @@ public class CsfFile
     /// <param name="skip">Only advance the stream and return null.</param>
     /// <returns>Read string or null if `skip` was true.</returns>
     /// <exception cref="CsfLoadException"></exception>
-    public string ParseString(MemoryStream memoryStream, byte[] buffer, bool skip = false)
+    public string ParseString(MemoryStream memoryStream, Span<byte> buffer, bool skip = false)
     {
-        memoryStream.Read(buffer, 0, 4);
-        uint prefix = BitConverter.ToUInt32(buffer);
+        memoryStream.ReadExactly(buffer);
+        uint prefix = BinaryPrimitives.ReadUInt32LittleEndian(buffer);
         bool hasExtra = prefix == StrwPrefix;
 
         if ((prefix != StrPrefix) && !hasExtra)
             throw new CsfLoadException(nameof(CsfFile) + ": STR/STRW prefix not found");
 
-        memoryStream.Read(buffer, 0, 4);
-        uint stringLength = BitConverter.ToUInt32(buffer, 0);
+        memoryStream.ReadExactly(buffer);
+        uint stringLength = BinaryPrimitives.ReadUInt32LittleEndian(buffer);
         string csfString = null;
 
         if (!skip)
@@ -217,8 +221,8 @@ public class CsfFile
 
         if (hasExtra)
         {
-            memoryStream.Read(buffer, 0, 4);
-            uint extraLength = BitConverter.ToUInt32(buffer, 0);
+            memoryStream.ReadExactly(buffer);
+            uint extraLength = BinaryPrimitives.ReadUInt32LittleEndian(buffer);
             // Skip the extra data, as it's unused by the game.
             memoryStream.Position += extraLength;
         }

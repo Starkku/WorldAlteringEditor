@@ -205,9 +205,13 @@ public static class MapLoader
 
         var tiles = new List<MapTile>(uncompressedData.Count / IsoMapPack5Tile.Size);
         position = 0;
+        Span<byte> span = stackalloc byte[IsoMapPack5Tile.Size];
         while (position < uncompressedData.Count - IsoMapPack5Tile.Size)
         {
-            var mapTile = new MapTile(uncompressedData.GetRange(position, IsoMapPack5Tile.Size).ToArray());
+            for (int i = 0; i < IsoMapPack5Tile.Size; i++)
+                span[i] = uncompressedData[position + i];
+
+            var mapTile = new MapTile(span);
             if (mapTile.TileIndex == ushort.MaxValue)
             {
                 mapTile.TileIndex = 0;

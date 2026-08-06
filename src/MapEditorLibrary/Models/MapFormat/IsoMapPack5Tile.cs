@@ -1,4 +1,6 @@
-﻿namespace MapEditorLibrary.Models.MapFormat;
+﻿using System.Buffers.Binary;
+
+namespace MapEditorLibrary.Models.MapFormat;
 
 /// <summary>
 /// Low-level cell class.
@@ -9,11 +11,11 @@ public class IsoMapPack5Tile
 
     public IsoMapPack5Tile() { }
 
-    public IsoMapPack5Tile(byte[] data)
+    public IsoMapPack5Tile(Span<byte> data)
     {
-        X = BitConverter.ToInt16(data, 0);
-        Y = BitConverter.ToInt16(data, 2);
-        TileIndex = BitConverter.ToInt32(data, 4);
+        X = BinaryPrimitives.ReadInt16LittleEndian(data);
+        Y = BinaryPrimitives.ReadInt16LittleEndian(data.Slice(2));
+        TileIndex = BinaryPrimitives.ReadInt32LittleEndian(data.Slice(4));
         SubTileIndex = data[8];
         Level = data[9];
         IceGrowth = data[10];

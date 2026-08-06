@@ -15,7 +15,7 @@ public class MapTile : IsoMapPack5Tile
 
     public MapTile() { }
 
-    public MapTile(byte[] data) : base(data) { }
+    public MapTile(Span<byte> data) : base(data) { }
 
     /// <summary>
     /// The cached image for this tile.

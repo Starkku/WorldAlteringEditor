@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Buffers.Binary;
+using System.Text;
 
 namespace MapEditorLibrary.CCEngine;
 
@@ -256,19 +257,21 @@ public struct MixFileHeader
         if (buffer.Length < SIZE_OF_HEADER)
             throw new ArgumentException("buffer is not long enough");
 
-        FileCount = BitConverter.ToInt16(buffer, 0);
-        BodySize = BitConverter.ToInt32(buffer, 2);
+        var span = new Span<byte>(buffer);
+
+        FileCount = BinaryPrimitives.ReadUInt16LittleEndian(buffer);
+        BodySize = BinaryPrimitives.ReadUInt32LittleEndian(span.Slice(2));
     }
 
     /// <summary>
     /// The number of files in the MIX file.
     /// </summary>
-    public short FileCount { get; private set; }
+    public ushort FileCount { get; private set; }
 
     /// <summary>
     /// The size of the MIX file, excluding the header and index.
     /// </summary>
-    public int BodySize { get; private set; }
+    public uint BodySize { get; private set; }
 }
 
 /// <summary>
@@ -283,9 +286,11 @@ public struct MixFileEntry
         if (buffer.Length < SIZE_OF_FILE_ENTRY)
             throw new ArgumentException("buffer is not long enough");
 
-        Identifier = BitConverter.ToUInt32(buffer, 0);
-        Offset = BitConverter.ToInt32(buffer, 4);
-        Size = BitConverter.ToInt32(buffer, 8);
+        var span = new Span<byte>(buffer);
+
+        Identifier = BinaryPrimitives.ReadUInt32LittleEndian(span);
+        Offset = BinaryPrimitives.ReadInt32LittleEndian(span.Slice(4));
+        Size = BinaryPrimitives.ReadInt32LittleEndian(span.Slice(8));
     }
 
     /// <summary>
@@ -302,11 +307,6 @@ public struct MixFileEntry
     /// The size of the file.
     /// </summary>
     public int Size { get; private set; }
-}
-
-public struct FileOffsetInfo
-{
-
 }
 
 public class MixParseException : Exception

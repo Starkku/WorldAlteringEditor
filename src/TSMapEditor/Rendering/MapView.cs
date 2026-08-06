@@ -1926,11 +1926,6 @@ public class MapView : IMapView, IMapScreenCropper
 
         try
         {
-            if (isActive && tileUnderCursor != null && cursorAction != null)
-            {
-                cursorAction.PreMapDraw(tileUnderCursor.CoordsToPoint());
-            }
-
             if (mapInvalidated || cameraMoved)
             {
                 DrawVisibleMapPortion();

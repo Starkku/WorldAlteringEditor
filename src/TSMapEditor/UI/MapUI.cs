@@ -738,6 +738,12 @@ public class MapUI : XNAControl, ICursorActionTarget, IMutationTarget, IMapScree
 
     public override void Draw(GameTime gameTime)
     {
+        // Run the cursor action's pre-map-draw logic before passing TechnoUnderCursor
+        // to the renderer, so that placement previews (which assign TechnoUnderCursor)
+        // get their range indicators drawn during placement.
+        if (IsActive && tileUnderCursor != null && CursorAction != null)
+            CursorAction.PreMapDraw(tileUnderCursor.CoordsToPoint());
+
         mapView.Draw(IsActive, TechnoUnderCursor, tileUnderCursor, CursorAction);
 
         mapView.DrawOnTileUnderCursor(tileUnderCursor, CursorAction, isDraggingObject,

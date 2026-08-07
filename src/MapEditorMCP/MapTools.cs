@@ -896,4 +896,26 @@ internal sealed class MapTools
             throw new McpException(ex.Message);
         }
     }
+
+    [McpServerTool(Name = "set_cells_height", ReadOnly = false, Destructive = true, Idempotent = true, OpenWorld = false, UseStructuredContent = true)]
+    [Description("Sets the raw height level of map cells without smoothing or changing their terrain tile. Duplicate and unchanged cells are ignored. " +
+        "Unavailable when get_map_info reports isFlatWorld as true.")]
+    public async Task<MCPMapEditResult> SetCellsHeight(
+        [Description("One or more map-cell coordinates. At most 10,000 entries are supported.")] List<MapCellCoordinate> cells,
+        [Description("Raw height level to assign, from 0 through 12.")] int height,
+        [Description("Optional map revision. When supplied, rejects the call if the map changed.")] int? expectedRevision = null,
+        CancellationToken cancellationToken = default)
+    {
+        Logger.Log($"{nameof(MapTools)}.{nameof(SetCellsHeight)}");
+
+        try
+        {
+            return await gameThreadDispatcher.InvokeAsync(
+                () => mapFacade.SetCellsHeight(cells, height, expectedRevision), cancellationToken);
+        }
+        catch (MapFacadeValidationException ex)
+        {
+            throw new McpException(ex.Message);
+        }
+    }
 }

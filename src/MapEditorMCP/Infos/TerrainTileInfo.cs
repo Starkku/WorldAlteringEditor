@@ -19,12 +19,14 @@ internal sealed class TileIndexInfo
 
 internal sealed class SubTileInfo
 {
-    public SubTileInfo(int subTileIndex, int x, int y, int height)
+    public SubTileInfo(int subTileIndex, int x, int y, int height, string landType, string rampType)
     {
         SubTileIndex = subTileIndex;
         X = x;
         Y = y;
         Height = height;
+        LandType = landType;
+        RampType = rampType;
     }
 
     [Description("Zero-based sub-tile slot index used by set_cells_terrain.")]
@@ -38,6 +40,12 @@ internal sealed class SubTileInfo
 
     [Description("Height level added to the placement origin when this sub-tile is placed as part of the full tile.")]
     public int Height { get; }
+
+    [Description("Type of land of this sub-tile.")]
+    public string LandType { get; }
+
+    [Description("Type of ramp of this sub-tile.")]
+    public string RampType { get; }
 }
 
 internal sealed class TerrainTileInfo

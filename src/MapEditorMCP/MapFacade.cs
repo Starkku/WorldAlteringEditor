@@ -502,7 +502,9 @@ internal class MapFacade
                     subTileIndex,
                     coordOffset.Value.X,
                     coordOffset.Value.Y,
-                    subTile.TmpImage.Height));
+                    subTile.TmpImage.Height,
+                    ((LandType)subTile.TmpImage.TerrainType).ToString(),
+                    subTile.TmpImage.RampType.ToString()));
             }
         }
 
@@ -1609,6 +1611,62 @@ internal class MapFacade
                 tileIndex,
                 (byte)subTileIndex),
             "set_cells_terrain",
+            changedCoords);
+
+        return new MCPMapEditResult(
+            mutationManager.Revision,
+            changedCoords.Select(coords => CellInfo.FromMapCell(map, map.GetTile(coords))).ToList());
+    }
+
+    public MCPMapEditResult SetCellsHeight(List<MapCellCoordinate> cells, int height, int? expectedRevision)
+    {
+        if (expectedRevision.HasValue && expectedRevision.Value != mutationManager.Revision)
+        {
+            throw new MapFacadeValidationException(
+                $"The map revision changed from {expectedRevision.Value} to {mutationManager.Revision}. " +
+                "Query the map again before setting cell height, or omit expectedRevision to allow concurrent edits.");
+        }
+
+        if (Constants.IsFlatWorld)
+            throw new MapFacadeValidationException("The active mod has flat maps and does not support cell height.");
+
+        if (height < 0 || height > Constants.MaxMapHeightLevel)
+        {
+            throw new MapFacadeValidationException(
+                $"Cell height must be from 0 through {Constants.MaxMapHeightLevel}.");
+        }
+
+        if (cells == null || cells.Count == 0)
+            throw new MapFacadeValidationException("At least one cell coordinate must be provided.");
+        if (cells.Count > MaxMapOperationCellCount)
+            throw new MapFacadeValidationException($"At most {MaxMapOperationCellCount} cell coordinates can be set in one call.");
+
+        var distinctCoords = new HashSet<Point2D>();
+        for (int i = 0; i < cells.Count; i++)
+        {
+            MapCellCoordinate cell = cells[i];
+            if (cell == null)
+                throw new MapFacadeValidationException($"Cell coordinate {i} cannot be null.");
+
+            var cellCoords = new Point2D(cell.X, cell.Y);
+            if (map.GetTile(cellCoords) == null)
+                throw new MapFacadeValidationException($"Cell coordinate {i} at ({cell.X}, {cell.Y}) is outside the map.");
+
+            distinctCoords.Add(cellCoords);
+        }
+
+        var changedCoords = distinctCoords
+            .Where(coords => map.GetTile(coords).Level != height)
+            .OrderBy(coords => coords.Y)
+            .ThenBy(coords => coords.X)
+            .ToList();
+
+        if (changedCoords.Count == 0)
+            return new MCPMapEditResult(mutationManager.Revision, new List<CellInfo>());
+
+        PerformMCPMutation(
+            new SetCellsHeightMutation(mutationTarget, changedCoords, (byte)height),
+            "set_cells_height",
             changedCoords);
 
         return new MCPMapEditResult(

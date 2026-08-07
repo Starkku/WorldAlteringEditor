@@ -1,4 +1,5 @@
 using MapEditorLibrary;
+using MapEditorLibrary.CCEngine;
 using MapEditorLibrary.Models;
 using MapEditorLibrary.Models.Enums;
 
@@ -6,7 +7,7 @@ namespace MapEditorMCP.Infos;
 
 internal class CellInfo
 {
-    public CellInfo(int x, int y, string tileSetName, int tileIndex, int tileIndexInTileSet, int subTileIndex, string landType,
+    public CellInfo(int x, int y, string tileSetName, int tileIndex, int tileIndexInTileSet, int subTileIndex, string landType, string rampType,
         bool passableForLandUnits, bool passableForNavalUnits, int height,
         MapObjectInfo terrainObjectInfo, MapOverlayInfo overlayInfo, List<MapBuildingInfo> buildingInfos, List<MapFootInfo> footInfos,
         List<MapWaypointInfo> waypointInfos)
@@ -18,6 +19,7 @@ internal class CellInfo
         TileIndexInTileSet = tileIndexInTileSet;
         SubTileIndex = subTileIndex;
         LandType = landType;
+        RampType = rampType;
         PassableForLandUnits = passableForLandUnits;
         PassableForNavalUnits = passableForNavalUnits;
         Height = height;
@@ -35,6 +37,7 @@ internal class CellInfo
     public int TileIndexInTileSet { get; }
     public int SubTileIndex { get; }
     public string LandType { get; }
+    public string RampType { get; }
     public bool PassableForLandUnits { get; }
     public bool PassableForNavalUnits { get; }
     public int Height { get; }
@@ -67,9 +70,10 @@ internal class CellInfo
         var tileInfo = theater.GetTile(mapTile.TileIndex);
         var subTileInfo = tileInfo.GetSubTile(mapTile.SubTileIndex);
         LandType landType = (LandType)subTileInfo.TmpImage.TerrainType;
+        RampType rampType = subTileInfo.TmpImage.RampType;
 
         return new CellInfo(mapTile.X, mapTile.Y, tileSet.SetName, mapTile.TileIndex, mapTile.TileIndex - tileSet.StartTileIndex,
-            mapTile.SubTileIndex, landType.ToString(), !Helpers.IsLandTypeImpassable(landType, true), !Helpers.IsLandTypeImpassableForNavalUnits(landType),
+            mapTile.SubTileIndex, landType.ToString(), rampType.ToString(), !Helpers.IsLandTypeImpassable(landType, true), !Helpers.IsLandTypeImpassableForNavalUnits(landType),
             mapTile.Level, terrainObjectInfo, overlayInfo, buildingInfos,
             vehicleInfos.Concat(infantryInfos).Concat(aircraftInfos).ToList(), waypointInfos);
     }

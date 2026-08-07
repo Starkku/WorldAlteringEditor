@@ -25,7 +25,7 @@ public class FlattenGroundCursorAction : CursorAction
 
     public override void OnActionEnter()
     {
-        CursorActionTarget.BrushSize = Map.EditorConfig.BrushSizes.Find(bs => bs.Width == 2 && bs.Height == 2) ?? Map.EditorConfig.BrushSizes[0];
+        CursorActionTarget.BrushSize = Map.EditorConfig.BrushSizes.Find(bs => bs.Width == 3 && bs.Height == 3) ?? Map.EditorConfig.BrushSizes[0];
     }
 
     public override bool DrawCellCursor => true;

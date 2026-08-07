@@ -222,7 +222,25 @@ public class MapSetup
 
             foreach (var connectedTile in connectedTileType.Tiles)
             {
-                var tileSet = theaterTileInfo.Theater.TileSets.Find(ts => ts.SetName == connectedTile.TileSetName && ts.AllowToPlace);
+                TileSet tileSet = null;
+
+                if (connectedTile.PossibleTileSetNames != null)
+                {
+                    for (int i = 0; i < connectedTile.PossibleTileSetNames.Count; i++)
+                    {
+                        tileSet = theaterTileInfo.Theater.TileSets.Find(ts => ts.SetName == connectedTile.PossibleTileSetNames[i] && ts.AllowToPlace);
+
+                        if (tileSet != null)
+                        {
+                            Logger.Log($"TileSet resolved to {tileSet.SetName} (#{tileSet.Index}) for connected tile #{connectedTile.Index} of {connectedTileType.IniName}");
+                            connectedTile.TileSetName = connectedTile.PossibleTileSetNames[i];
+                            break;
+                        }
+                    }
+                }
+
+                if (tileSet == null)
+                    tileSet = theaterTileInfo.Theater.TileSets.Find(ts => ts.SetName == connectedTile.TileSetName && ts.AllowToPlace);
 
                 if (tileSet == null)
                 {

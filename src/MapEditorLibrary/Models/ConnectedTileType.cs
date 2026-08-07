@@ -64,9 +64,16 @@ public class ConnectedTile
 
         string tileSet = iniSection.GetStringValue("TileSet", null);
         if (string.IsNullOrWhiteSpace(tileSet))
-            throw new INIConfigException($"Connected Tile {iniSection.SectionName} has no TileSet!");
+        {
+            PossibleTileSetNames = iniSection.GetListValue("TileSets", ',', static s => s.Trim());
 
-        TileSetName = tileSet;
+            if (PossibleTileSetNames.Count == 0)
+                throw new INIConfigException($"Connected Tile {iniSection.SectionName} has no TileSet!");
+        }
+        else
+        {
+            TileSetName = tileSet;
+        }
 
         IndicesInTileSet = indicesString.Split(',').Select(s => int.Parse(s, CultureInfo.InvariantCulture)).ToList();
 
@@ -200,7 +207,12 @@ public class ConnectedTile
     public int Index { get; set; }
 
     /// <summary>
-    /// The name of the tile's Tile Set
+    /// Candidates for the tile set's name.
+    /// </summary>
+    public List<string> PossibleTileSetNames { get; }
+
+    /// <summary>
+    /// Resolved name of the tile's Tile Set
     /// </summary>
     public string TileSetName { get; set; }
 

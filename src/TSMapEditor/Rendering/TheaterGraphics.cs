@@ -1416,6 +1416,9 @@ public class TheaterGraphics : ITheater, ITheaterTileData
 
     public int GetOverlayFrameCount(OverlayType overlayType)
     {
+        if (OverlayTextures[overlayType.Index] == null)
+            return 0;
+
         int frameCount = OverlayTextures[overlayType.Index].GetFrameCount();
 
         int lastValidFrame = -1;

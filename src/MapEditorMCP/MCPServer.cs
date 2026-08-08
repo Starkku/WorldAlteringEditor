@@ -1,7 +1,6 @@
 using MapEditorLibrary.Models;
 using MapEditorLibrary.Mutations;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
+using MapEditorMCP.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using ModelContextProtocol;
@@ -39,43 +38,39 @@ public sealed class MCPServer : IDisposable
     private readonly CancellationTokenSource shutdownCancellationTokenSource = new CancellationTokenSource();
     private readonly int port;
 
-    private WebApplication application;
+    private ServiceProvider serviceProvider;
+    private LoopbackHttpServer httpServer;
     private bool disposed;
 
     public async Task StartAsync(CancellationToken cancellationToken = default)
     {
         ObjectDisposedException.ThrowIf(disposed, this);
 
-        if (application != null)
+        if (httpServer != null)
             return;
 
-        var builder = WebApplication.CreateSlimBuilder(new WebApplicationOptions
-        {
-            Args = Array.Empty<string>(),
-            ApplicationName = typeof(MCPServer).Assembly.FullName
-        });
-
-        ServerURL = $"http://127.0.0.1:{port.ToString(CultureInfo.InvariantCulture)}";
-
-        builder.WebHost.UseUrls(ServerURL);
-        builder.Configuration["AllowedHosts"] = "localhost;127.0.0.1;[::1]";
-        builder.Logging.AddProvider(new MapEditorMcpLogger());
-
-        builder.Services.AddSingleton(mapFacade);
-        builder.Services.AddSingleton(scriptingFacade);
-        builder.Services.AddSingleton(mapScreenCropper);
-        builder.Services.AddSingleton(new GameThreadDispatcher(windowManager, shutdownCancellationTokenSource.Token));
-        builder.Services
+        var loggerFactory = new MapEditorMcpLogger();
+        var services = new ServiceCollection();
+        services.AddSingleton<ILoggerFactory>(loggerFactory);
+        services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
+        services.AddSingleton(mapFacade);
+        services.AddSingleton(scriptingFacade);
+        services.AddSingleton(mapScreenCropper);
+        services.AddSingleton(new GameThreadDispatcher(windowManager, shutdownCancellationTokenSource.Token));
+        services
             .AddMcpServer(options => options.Filters.Request.CallToolFilters.Add(next => (request, requestCancellationToken) =>
                 InvokeToolWithDetailedErrors(next, request, requestCancellationToken)))
-            .WithHttpTransport(options => options.Stateless = true)
             .WithTools<MapTools>()
             .WithTools<ScriptingTools>();
 
-        application = builder.Build();
-        application.MapMcp(MCPPath);
-
-        await application.StartAsync(cancellationToken);
+        serviceProvider = services.BuildServiceProvider();
+        httpServer = new LoopbackHttpServer(port, boundPort =>
+        {
+            ServerURL = $"http://127.0.0.1:{boundPort.ToString(CultureInfo.InvariantCulture)}";
+            var endpoint = new McpHttpEndpoint(serviceProvider, loggerFactory, boundPort, MCPPath);
+            return endpoint.HandleRequestAsync;
+        }, cancelRequestOnReadEof: true);
+        await httpServer.StartAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public void Dispose()
@@ -87,45 +82,61 @@ public sealed class MCPServer : IDisposable
         shutdownCancellationTokenSource.Cancel();
         mapScreenCropper.StopScreenCropRequests();
 
-        WebApplication applicationToDispose = application;
-        application = null;
+        LoopbackHttpServer httpServerToDispose = httpServer;
+        ServiceProvider serviceProviderToDispose = serviceProvider;
+        httpServer = null;
+        serviceProvider = null;
 
-        if (applicationToDispose == null)
+        if (httpServerToDispose == null)
         {
+            serviceProviderToDispose?.Dispose();
             shutdownCancellationTokenSource.Dispose();
             return;
         }
 
-        _ = Task.Run(() => StopAndDisposeAsync(applicationToDispose));
+        _ = Task.Run(() => StopAndDisposeAsync(httpServerToDispose, serviceProviderToDispose));
     }
 
-    private async Task StopAndDisposeAsync(WebApplication applicationToDispose)
+    private async Task StopAndDisposeAsync(LoopbackHttpServer httpServerToDispose, ServiceProvider serviceProviderToDispose)
+    {
+        Task cleanupTask = DisposeServerResourcesAsync(httpServerToDispose, serviceProviderToDispose);
+        try
+        {
+            await cleanupTask.WaitAsync(ShutdownTimeout).ConfigureAwait(false);
+        }
+        catch (TimeoutException)
+        {
+            Logger.Log($"MCP server cleanup is still running after {ShutdownTimeout.TotalSeconds} seconds.");
+            _ = cleanupTask.ContinueWith(
+                task => Logger.Log("MCP server cleanup eventually failed. Returned error: " + task.Exception),
+                CancellationToken.None,
+                TaskContinuationOptions.OnlyOnFaulted | TaskContinuationOptions.ExecuteSynchronously,
+                TaskScheduler.Default);
+        }
+        catch (Exception ex)
+        {
+            Logger.Log("Failed to clean up the MCP server. Returned error: " + ex.Message);
+        }
+    }
+
+    private async Task DisposeServerResourcesAsync(
+        LoopbackHttpServer httpServerToDispose,
+        ServiceProvider serviceProviderToDispose)
     {
         try
         {
-            using var timeoutCancellationTokenSource = new CancellationTokenSource(ShutdownTimeout);
-            await applicationToDispose.StopAsync(timeoutCancellationTokenSource.Token).ConfigureAwait(false);
-        }
-        catch (OperationCanceledException)
-        {
-            Logger.Log($"MCP server did not stop gracefully within {ShutdownTimeout.TotalSeconds} seconds.");
-        }
-        catch (Exception ex)
-        {
-            Logger.Log("Failed to stop the MCP server cleanly. Returned error: " + ex.Message);
-        }
-
-        try
-        {
-            await applicationToDispose.DisposeAsync().ConfigureAwait(false);
-        }
-        catch (Exception ex)
-        {
-            Logger.Log("Failed to dispose the MCP server cleanly. Returned error: " + ex.Message);
+            await httpServerToDispose.DisposeAsync().ConfigureAwait(false);
         }
         finally
         {
-            shutdownCancellationTokenSource.Dispose();
+            try
+            {
+                serviceProviderToDispose?.Dispose();
+            }
+            finally
+            {
+                shutdownCancellationTokenSource.Dispose();
+            }
         }
     }
 
@@ -147,9 +158,13 @@ public sealed class MCPServer : IDisposable
         }
     }
 
-    private sealed class MapEditorMcpLogger : ILoggerProvider, ILogger
+    private sealed class MapEditorMcpLogger : ILoggerFactory, ILogger
     {
         public ILogger CreateLogger(string categoryName) => this;
+
+        public void AddProvider(ILoggerProvider provider)
+        {
+        }
 
         public void Dispose()
         {

@@ -19,6 +19,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 -------------------------------------------
 
+The MCP server implementation uses code adapted from the Model Context Protocol C# SDK 2.1.0,
+licensed under Apache-2.0 and the MIT licenses.
+Copyright (c) 2024-2026 Model Context Protocol a Series of LF Projects, LLC.
+https://github.com/modelcontextprotocol/csharp-sdk/blob/3be47ee31ede99ef9025af02d9eb37da938d7f05/LICENSE
+
+-------------------------------------------
+
 This program uses code from the OpenRA project. It is made
 available to you under the terms of the GNU General Public License
 version 3 as published by the Free Software Foundation.

@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapEditorLibrary", "MapEdit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapEditorMCP", "MapEditorMCP\MapEditorMCP.csproj", "{D0CF40EC-EE19-4A58-9177-7DC6113AAAAF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapEditorMCP.Tests", "MapEditorMCP.Tests\MapEditorMCP.Tests.csproj", "{A0FE8675-67B5-4B92-994D-B2B2AE691544}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{D0CF40EC-EE19-4A58-9177-7DC6113AAAAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0CF40EC-EE19-4A58-9177-7DC6113AAAAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0CF40EC-EE19-4A58-9177-7DC6113AAAAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0FE8675-67B5-4B92-994D-B2B2AE691544}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0FE8675-67B5-4B92-994D-B2B2AE691544}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0FE8675-67B5-4B92-994D-B2B2AE691544}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0FE8675-67B5-4B92-994D-B2B2AE691544}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

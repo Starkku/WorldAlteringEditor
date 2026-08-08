@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
@@ -23,3 +24,4 @@ using System.Runtime.Versioning;
 [assembly: Guid("56a6bb60-cf0f-4b98-9591-d51f97cdbf59")]
 
 [assembly: SupportedOSPlatform("windows10.0.14393.0")]
+[assembly: InternalsVisibleTo("MapEditorMCP.Tests")]

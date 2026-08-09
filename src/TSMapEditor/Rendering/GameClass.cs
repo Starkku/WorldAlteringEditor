@@ -19,11 +19,6 @@ using TSMapEditor.UI;
 using MapEditorLibrary;
 using MapEditorLibrary.Misc;
 using MapEditorLibrary.CCEngine;
-using System.Reflection;
-
-#if !DEBUG
-using System.Windows.Forms;
-#endif
 
 namespace TSMapEditor.Rendering;
 

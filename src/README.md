@@ -1,0 +1,6 @@
+- `MapEditorLauncher`: Source code for World-Altering Editor's automatic updater + launcher, used in the CnCNet Tiberian Sun Client.
+- `MapEditorLibrary`: TS/RA2 file type parsing, math, game object data models, classes for loading game assets for rendering with MonoGame, map loading, Undo/Redo system and mutations.
+- `MapEditorMCP`: Model Context Protocol server for allowing AI agents to communicate with the World-Altering Editor.
+- `MapEditorMCP.Tests`: Tests for verifying correctness of the MCP server's custom HTTP server (we didn't want a dependency on ASP.NET just for this).
+- `TSMapEditor`: Actual editor user interface and main editor executable. Map rendering, UI windows, INI-based UI creation, editor configuration (both mod-level and user-level configuration), cursor actions for performing modifications on the map.
+- `TSMapEditor.sln`: Solution file containing all the aforementioned C# projects.

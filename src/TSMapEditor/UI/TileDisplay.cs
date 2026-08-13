@@ -93,7 +93,6 @@ public class TileDisplay : XNAPanel
     {
         base.Initialize();
 
-        BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 196), 2, 2);
         PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
 
         palettedDrawEffect = AssetLoader.LoadEffect("Shaders/PalettedDrawNoDepth") ?? throw new FileNotFoundException("Shader not found: PalettedDrawNoDepth"); ;

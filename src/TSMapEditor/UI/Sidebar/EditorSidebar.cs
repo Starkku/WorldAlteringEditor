@@ -7,11 +7,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using TSMapEditor.Rendering;
+using TSMapEditor.UI.Controls;
 using TSMapEditor.UI.CursorActions;
 
 namespace TSMapEditor.UI.Sidebar;
 
-public class EditorSidebar : EditorPanel
+public class EditorSidebar : EditorWindow
 {
     public EditorSidebar(WindowManager windowManager, EditorState editorState, Map map,
         TheaterGraphics theaterGraphics, ICursorActionTarget cursorActionTarget,
@@ -22,6 +23,10 @@ public class EditorSidebar : EditorPanel
         this.theaterGraphics = theaterGraphics;
         this.cursorActionTarget = cursorActionTarget;
         this.overlayPlacementAction = overlayPlacementAction;
+        EnableDropShadow = false;
+        CanBeMoved = false;
+        CenterByDefault = false;
+        HandleResolutionChanges = false;
     }
 
     private EditorState editorState;

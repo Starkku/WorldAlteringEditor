@@ -17,7 +17,7 @@ enum TileSetSortMode
     Name
 }
 
-public class TileSelector : XNAControl
+public class TileSelector : EditorWindow
 {
     private const int TileSetListWidth = 180;
     private const int ResizeDragThreshold = 30;
@@ -29,6 +29,10 @@ public class TileSelector : XNAControl
         this.theaterGraphics = theaterGraphics;
         this.placeTerrainCursorAction = placeTerrainCursorAction;
         this.editorState = editorState;
+        EnableDropShadow = false;
+        CanBeMoved = false;
+        CenterByDefault = false;
+        HandleResolutionChanges = false;
     }
 
     protected override void OnClientRectangleUpdated()
@@ -298,7 +302,7 @@ public class TileSelector : XNAControl
 
     public override void Draw(GameTime gameTime)
     {
-        FillRectangle(new Rectangle(0, 0, Width, ResizeDragThreshold), new Color(0, 0, 0, 64));
-        DrawChildren(gameTime);
+        FillRectangle(new Rectangle(btnSort.Right, 0, Width, ResizeDragThreshold), new Color(0, 0, 0, 64));
+        base.Draw(gameTime);
     }
 }

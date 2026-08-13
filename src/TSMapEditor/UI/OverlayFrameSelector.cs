@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using TSMapEditor.Rendering;
+using TSMapEditor.UI.Controls;
 
 namespace TSMapEditor.UI;
 
@@ -30,7 +31,7 @@ class OverlayFrameSelectorFrame
     public PositionedTexture Texture { get; set; }
 }
 
-public class OverlayFrameSelector : XNAPanel
+public class OverlayFrameSelector : EditorWindow
 {
     private const int OVERLAY_FRAME_PADDING = 10;
     private const int SCROLL_RATE = 10;
@@ -40,6 +41,10 @@ public class OverlayFrameSelector : XNAPanel
         this.theaterGraphics = theaterGraphics;
         this.editorState = editorState;
         DrawMode = ControlDrawMode.UNIQUE_RENDER_TARGET;
+        EnableDropShadow = false;
+        CanBeMoved = false;
+        CenterByDefault = false;
+        HandleResolutionChanges = false;
     }
 
     private readonly TheaterGraphics theaterGraphics;
@@ -99,7 +104,6 @@ public class OverlayFrameSelector : XNAPanel
     {
         base.Initialize();
 
-        BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 196), 2, 2);
         PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
 
         palettedDrawEffect = AssetLoader.LoadEffect("Shaders/PalettedDrawNoDepth") ?? throw new FileNotFoundException("Shader not found: PalettedDrawNoDepth");
@@ -322,7 +326,7 @@ public class OverlayFrameSelector : XNAPanel
 
     public override void Draw(GameTime gameTime)
     {
-        DrawPanel();
+        base.Draw(gameTime);
 
         for (int i = 0; i < framesInView.Count; i++)
         {
@@ -357,8 +361,5 @@ public class OverlayFrameSelector : XNAPanel
             var rectangle = new Rectangle(frame.Location.X, frame.Location.Y + viewY, frame.Size.X, frame.Size.Y);
             DrawRectangle(rectangle, Color.Red, 2);
         }
-
-        DrawChildren(gameTime);
-        DrawPanelBorders();
     }
 }

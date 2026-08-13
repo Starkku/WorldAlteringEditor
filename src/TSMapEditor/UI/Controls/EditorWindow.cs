@@ -63,6 +63,11 @@ public class EditorWindow : EditorPanel
     /// </summary>
     public bool IsForeground { get; internal set; } = true;
 
+    /// <summary>
+    /// Whether the window handles resolution changes by shared logic of the <see cref="EditorWindow"/> class.
+    /// </summary>
+    protected bool HandleResolutionChanges { get; set; } = true;
+
     protected bool IsDragged;
     private Point lastCursorPoint;
 
@@ -86,6 +91,9 @@ public class EditorWindow : EditorPanel
 
     private void WindowManager_RenderResolutionChanged(object sender, EventArgs e)
     {
+        if (!HandleResolutionChanges)
+            return;
+
         if (CenterByDefault)
             CenterOnParent();
         else

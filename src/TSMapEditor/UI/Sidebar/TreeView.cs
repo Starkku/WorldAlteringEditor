@@ -435,6 +435,7 @@ public class TreeView : EditorPanel
 
     public override void Draw(GameTime gameTime)
     {
+        RemapColor = UISettings.ActiveSettings.PanelBackgroundColor;
         DrawPanel();
 
         int drawnWidth = Width;

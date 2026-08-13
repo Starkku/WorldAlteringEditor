@@ -86,7 +86,6 @@ public abstract class ObjectListPanel : XNAPanel, ISearchBoxContainer
         ObjectTreeView.Height = Height - ObjectTreeView.Y;
         ObjectTreeView.Width = Width;
         AddChild(ObjectTreeView);
-        ObjectTreeView.BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 222), 2, 2);
 
         ObjectTreeView.SelectedItemChanged += ObjectTreeView_SelectedItemChanged;
         EditorState.ObjectOwnerChanged += EditorState_ObjectOwnerChanged;

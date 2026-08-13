@@ -31,6 +31,8 @@ public class MegamapWindow : EditorWindow
     {
         this.cursorActionTarget = cursorActionTarget;
         this.enableToolbar = enableToolbar;
+        EnableGlassEffect = enableToolbar;
+        EnableDropShadow = enableToolbar;
         MegamapTexture = cursorActionTarget.MinimapTexture;
 
         double ratio = MegamapTexture.Width / (double)MegamapTexture.Height;
@@ -265,7 +267,7 @@ public class MegamapWindow : EditorWindow
 
     public override void Draw(GameTime gameTime)
     {
-        DrawPanel();
+        DrawWindowBackground();
 
         Renderer.PushSettings(new SpriteBatchSettings(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearWrap, null, null, null));
         DrawTexture(MegamapTexture, textureDrawRectangle, Color.White);
@@ -288,6 +290,6 @@ public class MegamapWindow : EditorWindow
             DrawStringWithShadow(Translate(this, "EscToClose", "Press ESC to close"), 1, new Vector2(Constants.UIEmptySideSpace, Constants.UIEmptyTopSpace), Color.Red, 1.0f);
         }
 
-        DrawPanelBorders();
+        DrawWindowBorders();
     }
 }

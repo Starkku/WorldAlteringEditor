@@ -85,6 +85,8 @@ public class SettingsPanel : INItializableWindow
     private XNADropDown ddScrollRate;
     private XNACheckBox chkUseBoldFont;
     private XNACheckBox chkGraphicsLevel;
+    private XNACheckBox chkEnableWindowGlassEffect;
+    private XNACheckBox chkEnableWindowDropShadowEffect;
     private XNACheckBox chkSmartScriptActionCloning;
     private XNACheckBox chkSmartScriptDefaultValues;
     private XNACheckBox chkQuickTriggerParameterSelection;
@@ -94,6 +96,7 @@ public class SettingsPanel : INItializableWindow
 
     public override void Kill()
     {
+        ddTheme.SelectedIndexChanged -= DdTheme_SelectedIndexChanged;
         BackgroundTexture?.Dispose();
         base.Kill();
     }
@@ -132,6 +135,8 @@ public class SettingsPanel : INItializableWindow
         foreach (var theme in EditorThemes.Themes)
             ddTheme.AddItem(theme.Key);
 
+        ddTheme.SelectedIndexChanged += DdTheme_SelectedIndexChanged;
+
         ddScrollRate = FindChild<XNADropDown>(nameof(ddScrollRate));
         var scrollRateNames = new string[] 
         { 
@@ -155,6 +160,9 @@ public class SettingsPanel : INItializableWindow
 
         chkGraphicsLevel = FindChild<XNACheckBox>(nameof(chkGraphicsLevel));
 
+        chkEnableWindowGlassEffect = FindChild<XNACheckBox>(nameof(chkEnableWindowGlassEffect));
+        chkEnableWindowDropShadowEffect = FindChild<XNACheckBox>(nameof(chkEnableWindowDropShadowEffect));
+
         chkSmartScriptActionCloning = FindChild<XNACheckBox>(nameof(chkSmartScriptActionCloning));
 
         chkSmartScriptDefaultValues = FindChild<XNACheckBox>(nameof(chkSmartScriptDefaultValues));
@@ -167,6 +175,14 @@ public class SettingsPanel : INItializableWindow
         tbMCPServerPort = FindChild<EditorNumberTextBox>(nameof(tbMCPServerPort));
 
         LoadSettings();
+    }
+
+    private void DdTheme_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (ddTheme.SelectedItem == null)
+            return;
+
+        UISettings.ActiveSettings = EditorThemes.Themes[ddTheme.SelectedItem.Text];
     }
 
     private void DdLanguage_SelectedIndexChanged(object sender, EventArgs e)
@@ -198,6 +214,8 @@ public class SettingsPanel : INItializableWindow
         chkBorderless.Checked = userSettings.Borderless;
         chkUseBoldFont.Checked = userSettings.UseBoldFont;
         chkGraphicsLevel.Checked = userSettings.GraphicsLevel > 0;
+        chkEnableWindowGlassEffect.Checked = userSettings.EnableWindowGlassEffect;
+        chkEnableWindowDropShadowEffect.Checked = userSettings.EnableWindowDropShadowEffect;
         chkSmartScriptActionCloning.Checked = userSettings.SmartScriptActionCloning;
         chkSmartScriptDefaultValues.Checked = userSettings.SmartScriptActionDefaultValues;
         chkQuickTriggerParameterSelection.Checked = userSettings.QuickTriggerParameterSelection;
@@ -229,6 +247,8 @@ public class SettingsPanel : INItializableWindow
         userSettings.Language.UserDefinedValue = ((Translation)ddLanguage.SelectedItem.Tag).InternalName;
         userSettings.UseBoldFont.UserDefinedValue = chkUseBoldFont.Checked;
         userSettings.GraphicsLevel.UserDefinedValue = chkGraphicsLevel.Checked ? 1 : 0;
+        userSettings.EnableWindowGlassEffect.UserDefinedValue = chkEnableWindowGlassEffect.Checked;
+        userSettings.EnableWindowDropShadowEffect.UserDefinedValue = chkEnableWindowDropShadowEffect.Checked;
         userSettings.SmartScriptActionCloning.UserDefinedValue = chkSmartScriptActionCloning.Checked;
         userSettings.SmartScriptActionDefaultValues.UserDefinedValue = chkSmartScriptDefaultValues.Checked;
         userSettings.QuickTriggerParameterSelection.UserDefinedValue = chkQuickTriggerParameterSelection.Checked;

@@ -19,7 +19,7 @@ using Microsoft.Win32;
 
 namespace TSMapEditor.UI;
 
-public class MainMenu : EditorPanel
+public class MainMenu : EditorWindow
 {
     private const int BrowseButtonWidth = 70;
 

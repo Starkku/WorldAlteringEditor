@@ -1,4 +1,5 @@
-﻿using Rampastring.XNAUI;
+﻿using Microsoft.Xna.Framework;
+using Rampastring.XNAUI;
 using Rampastring.XNAUI.XNAControls;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ public class EditorPanel : XNAPanel
 
         if (BackgroundTexture == null)
         {
-            BackgroundTexture = AssetLoader.CreateTexture(UISettings.ActiveSettings.PanelBackgroundColor, 2, 2);
+            BackgroundTexture = AssetLoader.CreateTexture(Color.White, 2, 2);
             PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
             isStockBackgroundTexture = true;
         }
@@ -72,5 +73,11 @@ public class EditorPanel : XNAPanel
             BackgroundTexture?.Dispose();
 
         base.Kill();
+    }
+
+    public override void Draw(GameTime gameTime)
+    {
+        RemapColor = UISettings.ActiveSettings.PanelBackgroundColor;
+        base.Draw(gameTime);
     }
 }

@@ -30,15 +30,31 @@ public class CustomUISettings : UISettings
         CheckBoxClearTexture = AssetLoader.LoadTexture("checkBoxClear.png");
         CheckBoxDisabledCheckedTexture = AssetLoader.LoadTexture("checkBoxCheckedD.png");
         CheckBoxDisabledClearTexture = AssetLoader.LoadTexture("checkBoxClearD.png");
-        PanelBackgroundColor = new Color(0, 0, 0, 128);
+        PanelBackgroundColor = new Color(128, 128, 128, 255);
         PanelBorderColor = new Color(128, 128, 128, 255);
         DefaultAlphaRate = 1.0f; // ScrollBar textures need instant animations
     }
 
-    public Color ListBoxBackgroundColor { get; set; } = Color.Black;
+    public Color ListBoxBackgroundColor { get; set; } = new Color(0, 0, 0, 128);
     public Color ButtonMainBackgroundColor { get; set; } = new Color(0, 0, 0, 196);
     public Color ButtonSecondaryBackgroundColor { get; set; } = new Color(0, 0, 0, 255);
     public Color ButtonTertiaryBackgroundColor { get; set; } = Color.White;
+    public Color ButtonHoverMainBackgroundColor { get; set; } = new Color(128, 128, 128, 196);
+    public Color ButtonHoverSecondaryBackgroundColor { get; set; } = new Color(128, 128, 128, 255);
+    public Color ButtonHoverTertiaryBackgroundColor { get; set; } = Color.White;
+    public Color WindowGlassTint { get; set; } = new Color(8, 12, 18, 180);
+    public float WindowBlurRadius { get; set; } = 8.0f;
+    public float WindowGlassBackdropSaturation { get; set; } = 0.85f;
+    public float WindowGlassNoiseStrength { get; set; } = 0.010f;
+    public Color WindowGlassReflectionColor { get; set; } = new Color(205, 225, 255);
+    public float WindowGlassReflectionIntensity { get; set; } = 0.18f;
+    public Color WindowShadowColor { get; set; } = new Color(0, 0, 0, 170);
+    public float WindowShadowBlurRadius { get; set; } = 18.0f;
+    public float WindowShadowSpread { get; set; } = 1.0f;
+    public float WindowShadowOffsetX { get; set; } = 0.0f;
+    public float WindowShadowOffsetY { get; set; } = 5.0f;
+    public float WindowInactiveShadowStrength { get; set; } = 0.25f;
+    public Color WindowInactiveBorderColor { get; set; } = new Color(64, 64, 64);
 }
 
 class UIManager : XNAControl, IWindowParentControl

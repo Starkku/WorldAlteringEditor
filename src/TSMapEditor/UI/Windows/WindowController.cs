@@ -86,6 +86,9 @@ public class WindowController
 
         if (foregroundWindow != window)
         {
+            if (foregroundWindow != null)
+                foregroundWindow.IsForeground = false;
+
             windowParentControl.SetAutoUpdateChildOrder(false);
 
             Windows.Remove(window);
@@ -100,9 +103,38 @@ public class WindowController
             windowParentControl.SetAutoUpdateChildOrder(true);
 
             foregroundWindow = window;
+            foregroundWindow.IsForeground = true;
 
             foregroundWindow.UpdateOrder = ChildWindowOrderValue + Windows.Count;
             foregroundWindow.DrawOrder = ChildWindowOrderValue + Windows.Count;
+        }
+    }
+
+    private void Window_Closed(object sender, EventArgs e)
+    {
+        var window = (EditorWindow)sender;
+        if (foregroundWindow != window)
+            return;
+
+        SelectTopVisibleWindow(window);
+    }
+
+    private void SelectTopVisibleWindow(EditorWindow excludedWindow = null)
+    {
+        if (foregroundWindow != null)
+            foregroundWindow.IsForeground = false;
+
+        foregroundWindow = null;
+
+        for (int i = Windows.Count - 1; i >= 0; i--)
+        {
+            var window = Windows[i];
+            if (window == excludedWindow || !window.Visible || !window.Enabled)
+                continue;
+
+            foregroundWindow = window;
+            foregroundWindow.IsForeground = true;
+            break;
         }
     }
 
@@ -233,8 +265,10 @@ public class WindowController
         {
             window.DrawOrder = ChildWindowOrderValue;
             window.UpdateOrder = ChildWindowOrderValue;
+            window.IsForeground = false;
             window.LeftClick += Window_HandleFocusSwitch;
             window.InteractedWith += Window_HandleFocusSwitch;
+            window.Closed += Window_Closed;
             windowParentControl.AddChild(window);
 
             AddFocusSwitchHandlerToChildrenRecursive(window, window);
@@ -335,8 +369,10 @@ public class WindowController
         Windows.Add(window);
         window.DrawOrder = ChildWindowOrderValue;
         window.UpdateOrder = ChildWindowOrderValue;
+        window.IsForeground = false;
         window.LeftClick += Window_HandleFocusSwitch;
         window.InteractedWith += Window_HandleFocusSwitch;
+        window.Closed += Window_Closed;
         windowParentControl.AddChild(window);
 
         AddFocusSwitchHandlerToChildrenRecursive(window, window);
@@ -355,7 +391,12 @@ public class WindowController
             window.UpdateOrder = ChildWindowOrderValue;
             window.LeftClick -= Window_HandleFocusSwitch;
             window.InteractedWith -= Window_HandleFocusSwitch;
+            window.Closed -= Window_Closed;
             RemoveFocusSwitchHandlerFromChildrenRecursive(window, window);
+
+            if (foregroundWindow == window)
+                SelectTopVisibleWindow();
+
             window.Kill();
             windowParentControl.RemoveChild(window);
         }
@@ -377,6 +418,7 @@ public class WindowController
         {
             window.LeftClick -= Window_HandleFocusSwitch;
             window.InteractedWith -= Window_HandleFocusSwitch;
+            window.Closed -= Window_Closed;
             windowParentControl.RemoveChild(window);
 
             ClearFocusSwitchHandlerFromChildrenRecursive(window, window);

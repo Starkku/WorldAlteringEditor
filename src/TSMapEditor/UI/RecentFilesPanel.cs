@@ -9,11 +9,10 @@ using TSMapEditor.UI.Windows;
 
 namespace TSMapEditor.UI;
 
-public class RecentFilesPanel : XNAPanel
+public class RecentFilesPanel : EditorPanel
 {
     public RecentFilesPanel(WindowManager windowManager) : base(windowManager)
     {
-        BackgroundTexture = AssetLoader.CreateTexture(UISettings.ActiveSettings.BackgroundColor, 2, 2);
     }
 
     public EventHandler<FileSelectedEventArgs> FileSelected;

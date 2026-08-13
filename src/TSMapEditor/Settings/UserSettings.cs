@@ -40,6 +40,8 @@ public class UserSettings
             Borderless,
             FullscreenWindowed,
             ConserveVRAM,
+            EnableWindowGlassEffect,
+            EnableWindowDropShadowEffect,
 
             ScrollRate,
             MapWideOverlayOpacity,
@@ -104,6 +106,8 @@ public class UserSettings
     public BoolSetting Borderless = new BoolSetting(Display, nameof(Borderless), false);
     public BoolSetting FullscreenWindowed = new BoolSetting(Display, nameof(FullscreenWindowed), false);
     public BoolSetting ConserveVRAM = new BoolSetting(Display, nameof(ConserveVRAM), false);
+    public BoolSetting EnableWindowGlassEffect = new BoolSetting(Display, nameof(EnableWindowGlassEffect), true);
+    public BoolSetting EnableWindowDropShadowEffect = new BoolSetting(Display, nameof(EnableWindowDropShadowEffect), true);
 
     public IntSetting ScrollRate = new IntSetting(MapView, nameof(ScrollRate), 15);
     public IntSetting MapWideOverlayOpacity = new IntSetting(MapView, nameof(MapWideOverlayOpacity), 50);

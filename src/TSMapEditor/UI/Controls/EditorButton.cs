@@ -40,8 +40,9 @@ public class EditorButton : XNAButton
             customUISettings.ButtonTertiaryBackgroundColor);
 
         HoverTexture = Helpers.CreateUITexture(GraphicsDevice, Width, Height,
-            new Color(128, 128, 128, 196),
-            new Color(128, 128, 128, 255), Color.White);
+            customUISettings.ButtonHoverMainBackgroundColor,
+            customUISettings.ButtonHoverSecondaryBackgroundColor,
+            customUISettings.ButtonHoverTertiaryBackgroundColor);
     }
 
     public override void Draw(GameTime gameTime)

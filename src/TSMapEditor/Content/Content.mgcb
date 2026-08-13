@@ -25,6 +25,12 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/AlphaMapApply.fx
 
+#begin Shaders/BackdropBlur.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/BackdropBlur.fx
+
 #begin Shaders/PalettedColorDraw.fx
 /importer:EffectImporter
 /processor:EffectProcessor

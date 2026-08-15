@@ -10,6 +10,7 @@ using TSMapEditor.UI.Windows;
 using TSMapEditor.UI.Windows.MainMenuWindows;
 using MessageBoxButtons = TSMapEditor.UI.Windows.MessageBoxButtons;
 using MapEditorLibrary;
+using Microsoft.Xna.Framework.Graphics;
 
 
 #if WINDOWS
@@ -19,12 +20,60 @@ using Microsoft.Win32;
 
 namespace TSMapEditor.UI;
 
+/// <summary>
+/// Simple wrapper control that draws a background texture under the main menu,
+/// allowing previewing the theme's glass effect against a proper background.
+/// </summary>
+public class MainMenuWrapper : XNAControl
+{
+    public MainMenuWrapper(WindowManager windowManager) : base(windowManager)
+    {
+    }
+
+    private Texture2D backgroundTexture;
+
+    public override void Initialize()
+    {
+        int numberOfAvailableBackgrounds = 0;
+
+        for (int i = 0; AssetLoader.AssetExists($"mainmenubg{i}.png"); i++)
+            numberOfAvailableBackgrounds++;
+
+        if (numberOfAvailableBackgrounds > 0)
+            backgroundTexture = AssetLoader.LoadTextureUncached($"mainmenubg{new Random().Next(numberOfAvailableBackgrounds)}.png");
+
+        var mainMenu = new MainMenu(WindowManager);
+        AddChild(mainMenu);
+        Width = mainMenu.Width;
+        Height = mainMenu.Height;
+
+        base.Initialize();
+    }
+
+    public override void Kill()
+    {
+        backgroundTexture?.Dispose();
+        base.Kill();
+    }
+
+    public override void Draw(GameTime gameTime)
+    {
+        if (backgroundTexture != null)
+        {
+            DrawTexture(backgroundTexture, new Point(0, 0), Color.White);
+        }
+
+        base.Draw(gameTime);
+    }
+}
+
 public class MainMenu : EditorWindow
 {
     private const int BrowseButtonWidth = 70;
 
     public MainMenu(WindowManager windowManager) : base(windowManager)
     {
+        EnableDropShadow = false;
     }
 
     private string gameDirectory;
@@ -189,7 +238,7 @@ public class MainMenu : EditorWindow
         settingsPanel.Y = Constants.UIEmptyTopSpace;
         AddChild(settingsPanel);
         settingsPanel.Height = lbFileList.Bottom - settingsPanel.Y;
-        Width += settingsPanel.Width + Constants.UIEmptySideSpace;
+        Width += settingsPanel.Width;
 
         var lblVersion = new XNALabel(WindowManager);
         lblVersion.Name = nameof(lblVersion);
@@ -401,7 +450,7 @@ public class MainMenu : EditorWindow
         if (fullscreenWindowed && !borderless)
             throw new InvalidOperationException("Borderless= cannot be set to false if FullscreenWindowed= is enabled.");
 
-        WindowManager.CenterControlOnScreen(this);
+        WindowManager.CenterControlOnScreen(Parent);
 
         _ = UserSettings.Instance.SaveSettingsAsync();
     }
@@ -548,6 +597,7 @@ public class MainMenu : EditorWindow
     private void LoadTheater()
     {
         mapSetup.LoadTheaterGraphics(WindowManager);
-        WindowManager.RemoveControl(this);
+        WindowManager.RemoveControl(Parent);
+        Parent.Kill();
     }
 }

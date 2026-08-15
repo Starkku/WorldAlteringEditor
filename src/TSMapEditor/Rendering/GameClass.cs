@@ -202,9 +202,9 @@ public class GameClass : Microsoft.Xna.Framework.Game
 
     private void InitMainMenu()
     {
-        var mainMenu = new MainMenu(windowManager);
-        windowManager.AddAndInitializeControl(mainMenu);
-        windowManager.CenterControlOnScreen(mainMenu);
+        var mainMenuWrapper = new MainMenuWrapper(windowManager);
+        windowManager.AddAndInitializeControl(mainMenuWrapper);
+        windowManager.CenterControlOnScreen(mainMenuWrapper);
     }
 
     private void SetTargetFPS()

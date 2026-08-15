@@ -185,7 +185,7 @@ public abstract class SelectObjectWindow<T> : INItializableWindow
     {
         if (lbObjectList.HoveredItem == null)
         {
-             infoPanel.Hide();
+             infoPanel.DoHide();
              return;
         }
 

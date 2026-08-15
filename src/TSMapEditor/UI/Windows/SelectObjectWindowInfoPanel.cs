@@ -2,10 +2,11 @@
 using MapEditorLibrary.GameMath;
 using Microsoft.Xna.Framework;
 using Rampastring.XNAUI;
+using TSMapEditor.UI.Controls;
 
 namespace TSMapEditor.UI.Windows;
 
-class SelectObjectWindowInfoPanel : EditorPanel
+class SelectObjectWindowInfoPanel : EditorWindow
 {
     public SelectObjectWindowInfoPanel(WindowManager windowManager) : base(windowManager)
     {
@@ -24,17 +25,7 @@ class SelectObjectWindowInfoPanel : EditorPanel
 
     public override void Initialize()
     {
-        BackgroundTexture = AssetLoader.CreateTexture(UISettings.ActiveSettings.BackgroundColor, 2, 2);
-
         base.Initialize();
-    }
-
-    public override void Kill()
-    {
-        BackgroundTexture?.Dispose();
-        BackgroundTexture = null;
-
-        base.Kill();
     }
 
     private void RegenerateSize()
@@ -82,7 +73,7 @@ class SelectObjectWindowInfoPanel : EditorPanel
         }
     }
 
-    public void Hide()
+    public void DoHide()
     {
         if (Detached)
             Attach();

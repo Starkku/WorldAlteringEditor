@@ -668,7 +668,7 @@ public class MapUI : XNAControl, ICursorActionTarget, IMutationTarget, IMapScree
                 {
                     CursorAction.Update(tileUnderCursor.CoordsToPoint());
 
-                    if (Cursor.LeftDown && !CursorAction.OnlyUniqueCellEvents)
+                    if (leftPressedDownOnControl && Cursor.LeftDown && !CursorAction.OnlyUniqueCellEvents)
                         CursorAction.LeftDown(tileUnderCursor.CoordsToPoint());
                 }
             }

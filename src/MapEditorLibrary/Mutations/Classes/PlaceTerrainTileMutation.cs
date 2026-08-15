@@ -10,10 +10,11 @@ namespace MapEditorLibrary.Mutations.Classes;
 /// </summary>
 public class PlaceTerrainTileMutation : Mutation, ICheckableMutation
 {
-    public PlaceTerrainTileMutation(IMutationTarget mutationTarget, Point2D targetCellCoords, ITileImage tile, int heightOffset)
+    public PlaceTerrainTileMutation(IMutationTarget mutationTarget, Point2D targetCellCoords, ITileImage tile, int heightOffset, int eventID)
         : this(mutationTarget, targetCellCoords, tile, heightOffset, mutationTarget.BrushSize,
             mutationTarget.AutoLATEnabled, mutationTarget.OnlyPaintOnClearGround)
     {
+        EventID = eventID;
     }
 
     public PlaceTerrainTileMutation(IMutationTarget mutationTarget, Point2D targetCellCoords, ITileImage tile, int heightOffset,

@@ -271,7 +271,7 @@ public class PlaceTerrainCursorAction : LineAndRegularPaintingAction
 
     protected override ICheckableMutation CreateRegularPlacementMutation(Point2D cellCoords)
     {
-        return new PlaceTerrainTileMutation(CursorActionTarget.MutationTarget, cellCoords, Tile, heightOffset);
+        return new PlaceTerrainTileMutation(CursorActionTarget.MutationTarget, cellCoords, Tile, heightOffset, EventID);
     }
 
     protected override Mutation CreateLinePlacementMutation(Direction direction, int length)
@@ -367,7 +367,7 @@ public class PlaceTerrainCursorAction : LineAndRegularPaintingAction
             return;
 
         Point2D adjustedCellCoords = GetAdjustedCellCoords(cellCoords);
-        var tileMutation = new PlaceTerrainTileMutation(CursorActionTarget.MutationTarget, adjustedCellCoords, Tile, heightOffset);
+        var tileMutation = new PlaceTerrainTileMutation(CursorActionTarget.MutationTarget, adjustedCellCoords, Tile, heightOffset, EventID);
         CursorActionTarget.MutationManager.PerformMutation(tileMutation);
         PreviousCellCoords = cellCoords;
 

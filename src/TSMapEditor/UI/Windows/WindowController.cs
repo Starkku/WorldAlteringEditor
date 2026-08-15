@@ -185,7 +185,7 @@ public class WindowController
         SaveMapAsWindow = new SaveMapAsWindow(windowParentControl.WindowManager, map);
         Windows.Add(SaveMapAsWindow);
 
-        CreateNewMapWindow = new CreateNewMapWindow(windowParentControl.WindowManager, true);
+        CreateNewMapWindow = new CreateNewMapWindow(windowParentControl.WindowManager);
         Windows.Add(CreateNewMapWindow);
 
         OpenMapWindow = new OpenMapWindow(windowParentControl.WindowManager);

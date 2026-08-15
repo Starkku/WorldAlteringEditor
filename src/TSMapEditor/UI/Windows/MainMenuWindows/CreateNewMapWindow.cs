@@ -27,14 +27,12 @@ public class CreateNewMapWindow : INItializableWindow
     private const int MinMapSize = 50;
     private const int MaxMapSize = 512;
 
-    public CreateNewMapWindow(WindowManager windowManager, bool canExit) : base(windowManager)
+    public CreateNewMapWindow(WindowManager windowManager) : base(windowManager)
     {
-        this.canExit = canExit;
     }
 
     public event EventHandler<CreateNewMapEventArgs> OnCreateNewMap;
-
-    private readonly bool canExit;
+    public event EventHandler OnBack;
 
     private XNADropDown ddTheater;
     private EditorNumberTextBox tbWidth;
@@ -44,8 +42,6 @@ public class CreateNewMapWindow : INItializableWindow
 
     public override void Initialize()
     {
-        HasCloseButton = canExit;
-
         Name = nameof(CreateNewMapWindow);
         base.Initialize();
 
@@ -54,6 +50,7 @@ public class CreateNewMapWindow : INItializableWindow
         tbHeight = FindChild<EditorNumberTextBox>(nameof(tbHeight));
         ddStartingLevel = FindChild<XNADropDown>(nameof(ddStartingLevel));
 
+        FindChild<EditorButton>("btnBack").LeftClick += BtnBack_LeftClick;
         FindChild<EditorButton>("btnCreate").LeftClick += BtnCreate_LeftClick;
 
         ddTheater.SelectedIndex = 0;
@@ -67,6 +64,12 @@ public class CreateNewMapWindow : INItializableWindow
         }
 
         CenterOnParent();
+    }
+
+    private void BtnBack_LeftClick(object sender, InputEventArgs e)
+    {
+        Hide();
+        OnBack?.Invoke(this, EventArgs.Empty);
     }
 
     public void Open()

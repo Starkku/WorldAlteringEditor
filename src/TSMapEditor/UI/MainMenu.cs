@@ -31,6 +31,7 @@ public class MainMenuWrapper : XNAControl
     }
 
     private Texture2D backgroundTexture;
+    private MainMenu mainMenu;
 
     public override void Initialize()
     {
@@ -42,7 +43,7 @@ public class MainMenuWrapper : XNAControl
         if (numberOfAvailableBackgrounds > 0)
             backgroundTexture = AssetLoader.LoadTextureUncached($"mainmenubg{new Random().Next(numberOfAvailableBackgrounds)}.png");
 
-        var mainMenu = new MainMenu(WindowManager);
+        mainMenu = new MainMenu(WindowManager);
         AddChild(mainMenu);
         Width = mainMenu.Width;
         Height = mainMenu.Height;
@@ -58,7 +59,7 @@ public class MainMenuWrapper : XNAControl
 
     public override void Draw(GameTime gameTime)
     {
-        if (backgroundTexture != null)
+        if (mainMenu != null && mainMenu.Visible && backgroundTexture != null)
         {
             DrawTexture(backgroundTexture, new Point(0, 0), Color.White);
         }
@@ -303,14 +304,35 @@ public class MainMenu : EditorWindow
             return;
 
         ApplySettings();
-        WindowManager.RemoveControl(Parent);
-        var createMapWindow = new CreateNewMapWindow(WindowManager, false);
-        createMapWindow.OnCreateNewMap += CreateMapWindow_OnCreateNewMap;
-        WindowManager.AddAndInitializeControl(createMapWindow);
+        Disable();
+
+        var createNewMapWindow = new CreateNewMapWindow(WindowManager);
+        createNewMapWindow.OnCreateNewMap += CreateMapWindow_OnCreateNewMap;
+        createNewMapWindow.OnBack += CreateMapWindow_OnBack;
+        Parent.AddChild(createNewMapWindow);
+    }
+
+    private void ClearCreateNewMapWindow(CreateNewMapWindow createNewMapWindow)
+    {
+        createNewMapWindow.OnCreateNewMap -= CreateMapWindow_OnCreateNewMap;
+        createNewMapWindow.OnBack -= CreateMapWindow_OnBack;
+        Parent.RemoveChild(createNewMapWindow);
+        createNewMapWindow.Kill();
+    }
+
+    private void CreateMapWindow_OnBack(object sender, EventArgs e)
+    {
+        var createNewMapWindow = (CreateNewMapWindow)sender;
+        ClearCreateNewMapWindow(createNewMapWindow);
+        Enable();
     }
 
     private void CreateMapWindow_OnCreateNewMap(object sender, CreateNewMapEventArgs e)
     {
+        var createNewMapWindow = (CreateNewMapWindow)sender;
+        ClearCreateNewMapWindow(createNewMapWindow);
+        Parent.RemoveChild(this);
+
         mapSetup = new MapSetup();
         string error = mapSetup.InitializeMap(gameDirectory, true, null, e, WindowManager);
         if (!string.IsNullOrWhiteSpace(error))

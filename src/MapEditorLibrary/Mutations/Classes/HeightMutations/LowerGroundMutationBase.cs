@@ -78,7 +78,7 @@ public abstract class LowerGroundMutationBase : AlterElevationMutationBase
 
         var changedCells = SmoothFlat(targetedCells, targetCellHeight - 1, HeightFloodMode.Down, AllowSteep);
 
-        if (changedCells != null && MutationTarget.AutoLATEnabled)
+        if (changedCells != null && AutoLATEnabled)
             ApplyAutoLAT(changedCells);
     }
 
@@ -100,6 +100,6 @@ public abstract class LowerGroundMutationBase : AlterElevationMutationBase
             if (cell.Y > maxY) maxY = cell.Y;
         }
 
-        ApplyGenericAutoLAT(minX - 1, minY - 1, maxX + 1, maxY + 1);
+        ApplyGenericAutoLAT(minX - 1, minY - 1, maxX + 1, maxY + 1, AddCellToUndoData);
     }
 }

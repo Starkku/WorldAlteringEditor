@@ -12,11 +12,13 @@ public abstract class AlterElevationMutationBase : Mutation
         OriginCell = originCell;
         BrushSize = brushSize ?? throw new ArgumentNullException(nameof(brushSize));
         RampTileSet = Map.TheaterInstance.Theater.RampTileSet;
+        AutoLATEnabled = mutationTarget.AutoLATEnabled;
     }
 
     protected readonly Point2D OriginCell;
     protected readonly BrushSize BrushSize;
     protected readonly TileSet RampTileSet;
+    protected readonly bool AutoLATEnabled;
 
     protected List<AlterGroundElevationUndoData> undoData = new List<AlterGroundElevationUndoData>();
 

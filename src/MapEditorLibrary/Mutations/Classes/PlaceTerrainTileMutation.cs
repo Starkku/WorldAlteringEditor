@@ -36,6 +36,7 @@ public class PlaceTerrainTileMutation : Mutation, ICheckableMutation
     public bool OnlyPaintOnClearGround { get; }
 
     private List<OriginalCellTerrainData> undoData;
+    private HashSet<Point2D> undoDataCellCoords;
 
     public bool ShouldPerform() => true;
 
@@ -47,36 +48,20 @@ public class PlaceTerrainTileMutation : Mutation, ICheckableMutation
                 tileSet.TranslatedName, TargetCellCoords, BrushSize);
     }
 
-    private void AddUndoDataForTile(Point2D brushOffset)
+    private void AddCellToUndoData(Point2D cellCoords)
     {
-        for (int i = 0; i < Tile.SubTileCount; i++)
-        {
-            ISubTileImage image = Tile.GetSubTile(i);
+        if (!undoDataCellCoords.Add(cellCoords))
+            return;
 
-            if (image == null)
-                continue;
+        var mapTile = Map.GetTileOrFail(cellCoords);
 
-            int cx = TargetCellCoords.X + (brushOffset.X * Tile.Width) + i % Tile.Width;
-            int cy = TargetCellCoords.Y + (brushOffset.Y * Tile.Height) + i / Tile.Width;
-
-            var mapTile = MutationTarget.Map.GetTile(cx, cy);
-            if (mapTile != null && (!OnlyPaintOnClearGround || mapTile.IsClearGround()) &&
-                !undoData.Exists(otd => otd.CellCoords.X == cx && otd.CellCoords.Y == cy))
-            {
-                undoData.Add(new OriginalCellTerrainData(mapTile.CoordsToPoint(), mapTile.TileIndex, mapTile.SubTileIndex, mapTile.Level));
-            }
-        }
+        undoData.Add(new OriginalCellTerrainData(cellCoords, mapTile.TileIndex, mapTile.SubTileIndex, mapTile.Level));
     }
 
     public override void Perform()
     {
         undoData = new List<OriginalCellTerrainData>(Tile.SubTileCount * BrushSize.Width * BrushSize.Height);
-
-        int totalWidth = Tile.Width * BrushSize.Width;
-        int totalHeight = Tile.Height * BrushSize.Height;
-
-        // Get un-do data
-        DoForArea(AddUndoDataForTile, AutoLATEnabled);
+        undoDataCellCoords = new HashSet<Point2D>();
 
         MapTile originCell = MutationTarget.Map.GetTile(TargetCellCoords);
         int originLevel = -1;
@@ -128,6 +113,7 @@ public class PlaceTerrainTileMutation : Mutation, ICheckableMutation
                 var mapTile = MutationTarget.Map.GetTile(TargetCellCoords + new Point2D(offset.X * Tile.Width, offset.Y * Tile.Height) + subTileOffset.Value);
                 if (mapTile != null && (!OnlyPaintOnClearGround || mapTile.IsClearGround()))
                 {
+                    AddCellToUndoData(mapTile.CoordsToPoint());
                     mapTile.ChangeTileIndex(Tile.TileID, (byte)i);
                     mapTile.Level = (byte)Math.Min(originLevel + Tile.GetSubTile(i).TmpImage.Height, Constants.MaxMapHeightLevel);
                     RefreshCellLighting(mapTile);
@@ -138,33 +124,10 @@ public class PlaceTerrainTileMutation : Mutation, ICheckableMutation
         // Apply autoLAT if necessary
         if (AutoLATEnabled)
         {
-            ApplyAutoLATForTilePlacement(Tile, BrushSize, TargetCellCoords);
+            ApplyAutoLATForTilePlacement(Tile, BrushSize, TargetCellCoords, AddCellToUndoData);
         }
 
         MutationTarget.AddRefreshPoint(TargetCellCoords, Math.Max(Tile.Width, Tile.Height) * Math.Max(BrushSize.Width, BrushSize.Height));
-    }
-
-    private void DoForArea(Action<Point2D> action, bool doForSurroundings)
-    {
-        int totalWidth = Tile.Width * BrushSize.Width;
-        int totalHeight = Tile.Height * BrushSize.Height;
-
-        int initX = doForSurroundings ? -1 : 0;
-        int initY = doForSurroundings ? -1 : 0;
-
-        if (doForSurroundings)
-        {
-            totalWidth++;
-            totalHeight++;
-        }
-
-        for (int y = initY; y <= totalHeight; y++)
-        {
-            for (int x = initX; x <= totalWidth; x++)
-            {
-                action(new Point2D(x, y));
-            }
-        }
     }
 
     public override void Undo()

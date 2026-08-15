@@ -75,7 +75,7 @@ public class FlattenGroundMutation : AlterElevationMutationBase
         // Flattening only ever produces non-steep ramps.
         var changedCells = SmoothFlat(requiredCells, optionalCells, desiredHeightLevel, HeightFloodMode.Both, allowSteep: false);
 
-        if (changedCells != null && MutationTarget.AutoLATEnabled)
+        if (changedCells != null && AutoLATEnabled)
             ApplyAutoLAT(changedCells);
     }
 
@@ -97,6 +97,6 @@ public class FlattenGroundMutation : AlterElevationMutationBase
             if (cell.Y > maxY) maxY = cell.Y;
         }
 
-        ApplyGenericAutoLAT(minX - 1, minY - 1, maxX + 1, maxY + 1);
+        ApplyGenericAutoLAT(minX - 1, minY - 1, maxX + 1, maxY + 1, AddCellToUndoData);
     }
 }

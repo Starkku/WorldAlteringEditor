@@ -404,13 +404,15 @@ public class TerrainGenerationMutation : Mutation
     private Random random;
 
     private List<OriginalCellTerrainData> undoData;
+    private HashSet<Point2D> undoDataCellCoords;
+    private HashSet<Point2D> terrainCellWriteCoords;
     private List<TerrainObject> placedTerrainObjects;
     private List<Point2D> placedOverlayCellCoords;
     private List<Point2D> placedSmudgeCellCoords;
 
     private bool wasPerformedWithAutoLatOn;
 
-    public int TerrainCellWriteCount => undoData?.Select(data => data.CellCoords).Distinct().Count() ?? 0;
+    public int TerrainCellWriteCount => terrainCellWriteCoords?.Count ?? 0;
     public int PlacedTerrainObjectCount => placedTerrainObjects?.Count ?? 0;
     public int PlacedOverlayCount => placedOverlayCellCoords?.Count ?? 0;
     public int PlacedSmudgeCount => placedSmudgeCellCoords?.Count ?? 0;
@@ -454,11 +456,6 @@ public class TerrainGenerationMutation : Mutation
             mapCell.Smudge = null;
         }
 
-        if (wasPerformedWithAutoLatOn)
-        {
-            ApplyAutoLATOnArea();
-        }
-
         MutationTarget.InvalidateMap();
 
         occupiedCells.Clear();
@@ -469,6 +466,8 @@ public class TerrainGenerationMutation : Mutation
         random = new Random(seed);
 
         undoData = new List<OriginalCellTerrainData>();
+        undoDataCellCoords = new HashSet<Point2D>();
+        terrainCellWriteCoords = new HashSet<Point2D>();
         placedTerrainObjects = new List<TerrainObject>();
         placedOverlayCellCoords = new List<Point2D>();
         placedSmudgeCellCoords = new List<Point2D>();
@@ -623,12 +622,22 @@ public class TerrainGenerationMutation : Mutation
         var latTileSet = terrainGeneratorConfiguration.TileGroups.Select(tg => tg.TileSet).FirstOrDefault(ts => Map.TheaterInstance.Theater.LATGrounds.Exists(lg => lg.GroundTileSet == ts));
         if (latTileSet != null)
         {
-            ApplyAutoLATForTileSetPlacement(latTileSet.Index, minX, minY, maxX, maxY);
+            ApplyAutoLATForTileSetPlacement(latTileSet.Index, minX, minY, maxX, maxY, AddCellToUndoData);
         }
         else
         {
-            ApplyGenericAutoLAT(minX, minY, maxX, maxY);
+            ApplyGenericAutoLAT(minX, minY, maxX, maxY, AddCellToUndoData);
         }
+    }
+
+    private void AddCellToUndoData(Point2D cellCoords)
+    {
+        if (!undoDataCellCoords.Add(cellCoords))
+            return;
+
+        var mapTile = Map.GetTileOrFail(cellCoords);
+
+        undoData.Add(new OriginalCellTerrainData(cellCoords, mapTile.TileIndex, mapTile.SubTileIndex, mapTile.Level));
     }
 
     private void PlaceTerrainTileAt(ITileImage tile, Point2D cellCoords)
@@ -645,7 +654,8 @@ public class TerrainGenerationMutation : Mutation
             if (mapTile == null)
                 continue;
 
-            undoData.Add(new OriginalCellTerrainData(cellCoords + offset, mapTile.TileIndex, mapTile.SubTileIndex, mapTile.Level));
+            AddCellToUndoData(cellCoords + offset);
+            terrainCellWriteCoords.Add(cellCoords + offset);
 
             mapTile.TileImage = null;
             mapTile.TileIndex = tile.TileID;

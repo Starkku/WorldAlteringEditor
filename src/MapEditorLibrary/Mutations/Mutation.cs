@@ -46,8 +46,10 @@ public abstract class Mutation : IMutation
 
     private static readonly Point2D[] surroundingTiles = new Point2D[] { new Point2D(-1, 0), new Point2D(1, 0), new Point2D(0, -1), new Point2D(0, 1) };
 
-    protected void ApplyGenericAutoLAT(int minX, int minY, int maxX, int maxY)
+    protected void ApplyGenericAutoLAT(int minX, int minY, int maxX, int maxY, Action<Point2D> addCellToUndoData)
     {
+        ArgumentNullException.ThrowIfNull(addCellToUndoData);
+
         // Get potential base tilesets of the placed LAT (if we're placing LAT)
         // This allows placing certain LATs on top of other LATs (example: snowy dirt on snow, when snow is also placed on grass)
         // TileSet baseTileSet = null;
@@ -77,7 +79,12 @@ public abstract class Mutation : IMutation
 
                 if (tileIndex > -1)
                 {
-                    Map.GetTile(cellCoords).ChangeTileIndex(tileIndex, 0);
+                    var mapTile = Map.GetTile(cellCoords);
+
+                    if (mapTile.TileIndex != tileIndex || mapTile.SubTileIndex != 0)
+                        addCellToUndoData(cellCoords);
+
+                    mapTile.ChangeTileIndex(tileIndex, 0);
                 }
             }
         }
@@ -229,8 +236,11 @@ public abstract class Mutation : IMutation
         return (baseTileSet, altBaseTileSet);
     }
 
-    protected void ApplyAutoLATForTilePlacement(ITileImage tile, BrushSize brushSize, Point2D targetCellCoords)
+    protected void ApplyAutoLATForTilePlacement(ITileImage tile, BrushSize brushSize, Point2D targetCellCoords,
+        Action<Point2D> addCellToUndoData)
     {
+        ArgumentNullException.ThrowIfNull(addCellToUndoData);
+
         // Get potential base tilesets of the placed LAT (if we're placing LAT)
         // This allows placing certain LATs on top of other LATs (example: snowy dirt on snow, when snow is also placed on grass)
         (var baseTileSet, var altBaseTileSet) = GetBaseTileSetsForTileSet(Map.TheaterInstance, tile.TileSetId);
@@ -244,11 +254,15 @@ public abstract class Mutation : IMutation
             targetCellCoords.X - 1,
             targetCellCoords.Y - 1,
             targetCellCoords.X + totalWidth,
-            targetCellCoords.Y + totalHeight);
+            targetCellCoords.Y + totalHeight,
+            addCellToUndoData);
     }
 
-    protected void ApplyAutoLATForTileSetPlacement(int tileSetIndex, int minX, int minY, int maxX, int maxY)
+    protected void ApplyAutoLATForTileSetPlacement(int tileSetIndex, int minX, int minY, int maxX, int maxY,
+        Action<Point2D> addCellToUndoData)
     {
+        ArgumentNullException.ThrowIfNull(addCellToUndoData);
+
         (var baseTileSet, var altBaseTileSet) = GetBaseTileSetsForTileSet(Map.TheaterInstance, tileSetIndex);
 
         for (int y = minY; y <= maxY; y++)
@@ -260,7 +274,12 @@ public abstract class Mutation : IMutation
 
                 if (tileIndex > -1)
                 {
-                    Map.GetTile(cellCoords).ChangeTileIndex(tileIndex, 0);
+                    var mapTile = Map.GetTile(cellCoords);
+
+                    if (mapTile.TileIndex != tileIndex || mapTile.SubTileIndex != 0)
+                        addCellToUndoData(cellCoords);
+
+                    mapTile.ChangeTileIndex(tileIndex, 0);
                 }
             }
         }

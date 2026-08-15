@@ -13,13 +13,17 @@ public class PlaceTerrainLineMutation : Mutation
         this.direction = direction;
         this.length = length;
         this.tile = tile;
+        autoLATEnabled = mutationTarget.AutoLATEnabled;
     }
 
     private readonly MapTile sourceTile;
     private readonly Direction direction;
     private readonly int length;
     private readonly TileImage tile;
+    private readonly bool autoLATEnabled;
     private List<OriginalCellTerrainData> undoData = new List<OriginalCellTerrainData>();
+    private HashSet<Point2D> undoDataCellCoords = new HashSet<Point2D>();
+    private HashSet<Point2D> placedTerrainCellCoords = new HashSet<Point2D>();
 
     public override string GetDisplayString()
     {
@@ -89,6 +93,8 @@ public class PlaceTerrainLineMutation : Mutation
     public override void Perform()
     {
         undoData.Clear();
+        undoDataCellCoords.Clear();
+        placedTerrainCellCoords.Clear();
 
         int processedLength = 0;
         while (processedLength <= length)
@@ -125,8 +131,6 @@ public class PlaceTerrainLineMutation : Mutation
 
     private void PlaceTile(Point2D coords)
     {
-        var originalData = new List<OriginalCellTerrainData>();
-
         // Process cells within tile foundation
         for (int i = 0; i < tile.SubTileCount; i++)
         {
@@ -140,22 +144,32 @@ public class PlaceTerrainLineMutation : Mutation
             if (cell == null)
                 continue;
 
-            if (undoData.Exists(d => d.CellCoords == cellCoords))
+            if (!placedTerrainCellCoords.Add(cellCoords))
                 continue;
 
-            undoData.Add(new OriginalCellTerrainData(cellCoords, cell.TileIndex, cell.SubTileIndex, cell.Level));
+            AddCellToUndoData(cellCoords);
             cell.ChangeTileIndex(tile.TileID, (byte)i);
             cell.Level = (byte)Math.Min(cell.Level + tile.GetSubTile(i).TmpImage.Height, Constants.MaxMapHeightLevel);
 
-            if (MutationTarget.AutoLATEnabled)
+            if (autoLATEnabled)
             {
                 BrushSize brush1x1 = Map.EditorConfig.BrushSizes.Find(static bs => bs.Width == 1 && bs.Height == 1);
                 if (brush1x1 == null)
                     throw new InvalidOperationException($"{nameof(PlaceTerrainLineMutation)}.{nameof(PlaceTile)}: Unable to find 1x1 brush!");
 
-                ApplyAutoLATForTilePlacement(tile, brush1x1, cellCoords);
+                ApplyAutoLATForTilePlacement(tile, brush1x1, cellCoords, AddCellToUndoData);
             }
         }
+    }
+
+    private void AddCellToUndoData(Point2D cellCoords)
+    {
+        if (!undoDataCellCoords.Add(cellCoords))
+            return;
+
+        var mapTile = Map.GetTileOrFail(cellCoords);
+
+        undoData.Add(new OriginalCellTerrainData(cellCoords, mapTile.TileIndex, mapTile.SubTileIndex, mapTile.Level));
     }
 
     public override void Undo()

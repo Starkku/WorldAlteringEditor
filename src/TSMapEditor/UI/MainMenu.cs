@@ -303,7 +303,7 @@ public class MainMenu : EditorWindow
             return;
 
         ApplySettings();
-        WindowManager.RemoveControl(this);
+        WindowManager.RemoveControl(Parent);
         var createMapWindow = new CreateNewMapWindow(WindowManager, false);
         createMapWindow.OnCreateNewMap += CreateMapWindow_OnCreateNewMap;
         WindowManager.AddAndInitializeControl(createMapWindow);

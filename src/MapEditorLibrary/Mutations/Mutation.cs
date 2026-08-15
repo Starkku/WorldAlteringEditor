@@ -13,6 +13,8 @@ namespace MapEditorLibrary.Mutations;
 /// </summary>
 public abstract class Mutation : IMutation
 {
+    public const int EventIdNone = -1;
+
     public Mutation(IMutationTarget mutationTarget)
     {
         MutationTarget = mutationTarget;
@@ -28,7 +30,7 @@ public abstract class Mutation : IMutation
 
     public abstract string GetDisplayString();
 
-    public int EventID { get; protected set; } = -1;
+    public int EventID { get; protected set; } = EventIdNone;
 
     public MutationHistoryMetadata HistoryMetadata { get; private set; }
 

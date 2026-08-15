@@ -9,9 +9,10 @@ namespace MapEditorLibrary.Mutations.Classes;
 /// </summary>
 public class PlaceOverlayMutation : Mutation, ICheckableMutation
 {
-    public PlaceOverlayMutation(IMutationTarget mutationTarget, OverlayType overlayType, int? forcedFrameIndex, Point2D cellCoords)
+    public PlaceOverlayMutation(IMutationTarget mutationTarget, OverlayType overlayType, int? forcedFrameIndex, Point2D cellCoords, int eventID)
         : this(mutationTarget, overlayType, forcedFrameIndex, cellCoords, mutationTarget.BrushSize)
     {
+        EventID = eventID;
     }
 
     public PlaceOverlayMutation(IMutationTarget mutationTarget, OverlayType overlayType, int? forcedFrameIndex,

@@ -152,7 +152,7 @@ public class OverlayPlacementAction : LineAndRegularPaintingAction
 
     protected override ICheckableMutation CreateRegularPlacementMutation(Point2D cellCoords)
     {
-        return new PlaceOverlayMutation(CursorActionTarget.MutationTarget, OverlayType, FrameIndex, cellCoords);
+        return new PlaceOverlayMutation(CursorActionTarget.MutationTarget, OverlayType, FrameIndex, cellCoords, EventID);
     }
 
     protected override Mutation CreateLinePlacementMutation(Direction direction, int length)

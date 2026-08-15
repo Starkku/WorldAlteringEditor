@@ -60,7 +60,7 @@ public class ConnectedOverlayPlacementAction : LineAndRegularPaintingAction
                 : new OriginalOverlayInfo(null, Constants.NO_OVERLAY));
         });
 
-        new PlaceConnectedOverlayMutation(CursorActionTarget.MutationTarget, ConnectedOverlayType, cellCoords).Perform();
+        new PlaceConnectedOverlayMutation(CursorActionTarget.MutationTarget, ConnectedOverlayType, cellCoords, Mutation.EventIdNone).Perform();
     }
 
     public override void PostMapDraw(Point2D cellCoords)
@@ -101,7 +101,7 @@ public class ConnectedOverlayPlacementAction : LineAndRegularPaintingAction
 
     protected override ICheckableMutation CreateRegularPlacementMutation(Point2D cellCoords)
     {
-        return new PlaceConnectedOverlayMutation(CursorActionTarget.MutationTarget, ConnectedOverlayType, cellCoords);
+        return new PlaceConnectedOverlayMutation(CursorActionTarget.MutationTarget, ConnectedOverlayType, cellCoords, EventID);
     }
 
     protected override Mutation CreateLinePlacementMutation(Direction direction, int length)

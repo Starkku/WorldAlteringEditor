@@ -9,11 +9,12 @@ namespace MapEditorLibrary.Mutations.Classes;
 /// </summary>
 public class PlaceSmudgeCollectionMutation : Mutation, ICheckableMutation
 {
-    public PlaceSmudgeCollectionMutation(IMutationTarget mutationTarget, SmudgeCollection smudgeCollection, Point2D cellCoords, BrushSize brushSize) : base(mutationTarget)
+    public PlaceSmudgeCollectionMutation(IMutationTarget mutationTarget, SmudgeCollection smudgeCollection, Point2D cellCoords, BrushSize brushSize, int eventID) : base(mutationTarget)
     {
         this.smudgeCollection = smudgeCollection;
         this.cellCoords = cellCoords;
         this.brushSize = brushSize ?? throw new ArgumentNullException(nameof(brushSize));
+        EventID = eventID;
     }
 
     private List<CachedSmudge> oldSmudges = new List<CachedSmudge>(1);

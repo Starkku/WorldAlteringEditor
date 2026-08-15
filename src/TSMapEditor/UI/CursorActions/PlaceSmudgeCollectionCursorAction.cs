@@ -113,7 +113,7 @@ public class PlaceSmudgeCollectionCursorAction : LineAndRegularPaintingAction
 
     protected override ICheckableMutation CreateRegularPlacementMutation(Point2D cellCoords)
     {
-        return new PlaceSmudgeCollectionMutation(CursorActionTarget.MutationTarget, SmudgeCollection, cellCoords, MutationTarget.BrushSize);
+        return new PlaceSmudgeCollectionMutation(CursorActionTarget.MutationTarget, SmudgeCollection, cellCoords, MutationTarget.BrushSize, EventID);
     }
 
     protected override Mutation CreateLinePlacementMutation(Direction direction, int length)

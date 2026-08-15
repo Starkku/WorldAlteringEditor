@@ -79,7 +79,7 @@ public class TerrainObjectCollectionPlacementAction : LineAndRegularPaintingActi
 
     protected override ICheckableMutation CreateRegularPlacementMutation(Point2D cellCoords)
     {
-        return new PlaceTerrainObjectCollectionMutation(CursorActionTarget.MutationTarget, TerrainObjectCollection, cellCoords);
+        return new PlaceTerrainObjectCollectionMutation(CursorActionTarget.MutationTarget, TerrainObjectCollection, cellCoords, EventID);
     }
 
     protected override Mutation CreateLinePlacementMutation(Direction direction, int length)

@@ -21,11 +21,12 @@ public struct CachedSmudge
 /// </summary>
 public class PlaceSmudgeMutation : Mutation, ICheckableMutation
 {
-    public PlaceSmudgeMutation(IMutationTarget mutationTarget, SmudgeType smudgeType, Point2D cellCoords, BrushSize brushSize) : base(mutationTarget)
+    public PlaceSmudgeMutation(IMutationTarget mutationTarget, SmudgeType smudgeType, Point2D cellCoords, BrushSize brushSize, int eventID) : base(mutationTarget)
     {
         this.smudgeType = smudgeType;
         this.cellCoords = cellCoords;
         this.brushSize = brushSize ?? throw new ArgumentNullException(nameof(brushSize));
+        EventID = eventID;
     }
 
     private List<CachedSmudge> oldSmudges = new List<CachedSmudge>(1);

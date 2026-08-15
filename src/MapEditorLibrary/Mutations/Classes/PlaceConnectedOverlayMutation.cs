@@ -52,9 +52,10 @@ public abstract class ConnectedOverlayMutationBase : Mutation
 /// </summary>
 public class PlaceConnectedOverlayMutation : ConnectedOverlayMutationBase, ICheckableMutation
 {
-    public PlaceConnectedOverlayMutation(IMutationTarget mutationTarget, ConnectedOverlayType connectedOverlayType, Point2D cellCoords)
+    public PlaceConnectedOverlayMutation(IMutationTarget mutationTarget, ConnectedOverlayType connectedOverlayType, Point2D cellCoords, int eventID)
         : this(mutationTarget, connectedOverlayType, cellCoords, mutationTarget.BrushSize)
     {
+        EventID = eventID;
     }
 
     public PlaceConnectedOverlayMutation(IMutationTarget mutationTarget, ConnectedOverlayType connectedOverlayType, Point2D cellCoords, BrushSize brush)

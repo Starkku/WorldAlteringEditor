@@ -665,12 +665,17 @@ public class PasteTerrainMutation : Mutation
             if (buildingType == null)
                 continue;
 
-            if (cell.Structures.Count > 0 && !allowOverlap)
+            if (!allowOverlap)
             {
                 bool isFoundationClear = true;
                 buildingType.ArtConfig.DoForFoundationCoordsOrOrigin(offset =>
                 {
                     Point2D foundationCellCoords = offset + cellCoords;
+                    if (!Map.IsCoordWithinMap(foundationCellCoords))
+                    {
+                        return;
+                    }
+
                     MapTile foundationCell = MutationTarget.Map.GetTile(foundationCellCoords);
 
                     foreach (var building in foundationCell.Structures)

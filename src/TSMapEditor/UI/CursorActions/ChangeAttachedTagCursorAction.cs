@@ -13,14 +13,16 @@ public class ChangeAttachedTagCursorAction : CursorAction
     {
     }
 
+    public override bool DrawCellCursor => true;
+
     public override string GetName() => Translate("Name", "Change Attached Tag");
 
     public Tag TagToAttach { get; set; }
 
     public override void DrawPreview(Point2D cellCoords, Point2D cameraTopLeftPoint)
     {
-        Point2D cellTopLeftPoint = CellMath.CellTopLeftPointFromCellCoords(cellCoords, CursorActionTarget.Map) - cameraTopLeftPoint;
-        cellTopLeftPoint = cellTopLeftPoint.ScaleBy(CursorActionTarget.Camera.ZoomLevel);
+        Point2D cellCenterPoint = CellMath.CellCenterPointFromCellCoords(cellCoords, CursorActionTarget.Map) - cameraTopLeftPoint;
+        cellCenterPoint = cellCenterPoint.ScaleBy(CursorActionTarget.Camera.ZoomLevel);
 
         var mapCell = CursorActionTarget.Map.GetTile(cellCoords);
         if (mapCell == null)
@@ -31,11 +33,11 @@ public class ChangeAttachedTagCursorAction : CursorAction
 
         string text = Translate("Text", "Attach Tag");
         var textDimensions = Renderer.GetTextDimensions(text, Constants.UIBoldFont);
-        int x = cellTopLeftPoint.X - (int)(textDimensions.X - Constants.CellSizeX) / 2;
+        int x = cellCenterPoint.X - (int)(textDimensions.X / 2);
 
         Renderer.DrawStringWithShadow(text,
             Constants.UIBoldFont,
-            new Vector2(x, cellTopLeftPoint.Y),
+            new Vector2(x, cellCenterPoint.Y - (Constants.CellSizeY / 2)),
             textColor);
     }
 

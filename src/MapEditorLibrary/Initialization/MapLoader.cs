@@ -396,13 +396,26 @@ public static class MapLoader
 
             FindAttachedTag(map, building, attachedTag);
 
-            // Check that the building's origin cell is within the map. If it is not, we should not add the building to the map at all.
             if (map.GetTile(building.Position) == null)
             {
-                AddMapLoadError(string.Format(Translate("MapLoader.CheckFoundationCell.TileOutOfBounds",
-                    "Building {0} has been placed outside of the map at {1}. Skipping adding it to map."),
-                    buildingType.ININame, building.Position));
-                continue;
+                Point2D nearestValidCellCoords = map.FindNearestValidMapPoint(buildingType.ArtConfig.Foundation.SizeToPoint(), new Point2D(x, y), null);
+
+                if (nearestValidCellCoords == Point2D.NegativeOne)
+                {
+                    AddMapLoadError(string.Format(Translate("MapLoader.CheckFoundationCell.TileOutOfBounds",
+                        "Building {0} has been placed outside of the map at {1}. Skipping adding it to map."),
+                        buildingType.ININame, building.Position));
+
+                    continue;
+                }
+                else
+                {
+                    AddMapLoadError(string.Format(Translate("MapLoader.ReadBuildings.BuildingMovedInsideMap",
+                        "Warning: The map has a building \"{0}\" ({1}) placed outside of the valid map area at {2}, {3}. It has been moved to {4}, {5}."),
+                        buildingType.GetEditorDisplayName(), buildingTypeId, x, y, nearestValidCellCoords.X, nearestValidCellCoords.Y));
+
+                    building.Position = nearestValidCellCoords;
+                }
             }
 
             map.PlaceBuilding(building);
@@ -467,13 +480,30 @@ public static class MapLoader
             FindAttachedTag(map, aircraft, attachedTag);
 
             var tile = map.GetTile(x, y);
-            map.PlaceAircraft(aircraft, allowOutOfBounds: true);
+
             if (tile == null)
             {
-                AddMapLoadError(string.Format(Translate("MapLoader.ReadAircraft.AircraftOutsideOfMap",
-                    "Warning: The map has an aircraft \"{0}\" ({1}) placed outside of the valid map area at {2}, {3}."),
-                    aircraftType.GetEditorDisplayName(), aircraftTypeId, x, y));
+                Point2D nearestValidCellCoords = map.FindNearestValidMapPoint(Point2D.One, new Point2D(x, y), null);
+
+                if (nearestValidCellCoords == Point2D.NegativeOne)
+                {
+                    AddMapLoadError(string.Format(Translate("MapLoader.ReadAircraft.AircraftOutsideOfMap.v2",
+                        "Warning: The map has an aircraft \"{0}\" ({1}) placed outside of the valid map area at {2}, {3}. Skipping adding it to map."),
+                        aircraftType.GetEditorDisplayName(), aircraftTypeId, x, y));
+
+                    continue;
+                }
+                else
+                {
+                    AddMapLoadError(string.Format(Translate("MapLoader.ReadAircraft.AircraftMovedInsideMap",
+                        "Warning: The map has a unit \"{0}\" ({1}) placed outside of the valid map area at {2}, {3}. It has been moved to {4}, {5}."),
+                        aircraftType.GetEditorDisplayName(), aircraftTypeId, x, y, nearestValidCellCoords.X, nearestValidCellCoords.Y));
+
+                    aircraft.Position = nearestValidCellCoords;
+                }
             }
+
+            map.PlaceAircraft(aircraft);
         }
 
         Logger.Log("Aircraft read successfully.");
@@ -537,13 +567,30 @@ public static class MapLoader
             FindAttachedTag(map, unit, attachedTag);
 
             var tile = map.GetTile(x, y);
-            map.PlaceUnit(unit, allowOutOfBounds: true);
+
             if (tile == null)
             {
-                AddMapLoadError(string.Format(Translate("MapLoader.ReadUnits.UnitOutsideOfMap",
-                    "Warning: The map has a unit \"{0}\" ({1}) placed outside of the valid map area at {2}, {3}."),
-                    unitType.GetEditorDisplayName(), unitTypeId, x, y));
+                Point2D nearestValidCellCoords = map.FindNearestValidMapPoint(Point2D.One, new Point2D(x, y), null);
+
+                if (nearestValidCellCoords == Point2D.NegativeOne)
+                {
+                    AddMapLoadError(string.Format(Translate("MapLoader.ReadUnits.UnitOutsideOfMap.v2",
+                        "Warning: The map has a unit \"{0}\" ({1}) placed outside of the valid map area at {2}, {3}. Skipping adding it to map."),
+                        unitType.GetEditorDisplayName(), unitTypeId, x, y));
+
+                    continue;
+                }
+                else
+                {
+                    AddMapLoadError(string.Format(Translate("MapLoader.ReadUnits.UnitMovedInsideMap",
+                        "Warning: The map has a unit \"{0}\" ({1}) placed outside of the valid map area at {2}, {3}. It has been moved to {4}, {5}."),
+                        unitType.GetEditorDisplayName(), unitTypeId, x, y, nearestValidCellCoords.X, nearestValidCellCoords.Y));
+
+                    unit.Position = nearestValidCellCoords;
+                }
             }
+
+            map.PlaceUnit(unit);
         }
 
         // Process follow IDs
@@ -619,9 +666,25 @@ public static class MapLoader
 
             if (tile == null)
             {
-                AddMapLoadError(string.Format(Translate("MapLoader.ReadInfantry.InfantryOutsideOfMap",
-                    "Warning: The map has an infantry \"{0}\" ({1}) placed outside of the valid map area at {2}, {3}."),
-                    infantryType.GetEditorDisplayName(), infantryTypeId, x, y));
+                Point2D nearestValidCellCoords = map.FindNearestValidMapPoint(Point2D.One, new Point2D(x, y), cell => cell.GetFreeSubCellSpot() != SubCell.None);
+
+                if (nearestValidCellCoords == Point2D.NegativeOne)
+                {
+                    AddMapLoadError(string.Format(Translate("MapLoader.ReadInfantry.InfantryOutsideOfMap.v2",
+                        "Warning: The map has an infantry \"{0}\" ({1}) placed outside of the valid map area at {2}, {3}. Skipping adding it to map."),
+                        infantryType.GetEditorDisplayName(), infantryTypeId, x, y));
+
+                    continue;
+                }
+                else
+                {
+                    infantry.Position = nearestValidCellCoords;
+                    infantry.SubCell = map.GetTile(nearestValidCellCoords).GetFreeSubCellSpot();
+
+                    AddMapLoadError(string.Format(Translate("MapLoader.ReadInfantry.InfantryMovedInsideMap",
+                        "Warning: The map has an infantry \"{0}\" ({1}) placed outside of the valid map area at {2}, {3}. It has been moved to {4}, {5}."),
+                        infantryType.GetEditorDisplayName(), infantryTypeId, x, y, nearestValidCellCoords.X, nearestValidCellCoords.Y));
+                }
             }
             else
             {
@@ -630,11 +693,12 @@ public static class MapLoader
                     AddMapLoadError(string.Format(Translate("MapLoader.ReadInfantry.MultipleInfantryOnSameSubCell",
                         "The map had multiple infantry on the same subcell \"{0}\" at {1}, {2}. Infantry of type \"{3}\" ({4}) was not placed on the map."),
                         Helpers.SubCellToTranslatedString(subCell), x, y, infantry.ObjectType.GetEditorDisplayName(), infantry.ObjectType.ININame));
+
                     continue;
                 }
             }
 
-            map.PlaceInfantry(infantry, allowOutOfBounds: true);
+            map.PlaceInfantry(infantry);
         }
 
         Logger.Log("Infantry read successfully.");
@@ -783,21 +847,7 @@ public static class MapLoader
             {
                 Point2D oldPosition = waypoint.Position;
 
-                // Find new cell to move waypoint to
-                // Lazy and inefficient implementation, but waypoints outside the map aren't common
-                int lowestDistance = int.MaxValue;
-                Point2D nearestCell = Point2D.NegativeOne;
-                map.DoForAllValidTiles(cell =>
-                {
-                    int distance = cell.CoordsToPoint().DistanceTo(waypoint.Position);
-                    if (distance < lowestDistance)
-                    {
-                        lowestDistance = distance;
-                        nearestCell = cell.CoordsToPoint();
-                    }
-                });
-
-                waypoint.Position = nearestCell;
+                waypoint.Position = map.FindNearestValidMapPoint(Point2D.One, oldPosition, null);
                 tile = map.GetTile(waypoint.Position);
 
                 AddMapLoadError(string.Format(Translate("MapLoader.ReadWaypoints.WaypointOutOfBounds", 

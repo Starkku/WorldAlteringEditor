@@ -61,9 +61,9 @@ public interface IMap
     void AddTeamType(TeamType teamType);
 
     void PlaceBuilding(Structure structure);
-    void PlaceUnit(Unit unit, bool allowOutOfBounds = false);
-    void PlaceInfantry(Infantry infantry, bool allowOutOfBounds = false);
-    void PlaceAircraft(Aircraft aircraft, bool allowOutOfBounds = false);
+    void PlaceUnit(Unit unit);
+    void PlaceInfantry(Infantry infantry);
+    void PlaceAircraft(Aircraft aircraft);
     void RemoveUnit(Unit unit);
 
     void DoForAllValidTiles(Action<MapTile> action);
@@ -72,4 +72,6 @@ public interface IMap
 
     void Save();
     void AutoSave(string filePath);
+
+    Point2D FindNearestValidMapPoint(Point2D size, Point2D coords, Func<MapTile, bool> filter);
 }

@@ -961,6 +961,9 @@ public class Map : IMap
     {
         EnsureTechnoObjectId(structure);
 
+        if (!IsCoordWithinMap(structure.Position))
+            throw new ArgumentException($"Structure origin must be inside of the map. (Attempted to place at {structure.ObjectType.ININame} at {structure.Position})");
+
         structure.ObjectType.ArtConfig.DoForFoundationCoordsOrOrigin(offset =>
         {
             var cell = GetTile(structure.Position + offset);
@@ -1015,9 +1018,9 @@ public class Map : IMap
         PlaceBuilding(structure);
     }
 
-    public void PlaceUnit(Unit unit, bool allowOutOfBounds = false)
+    public void PlaceUnit(Unit unit)
     {
-        var cell = allowOutOfBounds ? GetTile(unit.Position) : GetTileOrFail(unit.Position);
+        var cell = GetTileOrFail(unit.Position);
 
         EnsureTechnoObjectId(unit);
         cell?.Vehicles.Add(unit);
@@ -1046,15 +1049,16 @@ public class Map : IMap
         PlaceUnit(unit);
     }
 
-    public void PlaceInfantry(Infantry infantry, bool allowOutOfBounds = false)
+    public void PlaceInfantry(Infantry infantry)
     {
-        var cell = allowOutOfBounds ? GetTile(infantry.Position) : GetTileOrFail(infantry.Position);
-        if (cell != null && cell.Infantry[(int)infantry.SubCell] != null)
+        var cell = GetTileOrFail(infantry.Position);
+        if (cell.Infantry[(int)infantry.SubCell] != null)
             throw new InvalidOperationException("Cannot place infantry on an occupied sub-cell spot!");
 
         EnsureTechnoObjectId(infantry);
         if (cell != null)
             cell.Infantry[(int)infantry.SubCell] = infantry;
+
         Infantry.Add(infantry);
     }
 
@@ -1083,9 +1087,9 @@ public class Map : IMap
         PlaceInfantry(infantry);
     }
 
-    public void PlaceAircraft(Aircraft aircraft, bool allowOutOfBounds = false)
+    public void PlaceAircraft(Aircraft aircraft)
     {
-        var cell = allowOutOfBounds ? GetTile(aircraft.Position) : GetTileOrFail(aircraft.Position);
+        var cell = GetTileOrFail(aircraft.Position);
 
         EnsureTechnoObjectId(aircraft);
         cell?.Aircraft.Add(aircraft);
@@ -1955,5 +1959,52 @@ public class Map : IMap
         }
 
         return baseNodes;
+    }
+
+    /// <summary>
+    /// Finds the nearest valid map cell for a given foundation size and coordinate.
+    /// A filter function can be optionally supplied to filter which cells can be picked.
+    /// </summary>
+    /// <param name="size">The size of the valid area to find.</param>
+    /// <param name="coords">The coords that the area must be nearest to. Can be outside of the valid map area.</param>
+    /// <param name="filter">Optional filter function. Can be used to reject specific cells.</param>
+    /// <returns>The coordinates of the nearest valid map cell with the given criteria. <see cref="Point2D.NegativeOne"/> if one was not found.</returns>
+    public Point2D FindNearestValidMapPoint(Point2D size, Point2D coords, Func<MapTile, bool> filter)
+    {
+        int lowestDistance = int.MaxValue;
+        Point2D nearestCell = Point2D.NegativeOne;
+
+        DoForAllValidTiles(cell =>
+        {
+            // Consider this cell a candidate if picking it would result in the lowest distance recorded so far.
+            int distance = cell.CoordsToPoint().DistanceTo(coords);
+            if (distance < lowestDistance)
+            {
+                // Verify that the given foundation size fits on our candidate cell.
+                // This returns inside the cell-specific lambda function if the foundation
+                // size doesn't fit, or if the optional filter rejects one of the foundation cells.
+                for (int y = 0; y < size.Y; y++)
+                {
+                    for (int x = 0; x < size.X; x++)
+                    {
+                        Point2D offset = new Point2D(x, y);
+                        Point2D cellCoords = cell.CoordsToPoint() + offset;
+
+                        if (!IsCoordWithinMap(cellCoords))
+                            return;
+
+                        var foundationCell = GetTile(cellCoords);
+                        if (filter != null && !filter(foundationCell))
+                            return;
+                    }
+                }
+
+                // Update lowest distance.
+                lowestDistance = distance;
+                nearestCell = cell.CoordsToPoint();
+            }
+        });
+
+        return nearestCell;
     }
 }

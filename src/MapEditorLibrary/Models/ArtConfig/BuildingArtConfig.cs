@@ -22,6 +22,8 @@ public class Foundation
     public int Width { get; set; }
     public int Height { get; set; }
 
+    public Point2D SizeToPoint() => new Point2D(Width, Height);
+
     public void ReadFromIniSection(IniSection iniSection)
     {
         string foundationString = iniSection.GetStringValue("Foundation", string.Empty);

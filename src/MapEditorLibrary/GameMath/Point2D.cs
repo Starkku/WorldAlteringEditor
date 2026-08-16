@@ -42,6 +42,8 @@ public struct Point2D
 
     public static Point2D NegativeOne => new Point2D(-1, -1);
 
+    public static Point2D One => new Point2D(1, 1);
+
     public Vector2 ToXNAVector() => new Vector2(X, Y);
 
     public Point ToXNAPoint() => new Point(X, Y);

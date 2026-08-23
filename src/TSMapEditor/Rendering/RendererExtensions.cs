@@ -1,4 +1,5 @@
 ﻿using MapEditorLibrary;
+using MapEditorLibrary.Misc;
 using Microsoft.Xna.Framework;
 using Rampastring.XNAUI;
 using System;
@@ -23,5 +24,11 @@ public static class RendererExtensions
             color, thickness);
         Renderer.DrawLine(end, end + Helpers.VectorFromLengthAndAngle(sideLineLength, angle - angleDiff),
             color, thickness);
+    }
+
+    public static void SwapFonts()
+    {
+        Renderer.GetFontList().Swap(0, 2);
+        Renderer.GetFontList().Swap(1, 3);
     }
 }

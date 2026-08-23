@@ -85,7 +85,6 @@ public class StructureOptionsWindow : INItializableWindow
             return;
 
         TagOpened?.Invoke(this, new TagEventArgs(structure.AttachedTag));
-        PutOnBackground();
     }
 
     private void SelectionWindow_ApplyEffect<T>(Action<T> action, T window)

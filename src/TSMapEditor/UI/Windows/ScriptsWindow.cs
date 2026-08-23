@@ -41,7 +41,7 @@ public class ScriptListBoxItemTag
         if (Description == null)
             return;
 
-        int textWidth = (int)Renderer.MeasureString(Text + " ", fontIndex).X;
+        int textWidth = (int)Renderer. MeasureString(Text + " ", fontIndex).X;
         int remainingWidth = maxWidth - textWidth;
 
         int descriptionWidth = (int)Renderer.MeasureString(Description, fontIndex).X;

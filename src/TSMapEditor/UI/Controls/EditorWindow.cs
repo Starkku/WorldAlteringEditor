@@ -2,17 +2,15 @@
 using Microsoft.Xna.Framework.Graphics;
 using Rampastring.Tools;
 using Rampastring.XNAUI;
+using Rampastring.XNAUI.Windowing;
 using Rampastring.XNAUI.XNAControls;
 using System;
-using System.Linq;
 using TSMapEditor.Settings;
 
 namespace TSMapEditor.UI.Controls;
 
-public class EditorWindow : EditorPanel
+public class EditorWindow : XNAWindow
 {
-    private const float AppearingRate = 0.9f;
-    private const float DisappearingRate = -1.0f;
     private const string BackdropBlurEffectPath = "Shaders/BackdropBlur";
     private const int DropShadowTextureCoreSize = 2;
 
@@ -31,21 +29,6 @@ public class EditorWindow : EditorPanel
         DrawMode = ControlDrawMode.UNIQUE_RENDER_TARGET;
     }
 
-    public event EventHandler Closed;
-    public event EventHandler InteractedWith;
-
-
-    /// <summary>
-    /// This is stored here for the purposes of being able
-    /// to clean up event handlers when the window controller
-    /// for a session is cleaned.
-    /// </summary>
-    public EventHandler<InputEventArgs> FocusSwitchEventHandler { get; set; }
-
-    protected bool CanBeMoved { get; set; } = true;
-
-    public bool CenterByDefault { get; set; } = true;
-
     /// <summary>
     /// Whether this window uses the glass backdrop effect when enhanced
     /// graphical quality is enabled.
@@ -56,20 +39,6 @@ public class EditorWindow : EditorPanel
     /// Whether this window draws a drop shadow outside its render bounds.
     /// </summary>
     public bool EnableDropShadow { get; set; } = true;
-
-    /// <summary>
-    /// Whether this window is the foreground window in its window controller.
-    /// Unmanaged windows, such as modal message boxes, are foreground by default.
-    /// </summary>
-    public bool IsForeground { get; internal set; } = true;
-
-    /// <summary>
-    /// Whether the window handles resolution changes by shared logic of the <see cref="EditorWindow"/> class.
-    /// </summary>
-    protected bool HandleResolutionChanges { get; set; } = true;
-
-    protected bool IsDragged;
-    private Point lastCursorPoint;
 
     public override void Initialize()
     {
@@ -85,25 +54,10 @@ public class EditorWindow : EditorPanel
         }
 
         base.Initialize();
-
-        WindowManager.RenderResolutionChanged += WindowManager_RenderResolutionChanged;
-    }
-
-    private void WindowManager_RenderResolutionChanged(object sender, EventArgs e)
-    {
-        if (!HandleResolutionChanges)
-            return;
-
-        if (CenterByDefault)
-            CenterOnParent();
-        else
-            ConstrainPosition();
     }
 
     public override void Kill()
     {
-        WindowManager.RenderResolutionChanged -= WindowManager_RenderResolutionChanged;
-
         DisposeGlassRenderTargets();
 
         base.Kill();
@@ -117,11 +71,7 @@ public class EditorWindow : EditorPanel
 
     protected override void ParseControlINIAttribute(IniFile iniFile, string key, string value)
     {
-        if (key == nameof(CanBeMoved))
-        {
-            CanBeMoved = Conversions.BooleanFromString(value, CanBeMoved);
-        }
-        else if (key == nameof(EnableGlassEffect))
+        if (key == nameof(EnableGlassEffect))
         {
             EnableGlassEffect = Conversions.BooleanFromString(value, EnableGlassEffect);
         }
@@ -133,38 +83,14 @@ public class EditorWindow : EditorPanel
         base.ParseControlINIAttribute(iniFile, key, value);
     }
 
-    public override void Draw(GameTime gameTime)
-    {
-        DrawWindowBackground();
-        DrawChildren(gameTime);
-        DrawWindowBorders();
-    }
-
     /// <summary>
     /// Draws the window's background, using a blurred copy of the content
     /// behind the window when the glass effect is available.
     /// </summary>
-    protected void DrawWindowBackground()
+    protected override void DrawWindowBackground()
     {
         if (!TryDrawGlassBackdrop())
             DrawPanel();
-    }
-
-    /// <summary>
-    /// Draws the window border, dimming it when the window is not in front.
-    /// </summary>
-    protected void DrawWindowBorders()
-    {
-        if (!DrawBorders)
-            return;
-
-        var borderColor = BorderColor;
-        if (!IsForeground)
-        {
-            borderColor = ((CustomUISettings)UISettings.ActiveSettings).WindowInactiveBorderColor;
-        }
-
-        DrawRectangle(new Rectangle(0, 0, Width, Height), borderColor);
     }
 
     protected override void DrawBehindUniqueRenderTarget(Rectangle renderRectangle)
@@ -437,94 +363,5 @@ public class EditorWindow : EditorPanel
         halfScaleBlurRenderTarget = null;
         quarterScaleRenderTarget = null;
         quarterScaleBlurRenderTarget = null;
-    }
-
-    public void PutOnBackground()
-    {
-        // hack time! allow the other window to show on top of this one
-        WindowManager.AddCallback(new Action(() => { DrawOrder -= 500; UpdateOrder -= 500; }));
-    }
-
-    public void Hide()
-    {
-        AlphaRate = DisappearingRate;
-    }
-
-    protected virtual void Show()
-    {
-        AlphaRate = AppearingRate;
-        Alpha = 0f;
-        Enable();
-        IsDragged = false;
-
-        ConstrainPosition();
-
-        InteractedWith?.Invoke(this, EventArgs.Empty);
-    }
-
-    protected void ConstrainPosition()
-    {
-        if (ScaledWidth > WindowManager.RenderResolutionX)
-            X = (WindowManager.RenderResolutionX - ScaledWidth) / 2;
-        else if (X + ScaledWidth > WindowManager.RenderResolutionX)
-            X = WindowManager.RenderResolutionX - ScaledWidth;
-        else if (X < 0)
-            X = 0;
-
-        if (ScaledHeight > WindowManager.RenderResolutionY)
-            Y = (WindowManager.RenderResolutionY - ScaledHeight) / 2;
-        else if (Y + ScaledHeight > WindowManager.RenderResolutionY)
-            Y = WindowManager.RenderResolutionY - ScaledHeight;
-        else if (Y < 0)
-            Y = 0;
-    }
-
-    public override void Update(GameTime gameTime)
-    {
-        base.Update(gameTime);
-
-        if (Alpha <= 0f && AlphaRate < 0.0f)
-        {
-            Closed?.Invoke(this, EventArgs.Empty);
-            Disable();
-        }
-
-        if (IsDragged)
-        {
-            Point newCursorPoint = GetCursorPoint();
-            X = X + (newCursorPoint.X - lastCursorPoint.X) * Scaling;
-            Y = Y + (newCursorPoint.Y - lastCursorPoint.Y) * Scaling;
-
-            ConstrainPosition();
-            lastCursorPoint = GetCursorPoint();
-            IsDragged = Cursor.LeftDown;
-        }
-
-        if (IsActive && CanBeMoved && Cursor.LeftPressedDown)
-        {
-            var activeChild = Children.FirstOrDefault(c => c.IsActive);
-
-            if (activeChild != null)
-            {
-                // Find the last active child from the control hierarchy
-                while (true)
-                {
-                    var childOfChild = activeChild.Children.FirstOrDefault(c => c.IsActive);
-                    if (childOfChild == null)
-                        break;
-
-                    activeChild = childOfChild;
-                }
-            }
-
-            // Only allow moving window if the active child is not a control that is used by dragging
-            // TODO this could be made more object-oriented with a property at XNAControl level
-            if (activeChild == null || !(activeChild is XNAPanel || activeChild.HandlesDragging))
-            {
-                InteractedWith?.Invoke(this, EventArgs.Empty);
-                IsDragged = true;
-                lastCursorPoint = GetCursorPoint();
-            }
-        }
     }
 }

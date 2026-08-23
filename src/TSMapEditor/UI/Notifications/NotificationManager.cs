@@ -11,7 +11,7 @@ public interface INotificationManager
     void AddNotification(string text);
 }
 
-internal class NotificationManager : XNAControl, INotificationManager
+public class NotificationManager : XNAControl, INotificationManager
 {
     public NotificationManager(WindowManager windowManager) : base(windowManager)
     {

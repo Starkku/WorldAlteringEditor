@@ -3067,13 +3067,11 @@ public class TriggersWindow : INItializableWindow
     private void OpenTeamType(TeamType teamType)
     {
         TeamTypeOpened?.Invoke(this, new TeamTypeEventArgs(teamType));
-        PutOnBackground();
     }
 
     private void OpenCreateRandomTriggersSetWindow()
     {
         createRandomTriggerSetWindow.Open();
-        PutOnBackground();
     }
 
     private void Map_TriggersChanged(object sender, EventArgs e)

@@ -305,7 +305,6 @@ public class AITriggersWindow : INItializableWindow
     private void OpenTeamType(TeamType teamType)
     {
         TeamTypeOpened?.Invoke(this, new TeamTypeEventArgs(teamType));
-        PutOnBackground();
     }
 
     private void BtnNew_LeftClick(object sender, EventArgs e)

@@ -108,7 +108,7 @@ public class SaveMapAsWindow : EditorWindow
         }
 
         string path = Path.Combine(lbFileList.DirectoryPath, filename);
-        map.LoadedINI.FileName = path;
+        map.LoadedINI.FilePath = path;
         map.Save();
 
         if (UserSettings.Instance.LastScenarioPath != path)

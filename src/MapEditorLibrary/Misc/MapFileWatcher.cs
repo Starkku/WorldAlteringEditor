@@ -11,8 +11,8 @@ public class MapFileWatcher
     {
         this.map = map;
 
-        if (!string.IsNullOrWhiteSpace(map.LoadedINI.FileName))
-            StartWatching(map.LoadedINI.FileName);
+        if (!string.IsNullOrWhiteSpace(map.LoadedINI.FilePath))
+            StartWatching(map.LoadedINI.FilePath);
 
         map.MapManuallySaved += Map_MapManuallySaved;
         map.PreSave += Map_PreSave;
@@ -44,8 +44,8 @@ public class MapFileWatcher
 
     private void Map_MapManuallySaved(object sender, EventArgs e)
     {
-        if (map.LoadedINI.FileName != FilePath)
-            StartWatching(map.LoadedINI.FileName);
+        if (map.LoadedINI.FilePath != FilePath)
+            StartWatching(map.LoadedINI.FilePath);
     }
 
     private readonly Map map;

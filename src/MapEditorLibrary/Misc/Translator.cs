@@ -45,6 +45,8 @@ public class Translation
 
         IsReference = definitionSection.GetBooleanValue(nameof(IsReference), false);
 
+        UseSpriteFonts = definitionSection.GetBooleanValue(nameof(UseSpriteFonts), false);
+
         if (definitionSection.KeyExists(nameof(IniFileEncoding)))
         {
             IniFileEncoding = Encoding.GetEncoding(definitionSection.GetIntValue(nameof(IniFileEncoding), 0));
@@ -64,6 +66,8 @@ public class Translation
     public int Index { get; }
 
     public bool IsReference { get; }
+
+    public bool UseSpriteFonts { get; }
 
     private string ProcessEscapes(string str)
     {

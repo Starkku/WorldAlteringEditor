@@ -6,6 +6,7 @@ using MapEditorMCP;
 using Microsoft.Xna.Framework;
 using Rampastring.Tools;
 using Rampastring.XNAUI;
+using Rampastring.XNAUI.Windowing;
 using Rampastring.XNAUI.XNAControls;
 using System;
 using System.Linq;
@@ -33,6 +34,7 @@ public class CustomUISettings : UISettings
         PanelBackgroundColor = new Color(128, 128, 128, 255);
         PanelBorderColor = new Color(128, 128, 128, 255);
         DefaultAlphaRate = 1.0f; // ScrollBar textures need instant animations
+        ListBoxDefaultItemHeight = 18;
     }
 
     public Color ListBoxBackgroundColor { get; set; } = new Color(0, 0, 0, 128);
@@ -54,7 +56,6 @@ public class CustomUISettings : UISettings
     public float WindowShadowOffsetX { get; set; } = 0.0f;
     public float WindowShadowOffsetY { get; set; } = 5.0f;
     public float WindowInactiveShadowStrength { get; set; } = 0.25f;
-    public Color WindowInactiveBorderColor { get; set; } = new Color(64, 64, 64);
 }
 
 class UIManager : XNAControl, IWindowParentControl
@@ -126,7 +127,7 @@ class UIManager : XNAControl, IWindowParentControl
         // Keyboard must be initialized before any other controls so it's properly usable
         InitKeyboard();
 
-        windowController = new WindowController();
+        windowController = new WindowController(this);
         editorState = new EditorState();
         editorState.BrushSize = map.EditorConfig.BrushSizes[0];
         mutationManager = new MutationManager();
@@ -171,7 +172,7 @@ class UIManager : XNAControl, IWindowParentControl
         mapUI.TileInfoDisplay = tileInfoDisplay;
 
         InitNotificationManager();
-        windowController.Initialize(this, map, editorState, mapUI);
+        windowController.Initialize(map, editorState, notificationManager, mapUI);
 
         topBarMenu = new TopBarMenu(WindowManager, mutationManager, mapUI, map, windowController);
         topBarMenu.Width = editorSidebar.Width;
@@ -460,7 +461,7 @@ class UIManager : XNAControl, IWindowParentControl
     private void RefreshWindowTitle()
     {
         string baseTitle = "C&C World-Altering Editor (WAE) - {0}";
-        string mapPath = string.IsNullOrWhiteSpace(map.LoadedINI.FileName) ? Translate(this, "NewMap", "New map") : map.LoadedINI.FileName;
+        string mapPath = string.IsNullOrWhiteSpace(map.LoadedINI.FilePath) ? Translate(this, "NewMap", "New map") : map.LoadedINI.FilePath;
 
         Game.Window.Title = string.Format(baseTitle, mapPath);
     }
@@ -513,10 +514,10 @@ class UIManager : XNAControl, IWindowParentControl
 
     private void TopBarMenu_InputFileReloadRequested(object sender, EventArgs e)
     {
-        if (string.IsNullOrWhiteSpace(map.LoadedINI.FileName))
+        if (string.IsNullOrWhiteSpace(map.LoadedINI.FilePath))
             return;
 
-        loadMapFilePath = map.LoadedINI.FileName;
+        loadMapFilePath = map.LoadedINI.FilePath;
         StartLoadingMap();
     }
 

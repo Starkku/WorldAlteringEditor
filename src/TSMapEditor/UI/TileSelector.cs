@@ -1,4 +1,5 @@
-﻿using MapEditorLibrary.CCEngine;
+﻿using MapEditorLibrary;
+using MapEditorLibrary.CCEngine;
 using MapEditorLibrary.Models;
 using Microsoft.Xna.Framework;
 using Rampastring.XNAUI;
@@ -19,7 +20,6 @@ enum TileSetSortMode
 
 public class TileSelector : EditorWindow
 {
-    private const int TileSetListWidth = 180;
     private const int ResizeDragThreshold = 30;
 
     public TileSelector(WindowManager windowManager, Map map, TheaterGraphics theaterGraphics,
@@ -30,7 +30,7 @@ public class TileSelector : EditorWindow
         this.placeTerrainCursorAction = placeTerrainCursorAction;
         this.editorState = editorState;
         EnableDropShadow = false;
-        CanBeMoved = false;
+        AllowDragging = false;
         CenterByDefault = false;
         HandleResolutionChanges = false;
     }
@@ -40,9 +40,9 @@ public class TileSelector : EditorWindow
         if (Initialized)
         {
             lbTileSetList.Height = Height - tbSearch.Bottom;
-            lbTileSetList.Width = TileSetListWidth;
+            lbTileSetList.Width = Constants.TileSetListWidth;
             TileDisplay.Height = Height;
-            TileDisplay.Width = Width - TileSetListWidth;
+            TileDisplay.Width = Width - Constants.TileSetListWidth;
         }
 
         base.OnClientRectangleUpdated();
@@ -80,12 +80,12 @@ public class TileSelector : EditorWindow
 
         btnSort = new SortButton(WindowManager);
         btnSort.Name = nameof(btnSort);
-        btnSort.X = TileSetListWidth - btnSort.Width;
+        btnSort.X = Constants.TileSetListWidth - btnSort.Width;
         AddChild(btnSort);
 
         tbSearch = new EditorListBoxSearchTextBox(WindowManager);
         tbSearch.Name = nameof(tbSearch);
-        tbSearch.Width = TileSetListWidth - btnSort.Width;
+        tbSearch.Width = Constants.TileSetListWidth - btnSort.Width;
         tbSearch.Suggestion = Translate(this, "SearchTileSets", "Search TileSet...");
         AddChild(tbSearch);
         UIHelpers.AddSearchTipsBoxToControl(tbSearch);
@@ -94,7 +94,7 @@ public class TileSelector : EditorWindow
         lbTileSetList.Name = nameof(lbTileSetList);
         lbTileSetList.Y = tbSearch.Bottom;
         lbTileSetList.Height = Height - tbSearch.Bottom;
-        lbTileSetList.Width = TileSetListWidth;
+        lbTileSetList.Width = Constants.TileSetListWidth;
         lbTileSetList.AllowRightClickUnselect = false;
         lbTileSetList.SelectedIndexChanged += LbTileSetList_SelectedIndexChanged;
         AddChild(lbTileSetList);
@@ -103,8 +103,8 @@ public class TileSelector : EditorWindow
         TileDisplay = new TileDisplay(WindowManager, map, theaterGraphics, placeTerrainCursorAction, editorState);
         TileDisplay.Name = nameof(TileDisplay);
         TileDisplay.Height = Height;
-        TileDisplay.Width = Width - TileSetListWidth;
-        TileDisplay.X = TileSetListWidth;
+        TileDisplay.Width = Width - Constants.TileSetListWidth;
+        TileDisplay.X = Constants.TileSetListWidth;
         AddChild(TileDisplay);
 
         lbTileSetList.BackgroundTexture = TileDisplay.BackgroundTexture;

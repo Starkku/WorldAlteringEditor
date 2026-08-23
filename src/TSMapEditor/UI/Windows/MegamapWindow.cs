@@ -242,11 +242,11 @@ public class MegamapWindow : EditorWindow
             {
                 if (!wasLeftDown)
                 {
-                    CanBeMoved = enableToolbar && GetCursorPoint().Y < textureDrawRectangle.Y;
+                    AllowDragging = enableToolbar && GetCursorPoint().Y < textureDrawRectangle.Y;
                     oldWindowPosition = new Point2D(X, Y);
                 }
 
-                if (!CanBeMoved)
+                if (!AllowDragging)
                     MoveCamera();
 
                 wasLeftDown = true;
@@ -290,6 +290,6 @@ public class MegamapWindow : EditorWindow
             DrawStringWithShadow(Translate(this, "EscToClose", "Press ESC to close"), 1, new Vector2(Constants.UIEmptySideSpace, Constants.UIEmptyTopSpace), Color.Red, 1.0f);
         }
 
-        DrawWindowBorders();
+        DrawPanelBorders();
     }
 }

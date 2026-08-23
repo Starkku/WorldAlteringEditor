@@ -24,7 +24,7 @@ public class EditorSidebar : EditorWindow
         this.cursorActionTarget = cursorActionTarget;
         this.overlayPlacementAction = overlayPlacementAction;
         EnableDropShadow = false;
-        CanBeMoved = false;
+        AllowDragging = false;
         CenterByDefault = false;
         HandleResolutionChanges = false;
     }

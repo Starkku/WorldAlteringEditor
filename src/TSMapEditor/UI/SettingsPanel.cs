@@ -5,6 +5,7 @@ using Rampastring.XNAUI.XNAControls;
 using System;
 using System.Globalization;
 using System.Windows.Forms;
+using TSMapEditor.Rendering;
 using TSMapEditor.Settings;
 using TSMapEditor.UI.Controls;
 using TSMapEditor.UI.Windows;
@@ -83,7 +84,7 @@ public class SettingsPanel : INItializableWindow
     private XNACheckBox chkBorderless;
     private XNADropDown ddTheme;
     private XNADropDown ddScrollRate;
-    private XNACheckBox chkUseBoldFont;
+    private XNACheckBox chkUseSpriteFonts;
     private XNACheckBox chkGraphicsLevel;
     private XNACheckBox chkEnableWindowGlassEffect;
     private XNACheckBox chkEnableWindowDropShadowEffect;
@@ -156,7 +157,8 @@ public class SettingsPanel : INItializableWindow
 
         chkBorderless = FindChild<XNACheckBox>(nameof(chkBorderless));
 
-        chkUseBoldFont = FindChild<XNACheckBox>(nameof(chkUseBoldFont));
+        chkUseSpriteFonts = FindChild<XNACheckBox>(nameof(chkUseSpriteFonts));
+        chkUseSpriteFonts.CheckedChanged += ChkUseSpriteFonts_CheckedChanged;
 
         chkGraphicsLevel = FindChild<XNACheckBox>(nameof(chkGraphicsLevel));
 
@@ -194,7 +196,23 @@ public class SettingsPanel : INItializableWindow
         {
             TranslatorSetup.SetActiveTranslation(((Translation)ddLanguage.SelectedItem.Tag).InternalName);
             RefreshLayout();
+
+            if (TranslatorSetup.ActiveTranslation.UseSpriteFonts)
+            {
+                chkUseSpriteFonts.Checked = true;
+                chkUseSpriteFonts.AllowChecking = false;
+            }
+            else
+            {
+                chkUseSpriteFonts.Checked = false;
+                chkUseSpriteFonts.AllowChecking = true;
+            }
         });
+    }
+
+    private void ChkUseSpriteFonts_CheckedChanged(object sender, EventArgs e)
+    {
+        RendererExtensions.SwapFonts();
     }
 
     private void LoadSettings()
@@ -212,7 +230,7 @@ public class SettingsPanel : INItializableWindow
         ddScrollRate.SelectedIndex = ddScrollRate.Items.FindIndex(item => (int)item.Tag == userSettings.ScrollRate.GetValue());
 
         chkBorderless.Checked = userSettings.Borderless;
-        chkUseBoldFont.Checked = userSettings.UseBoldFont;
+        chkUseSpriteFonts.Checked = userSettings.UseSpriteFonts;
         chkGraphicsLevel.Checked = userSettings.GraphicsLevel > 0;
         chkEnableWindowGlassEffect.Checked = userSettings.EnableWindowGlassEffect;
         chkEnableWindowDropShadowEffect.Checked = userSettings.EnableWindowDropShadowEffect;
@@ -245,7 +263,7 @@ public class SettingsPanel : INItializableWindow
         var userSettings = UserSettings.Instance;
 
         userSettings.Language.UserDefinedValue = ((Translation)ddLanguage.SelectedItem.Tag).InternalName;
-        userSettings.UseBoldFont.UserDefinedValue = chkUseBoldFont.Checked;
+        userSettings.UseSpriteFonts.UserDefinedValue = chkUseSpriteFonts.Checked;
         userSettings.GraphicsLevel.UserDefinedValue = chkGraphicsLevel.Checked ? 1 : 0;
         userSettings.EnableWindowGlassEffect.UserDefinedValue = chkEnableWindowGlassEffect.Checked;
         userSettings.EnableWindowDropShadowEffect.UserDefinedValue = chkEnableWindowDropShadowEffect.Checked;

@@ -95,7 +95,7 @@ public class IniFileEx: IniFile
 
         foreach (var pair in GetSection(sectionName).Keys)
         {
-            string directory = FileName != null ? SafePath.CombineFilePath(SafePath.GetFileDirectoryName(FileName)) : "";
+            string directory = FilePath != null ? SafePath.CombineFilePath(SafePath.GetFileDirectoryName(FilePath)) : "";
             IniFileEx includedIni = FromPathOrMix(pair.Value, directory, ccFileManager);
             ConsolidateIniFiles(includedIni, this);
             Sections = includedIni.Sections;

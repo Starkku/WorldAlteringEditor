@@ -85,10 +85,6 @@ public static class Constants
 
     public const int UITopBarMenuHeight = 23;
 
-    public static int UITreeViewLineHeight = 20;
-
-    public static double UIAccidentalClickPreventionTime = 0.2;
-
     public static int MapPreviewMaxWidth = 800;
     public static int MapPreviewMaxHeight = 400;
 
@@ -128,6 +124,11 @@ public static class Constants
     public const int TS_WAYPT_SPECIAL = 100;
 
     public const string DefaultHouseTypeName = "Neutral";
+
+    public static int UITreeViewLineHeight = 22;
+    public static int UITreeViewLineIndentation = 50;
+    public static int TileSetListWidth = 200;
+    public static double UIAccidentalClickPreventionTime = 0.2;
 
     public static void Init()
     {
@@ -198,5 +199,8 @@ public static class Constants
         IniFile uiConstantsIni = Helpers.ReadConfigINI("UI/UIConstants.ini");
 
         UITreeViewLineHeight = uiConstantsIni.GetIntValue("UI", nameof(UITreeViewLineHeight), UITreeViewLineHeight);
+        UITreeViewLineIndentation = uiConstantsIni.GetIntValue("UI", nameof(UITreeViewLineIndentation), UITreeViewLineIndentation);
+        TileSetListWidth = uiConstantsIni.GetIntValue("UI", nameof(TileSetListWidth), TileSetListWidth);
+        UIAccidentalClickPreventionTime = uiConstantsIni.GetDoubleValue("UI", nameof(UIAccidentalClickPreventionTime), UIAccidentalClickPreventionTime);
     }
 }

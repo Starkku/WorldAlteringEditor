@@ -90,16 +90,16 @@ public class Map : IMap
     {
         try
         {
-            if (string.IsNullOrWhiteSpace(LoadedINI.FileName))
+            if (string.IsNullOrWhiteSpace(LoadedINI.FilePath))
                 throw new InvalidOperationException("Cannot reload INI of a map file that has no INI file path specified!");
 
-            if (!File.Exists(LoadedINI.FileName))
+            if (!File.Exists(LoadedINI.FilePath))
             {
                 Logger.Log("Map.ReloadINI: Skipping re-loading map INI because the map INI does not exist!");
                 return true;
             }
 
-            LoadedINI = new IniFileEx(LoadedINI.FileName, FileManager);
+            LoadedINI = new IniFileEx(LoadedINI.FilePath, FileManager);
 
             ReloadSections();
 
@@ -267,7 +267,7 @@ public class Map : IMap
         LoadedINI = new IniFileEx();
         var baseMap = Helpers.ReadConfigINIEx("BaseMap.ini", FileManager);
         baseMap.RemoveSection("INISystem");
-        baseMap.FileName = string.Empty;
+        baseMap.FilePath = string.Empty;
         baseMap.SetStringValue("Map", "Theater", theaterName);
         baseMap.SetStringValue("Map", "Size", $"0,0,{size.X},{size.Y}");
         baseMap.SetStringValue("Map", "LocalSize", $"{marginX},{marginY},{size.X - (marginX * 2)},{size.Y - (marginY * 2)}");
@@ -453,7 +453,7 @@ public class Map : IMap
         if (Constants.DefaultPreview)
             MapWriter.WriteDummyPreview(this, LoadedINI);
 
-        string savePath = filePath ?? LoadedINI.FileName;
+        string savePath = filePath ?? LoadedINI.FilePath;
 
         try
         {

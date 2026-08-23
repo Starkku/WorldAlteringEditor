@@ -2,6 +2,7 @@
 using MapEditorLibrary.GameMath;
 using MapEditorLibrary.Models;
 using Rampastring.XNAUI;
+using Rampastring.XNAUI.Windowing;
 using TSMapEditor.UI.Controls;
 
 namespace TSMapEditor.UI.Windows;
@@ -35,7 +36,7 @@ public abstract class SelectObjectWindow<T> : INItializableWindow
     {
         base.Initialize();
 
-        DrawOrder = WindowController.ChildWindowOrderValue * 2;
+        DrawOrder = XNAWindowController.ChildWindowOrderValue * 2;
         UpdateOrder = DrawOrder;
 
         if (Parent != null)

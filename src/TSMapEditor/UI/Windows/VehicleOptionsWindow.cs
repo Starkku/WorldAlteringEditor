@@ -96,7 +96,6 @@ public class VehicleOptionsWindow : INItializableWindow
             return;
 
         TagOpened?.Invoke(this, new TagEventArgs(unit.AttachedTag));
-        PutOnBackground();
     }
 
     private void SetFollowerCursorAction_ActionExited(object sender, EventArgs e)

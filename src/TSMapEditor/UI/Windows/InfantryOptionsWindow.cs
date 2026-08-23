@@ -93,7 +93,6 @@ public class InfantryOptionsWindow : INItializableWindow
             return;
 
         TagOpened?.Invoke(this, new TagEventArgs(infantry.AttachedTag));
-        PutOnBackground();
     }
 
     private void AttachedTagSelector_LeftClick(object sender, EventArgs e)

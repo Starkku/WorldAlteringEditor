@@ -383,6 +383,9 @@
     <None Update="Content\cursor.cur">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Content\Fonts.ini">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Content\generictilewithborder.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -496,9 +499,9 @@
     <PackageReference Include="ImeSharp" Version="1.4.1" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.3" />
-    <PackageReference Include="Rampastring.Tools" Version="2.0.7" />
+    <PackageReference Include="Rampastring.Tools" Version="3.0.2" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.3" />
-    <PackageReference Include="Rampastring.XNAUI.WindowsDX" Version="3.2.0" />
+    <PackageReference Include="Rampastring.XNAUI.WindowsDX" Version="4.0.1" />
     <PackageReference Include="SixLabors.ImageSharp" Version="2.1.11" />
     <PackageReference Include="TextCopy" Version="6.2.1" />
     <PackageReference Include="Westwind.Scripting" Version="1.3.3" />

@@ -42,7 +42,7 @@ public class OverlayFrameSelector : EditorWindow
         this.editorState = editorState;
         DrawMode = ControlDrawMode.UNIQUE_RENDER_TARGET;
         EnableDropShadow = false;
-        CanBeMoved = false;
+        AllowDragging = false;
         CenterByDefault = false;
         HandleResolutionChanges = false;
     }

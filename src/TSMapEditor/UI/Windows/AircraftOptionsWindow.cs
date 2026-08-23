@@ -87,7 +87,6 @@ public class AircraftOptionsWindow : INItializableWindow
             return;
 
         TagOpened?.Invoke(this, new TagEventArgs(aircraft.AttachedTag));
-        PutOnBackground();
     }
 
     private void AttachedTagSelector_LeftClick(object sender, EventArgs e)

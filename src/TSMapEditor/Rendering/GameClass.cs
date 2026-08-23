@@ -130,20 +130,20 @@ public class GameClass : Microsoft.Xna.Framework.Game
         AssetLoader.AssetSearchPaths.Add(Environment.CurrentDirectory + DSC + "Content" + DSC);
 
         // Hack: allow translations to override fonts
-        int i = 0;
-        while (true)
-        {
-            string spriteFontPath = Path.Combine("Translations", TranslatorSetup.ActiveTranslationDirectory(), "SpriteFont" + i + ".xnb");
-            if (AssetLoader.AssetExists(Path.Combine(Environment.CurrentDirectory, "Config", spriteFontPath)))
-            {
-                var spriteFont = Content.Load<SpriteFont>(spriteFontPath);
-                Renderer.GetFontList()[i] = spriteFont;
-            }
-            else
-            {
-                break;
-            }
-        }
+        // int i = 0;
+        // while (true)
+        // {
+        //     string spriteFontPath = Path.Combine("Translations", TranslatorSetup.ActiveTranslationDirectory(), "SpriteFont" + i + ".xnb");
+        //     if (AssetLoader.AssetExists(Path.Combine(Environment.CurrentDirectory, "Config", spriteFontPath)))
+        //     {
+        //         var spriteFont = Content.Load<SpriteFont>(spriteFontPath);
+        //         Renderer.GetFontList()[i] = spriteFont;
+        //     }
+        //     else
+        //     {
+        //         break;
+        //     }
+        // }
 
         windowManager = new WindowManager(this, graphics);
         windowManager.Initialize(Content, Environment.CurrentDirectory + DSC + "Content" + DSC);

@@ -72,7 +72,7 @@ public class KeyboardCommands
 
     public void ReadFromSettings()
     {
-        IniFile iniFile = UserSettings.Instance.UserSettingsIni;
+        IniFile iniFile = UserSettings.Instance.SettingsIni;
 
         foreach (var command in Commands)
         {
@@ -86,7 +86,7 @@ public class KeyboardCommands
 
     public void WriteToSettings()
     {
-        IniFile iniFile = UserSettings.Instance.UserSettingsIni;
+        IniFile iniFile = UserSettings.Instance.SettingsIni;
 
         foreach (var command in Commands)
         {

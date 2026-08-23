@@ -7,7 +7,6 @@ namespace TSMapEditor.UI.Controls;
 class EditorPopUpSelector : EditorPanel
 {
     private const int TEXT_HORIZONTAL_MARGIN = 3;
-    private const int TEXT_VERTICAL_MARGIN = 2;
 
     public EditorPopUpSelector(WindowManager windowManager) : base(windowManager)
     {
@@ -26,6 +25,8 @@ class EditorPopUpSelector : EditorPanel
     private string cachedText;
 
     private Color textColor;
+
+    private int textYPosition;
 
     public override void OnLeftClick(InputEventArgs inputEventArgs)
     {
@@ -61,10 +62,11 @@ class EditorPopUpSelector : EditorPanel
             {
                 oldText = Text;
                 cachedText = Renderer.GetStringWithLimitedWidth(Text, FontIndex, Width - TEXT_HORIZONTAL_MARGIN);
+                textYPosition = Renderer.GetSingleLineTextYPadding(FontIndex, Height);
             }
 
             DrawStringWithShadow(cachedText, FontIndex,
-                new Vector2(TEXT_HORIZONTAL_MARGIN, TEXT_VERTICAL_MARGIN),
+                new Vector2(TEXT_HORIZONTAL_MARGIN, textYPosition),
                 textColor);
         }
 

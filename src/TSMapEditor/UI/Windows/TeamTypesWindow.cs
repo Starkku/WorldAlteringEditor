@@ -277,7 +277,6 @@ public class TeamTypesWindow : INItializableWindow
             return;
 
         TaskForceOpened?.Invoke(this, new TaskForceEventArgs(editedTeamType.TaskForce));
-        PutOnBackground();
     }
 
     private void OpenScript()
@@ -286,7 +285,6 @@ public class TeamTypesWindow : INItializableWindow
             return;
 
         ScriptOpened?.Invoke(this, new ScriptEventArgs(editedTeamType.Script));
-        PutOnBackground();
     }
 
     private void OpenTag()
@@ -295,7 +293,6 @@ public class TeamTypesWindow : INItializableWindow
             return;
 
         TagOpened?.Invoke(this, new TagEventArgs(editedTeamType.Tag));
-        PutOnBackground();
     }
 
     private void SelectionWindow_ApplyEffect<T>(Action<T> action, T window)

@@ -86,13 +86,13 @@ class TopBarMenu : EditorPanel
         fileContextMenu.AddItem(" ", null, () => false, null, null);
         fileContextMenu.AddItem(Translate(this, "File.ReloadInputFile", "Reload Input File"),
             () => InputFileReloadRequested?.Invoke(this, EventArgs.Empty),
-            () => !string.IsNullOrWhiteSpace(map.LoadedINI.FileName),
+            () => !string.IsNullOrWhiteSpace(map.LoadedINI.FilePath),
             null, null);
         fileContextMenu.AddItem(" ", null, () => false, null, null);
         fileContextMenu.AddItem(Translate(this, "File.ExtractMegamap", "Extract Megamap..."), () => windowController.MegamapGenerationOptionsWindow.Open(false));
         fileContextMenu.AddItem(Translate(this, "File.GenerateMapPreview", "Generate Map Preview..."), WriteMapPreviewConfirmation);
         fileContextMenu.AddItem(" ", null, () => false, null, null, null);
-        fileContextMenu.AddItem(Translate(this, "File.OpenWithTextEditor", "Open With Text Editor"), OpenWithTextEditor, () => !string.IsNullOrWhiteSpace(map.LoadedINI.FileName));
+        fileContextMenu.AddItem(Translate(this, "File.OpenWithTextEditor", "Open With Text Editor"), OpenWithTextEditor, () => !string.IsNullOrWhiteSpace(map.LoadedINI.FilePath));
         fileContextMenu.AddItem(" ", null, () => false, null, null);
         fileContextMenu.AddItem(Translate(this, "File.Exit", "Exit"), WindowManager.CloseGame);
 
@@ -284,7 +284,7 @@ class TopBarMenu : EditorPanel
 
     private void SaveMap()
     {
-        if (string.IsNullOrWhiteSpace(map.LoadedINI.FileName))
+        if (string.IsNullOrWhiteSpace(map.LoadedINI.FilePath))
         {
             SaveAs();
             return;
@@ -362,7 +362,7 @@ class TopBarMenu : EditorPanel
 
         try
         {
-            Process.Start(textEditorPath, "\"" + map.LoadedINI.FileName + "\"");
+            Process.Start(textEditorPath, "\"" + map.LoadedINI.FilePath + "\"");
         }
         catch (Exception ex) when (ex is Win32Exception || ex is ObjectDisposedException)
         {
@@ -492,7 +492,7 @@ class TopBarMenu : EditorPanel
 
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                map.LoadedINI.FileName = saveFileDialog.FileName;
+                map.LoadedINI.FilePath = saveFileDialog.FileName;
                 TrySaveMap();
 
                 if (UserSettings.Instance.LastScenarioPath.GetValue() != saveFileDialog.FileName)

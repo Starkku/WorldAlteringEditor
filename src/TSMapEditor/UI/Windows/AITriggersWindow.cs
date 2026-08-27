@@ -133,11 +133,11 @@ public class AITriggersWindow : INItializableWindow
 
         var sortContextMenu = new EditorContextMenu(WindowManager);
         sortContextMenu.Name = nameof(sortContextMenu);
-        sortContextMenu.Width = lbAITriggers.Width;
         sortContextMenu.AddItem(Translate(this, "SortByID", "Sort by ID"), () => AiTriggerSortMode = AITriggerSortMode.ID);
         sortContextMenu.AddItem(Translate(this, "SortByName", "Sort by Name"), () => AiTriggerSortMode = AITriggerSortMode.Name);
         sortContextMenu.AddItem(Translate(this, "SortByColor", "Sort by Color"), () => AiTriggerSortMode = AITriggerSortMode.Color);
         sortContextMenu.AddItem(Translate(this, "SortByColorName", "Sort by Color, then by Name"), () => AiTriggerSortMode = AITriggerSortMode.ColorThenName);
+        sortContextMenu.Width = (int)Renderer.MeasureString(sortContextMenu.Items[^1].Text, sortContextMenu.FontIndex).X + Constants.UIEmptySideSpace * 2;
         AddChild(sortContextMenu);
 
         FindChild<EditorButton>("btnSortOptions").LeftClick += (s, e) => sortContextMenu.Open(GetCursorPoint());

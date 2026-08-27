@@ -181,11 +181,11 @@ public class TeamTypesWindow : INItializableWindow
 
         var sortContextMenu = new EditorContextMenu(WindowManager);
         sortContextMenu.Name = nameof(sortContextMenu);
-        sortContextMenu.Width = lbTeamTypes.Width;
         sortContextMenu.AddItem(Translate(this, "SortByID", "Sort by ID"), () => TeamTypeSortMode = TeamTypeSortMode.ID);
         sortContextMenu.AddItem(Translate(this, "SortByName", "Sort by Name"), () => TeamTypeSortMode = TeamTypeSortMode.Name);
         sortContextMenu.AddItem(Translate(this, "SortByColor", "Sort by Color"), () => TeamTypeSortMode = TeamTypeSortMode.Color);
         sortContextMenu.AddItem(Translate(this, "SortByColorName", "Sort by Color, then by Name"), () => TeamTypeSortMode = TeamTypeSortMode.ColorThenName);
+        sortContextMenu.Width = (int)Renderer.MeasureString(sortContextMenu.Items[^1].Text, sortContextMenu.FontIndex).X + Constants.UIEmptySideSpace * 2;
         AddChild(sortContextMenu);
 
         FindChild<EditorButton>("btnSortOptions").LeftClick += (s, e) => sortContextMenu.Open(GetCursorPoint());

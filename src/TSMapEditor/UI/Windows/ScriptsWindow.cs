@@ -271,11 +271,11 @@ public class ScriptsWindow : INItializableWindow
 
         var sortContextMenu = new EditorContextMenu(WindowManager);
         sortContextMenu.Name = nameof(sortContextMenu);
-        sortContextMenu.Width = lbScriptTypes.Width;
         sortContextMenu.AddItem(Translate(this, "SortByID", "Sort by ID"), () => ScriptSortMode = ScriptSortMode.ID);
         sortContextMenu.AddItem(Translate(this, "SortByName", "Sort by Name"), () => ScriptSortMode = ScriptSortMode.Name);
         sortContextMenu.AddItem(Translate(this, "SortByColor", "Sort by Color"), () => ScriptSortMode = ScriptSortMode.Color);
         sortContextMenu.AddItem(Translate(this, "SortByColorName", "Sort by Color, then by Name"), () => ScriptSortMode = ScriptSortMode.ColorThenName);
+        sortContextMenu.Width = (int)Renderer.MeasureString(sortContextMenu.Items[^1].Text, sortContextMenu.FontIndex).X + Constants.UIEmptySideSpace * 2;
         AddChild(sortContextMenu);
 
         FindChild<EditorButton>("btnSortOptions").LeftClick += (s, e) => sortContextMenu.Open(GetCursorPoint());

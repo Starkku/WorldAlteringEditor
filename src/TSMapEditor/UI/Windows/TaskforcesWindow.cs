@@ -1,4 +1,5 @@
-﻿using MapEditorLibrary.Misc;
+﻿using MapEditorLibrary;
+using MapEditorLibrary.Misc;
 using MapEditorLibrary.Models;
 using Microsoft.Xna.Framework;
 using Rampastring.XNAUI;
@@ -111,11 +112,11 @@ public class TaskforcesWindow : INItializableWindow
 
         var sortContextMenu = new EditorContextMenu(WindowManager);
         sortContextMenu.Name = nameof(sortContextMenu);
-        sortContextMenu.Width = lbTaskForces.Width;
         sortContextMenu.AddItem(Translate(this, "SortByID", "Sort by ID"), () => TaskForceSortMode = TaskForceSortMode.ID);
         sortContextMenu.AddItem(Translate(this, "SortByName", "Sort by Name"), () => TaskForceSortMode = TaskForceSortMode.Name);
         sortContextMenu.AddItem(Translate(this, "SortByColor", "Sort by Color"), () => TaskForceSortMode = TaskForceSortMode.Color);
         sortContextMenu.AddItem(Translate(this, "SortByColorName", "Sort by Color, then by Name"), () => TaskForceSortMode = TaskForceSortMode.ColorThenName);
+        sortContextMenu.Width = (int)Renderer.MeasureString(sortContextMenu.Items[^1].Text, sortContextMenu.FontIndex).X + Constants.UIEmptySideSpace * 2;
         AddChild(sortContextMenu);
 
         FindChild<EditorButton>("btnSortOptions").LeftClick += (s, e) => sortContextMenu.Open(GetCursorPoint());

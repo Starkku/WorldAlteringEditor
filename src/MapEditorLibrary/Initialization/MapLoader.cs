@@ -952,9 +952,19 @@ public static class MapLoader
 
                     string valueToSet = null;
 
-                    if ((int)paramType < 0 && Conversions.IntFromString(action.Parameters[i], 0) != Math.Abs((int)paramType))
+                    if (triggerActionType.Parameters[i].ReverseNegativeHardcodedParam)
                     {
-                        valueToSet = Math.Abs((int)paramType).ToString(CultureInfo.InvariantCulture);
+                        if ((int)paramType < 0 && Conversions.IntFromString(action.Parameters[i], 0) != Math.Abs((int)paramType))
+                        {
+                            valueToSet = Math.Abs((int)paramType).ToString(CultureInfo.InvariantCulture);
+                        }
+                    }
+                    else
+                    {
+                        if ((int)paramType < 0 && Conversions.IntFromString(action.Parameters[i], 0) != (int)paramType)
+                        {
+                            valueToSet = ((int)paramType).ToString(CultureInfo.InvariantCulture);
+                        }
                     }
 
                     if (paramType == TriggerParamType.Unused && action.Parameters[i] != "0")

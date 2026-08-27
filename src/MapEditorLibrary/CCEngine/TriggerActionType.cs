@@ -6,16 +6,18 @@ namespace MapEditorLibrary.CCEngine;
 
 public class TriggerActionParam
 {
-    public TriggerActionParam(TriggerParamType triggerParamType, string nameOverride, List<string> presetOptions = null)
+    public TriggerActionParam(TriggerParamType triggerParamType, string nameOverride, List<string> presetOptions = null, bool reverseNegative = true)
     {
         TriggerParamType = triggerParamType;
         NameOverride = nameOverride;
         PresetOptions = presetOptions;
+        ReverseNegativeHardcodedParam = reverseNegative;
     }
 
     public TriggerParamType TriggerParamType { get; }
     public string NameOverride { get; }
     public List<string> PresetOptions { get; }
+    public bool ReverseNegativeHardcodedParam { get; }
 
     public bool HasPresetOptions() => PresetOptions != null && PresetOptions.Count > 0;
 }
@@ -48,6 +50,7 @@ public class TriggerActionType
             string key = $"P{i + 1}Type";
             string nameOverrideKey = $"P{i + 1}Name";
             string presetOptionsKey = $"P{i + 1}PresetOptions";
+            string reverseNegativeKey = $"P{i + 1}ReverseNegative";
 
             if (!iniSection.KeyExists(key))
             {
@@ -72,7 +75,9 @@ public class TriggerActionType
                 }
             }
 
-            Parameters[i] = new TriggerActionParam(triggerParamType, nameOverride, presetOptions);
+            bool reverseNegativeHardcodedParam = iniSection.GetBooleanValue(reverseNegativeKey, true);
+
+            Parameters[i] = new TriggerActionParam(triggerParamType, nameOverride, presetOptions, reverseNegativeHardcodedParam);
         }
     }
 }

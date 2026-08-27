@@ -70,20 +70,20 @@ public static class Constants
     public const int VeterancyElite = 200;
     public const int VeterancyVeteran = 100;
 
-    public const int UIEmptySideSpace = 10;
-    public const int UIEmptyTopSpace = 10;
-    public const int UIEmptyBottomSpace = 10;
+    public const int UIEmptySideSpace = 11;
+    public const int UIEmptyTopSpace = 11;
+    public const int UIEmptyBottomSpace = 11;
 
-    public const int UIHorizontalSpacing = 6;
-    public const int UIVerticalSpacing = 6;
+    public const int UIHorizontalSpacing = 7;
+    public const int UIVerticalSpacing = 7;
 
     public const int UIDefaultFont = 0;
     public const int UIBoldFont = 1;
 
-    public const int UITextBoxHeight = 21;
-    public const int UIButtonHeight = 23;
+    public const int UITextBoxHeight = 22;
+    public const int UIButtonHeight = 24;
 
-    public const int UITopBarMenuHeight = 23;
+    public const int UITopBarMenuHeight = 25;
 
     public static int MapPreviewMaxWidth = 800;
     public static int MapPreviewMaxHeight = 400;

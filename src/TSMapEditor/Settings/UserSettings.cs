@@ -72,7 +72,7 @@ public class UserSettings : IniSettings
     public BoolSetting SmartScriptActionDefaultValues { get; } = new BoolSetting(General, nameof(SmartScriptActionDefaultValues), true);
     public BoolSetting QuickTriggerParameterSelection { get; } = new BoolSetting(General, nameof(QuickTriggerParameterSelection), true);
     public IntSetting AutoSaveInterval { get; } = new IntSetting(General, nameof(AutoSaveInterval), 300);
-    public IntSetting SidebarWidth { get; } = new IntSetting(General, nameof(SidebarWidth), 265);
+    public IntSetting SidebarWidth { get; } = new IntSetting(General, nameof(SidebarWidth), 275);
     public BoolSetting DoNotSuggestMPStartingWaypoints { get; } = new BoolSetting(General, nameof(DoNotSuggestMPStartingWaypoints), false);
 
     public BoolSetting EnableMCP { get; } = new BoolSetting(MCPServer, nameof(EnableMCP), false);

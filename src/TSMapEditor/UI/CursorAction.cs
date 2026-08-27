@@ -151,6 +151,8 @@ public abstract class CursorAction
 
     protected void DrawText(Point2D cellCoords, Point2D cameraTopLeftPoint, int xOffset, int yOffset, string text, Color textColor)
     {
+        yOffset -= 10; // account for font size change
+
         Point2D cellTopLeftCoordInWorld = CursorActionTarget.Is2DMode ? CellMath.CellTopLeftPointFromCellCoords(cellCoords, CursorActionTarget.Map) : 
             CellMath.CellTopLeftPointFromCellCoords_3D(cellCoords, CursorActionTarget.Map);
 

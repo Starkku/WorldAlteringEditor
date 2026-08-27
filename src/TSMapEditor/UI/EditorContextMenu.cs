@@ -9,7 +9,7 @@ class EditorContextMenu : XNAContextMenu
 {
     public EditorContextMenu(WindowManager windowManager) : base(windowManager)
     {
-        Width = 250;
+        Width = 270;
         TextHorizontalPadding = Constants.UIEmptySideSpace;
         FontIndex = Constants.UIBoldFont;
         ItemHeight = 25;

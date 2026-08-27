@@ -197,7 +197,7 @@ public class MainMenu : EditorWindow
 
         if (hasRecentFiles)
         {
-            const int recentFilesHeight = 150;
+            const int recentFilesHeight = 160;
 
             var lblRecentFiles = new XNALabel(WindowManager);
             lblRecentFiles.Name = nameof(lblRecentFiles);

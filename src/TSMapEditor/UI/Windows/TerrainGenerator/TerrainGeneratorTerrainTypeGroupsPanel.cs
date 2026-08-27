@@ -51,7 +51,7 @@ public class TerrainGeneratorTerrainTypeGroupsPanel : EditorPanel
             tbTerrainTypes.Name = nameof(tbTerrainTypes) + i;
             tbTerrainTypes.X = lblTerrainTypes.X;
             tbTerrainTypes.Y = lblTerrainTypes.Bottom + Constants.UIVerticalSpacing;
-            tbTerrainTypes.Width = (Width - 252) - tbTerrainTypes.X - Constants.UIEmptySideSpace;
+            tbTerrainTypes.Width = (Width - 272) - tbTerrainTypes.X - Constants.UIEmptySideSpace;
             AddChild(tbTerrainTypes);
             terrainTypeTextBoxes[i] = tbTerrainTypes;
 
@@ -67,7 +67,7 @@ public class TerrainGeneratorTerrainTypeGroupsPanel : EditorPanel
             tbOpenChance.X = lblOpenChance.X;
             tbOpenChance.Y = tbTerrainTypes.Y;
             tbOpenChance.AllowDecimals = true;
-            tbOpenChance.Width = 120;
+            tbOpenChance.Width = 130;
             AddChild(tbOpenChance);
             terrainTypeOpenChances[i] = tbOpenChance;
 
@@ -83,7 +83,7 @@ public class TerrainGeneratorTerrainTypeGroupsPanel : EditorPanel
             tbOccupiedChance.X = lblOccupiedChance.X;
             tbOccupiedChance.Y = tbTerrainTypes.Y;
             tbOccupiedChance.AllowDecimals = true;
-            tbOccupiedChance.Width = 120;
+            tbOccupiedChance.Width = 130;
             AddChild(tbOccupiedChance);
             terrainTypeOccupiedChances[i] = tbOccupiedChance;
 

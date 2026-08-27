@@ -42,7 +42,7 @@ public class TerrainGeneratorConfigWindow : EditorWindow
 
     public override void Initialize()
     {
-        Width = 800;
+        Width = 820;
         Name = nameof(TerrainGeneratorConfigWindow);
 
         var lblHeader = new XNALabel(WindowManager);

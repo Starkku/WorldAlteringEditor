@@ -43,48 +43,48 @@ public class TerrainGeneratorOverlayGroupsPanel : EditorPanel
 
         for (int i = 0; i < MaxOverlayGroupCount; i++)
         {
-            var lblTileSet = new XNALabel(WindowManager);
-            lblTileSet.Name = nameof(lblTileSet) + i;
-            lblTileSet.X = Constants.UIEmptySideSpace;
-            lblTileSet.Y = y;
-            lblTileSet.FontIndex = Constants.UIBoldFont;
-            lblTileSet.Text = string.Format(Translate(this, "OverlayNameType", "Overlay Type Name (Group #{0})"), i + 1);
-            AddChild(lblTileSet);
+            var lblOverlayType = new XNALabel(WindowManager);
+            lblOverlayType.Name = nameof(lblOverlayType) + i;
+            lblOverlayType.X = Constants.UIEmptySideSpace;
+            lblOverlayType.Y = y;
+            lblOverlayType.FontIndex = Constants.UIBoldFont;
+            lblOverlayType.Text = string.Format(Translate(this, "OverlayNameType", "Overlay Type Name (Group #{0})"), i + 1);
+            AddChild(lblOverlayType);
 
-            var selTileSet = new EditorTextBox(WindowManager);
-            selTileSet.Name = nameof(selTileSet) + i;
-            selTileSet.X = lblTileSet.X;
-            selTileSet.Y = lblTileSet.Bottom + Constants.UIVerticalSpacing;
-            selTileSet.Width = 200;
-            AddChild(selTileSet);
-            overlayNames[i] = selTileSet;
+            var selOverlayType = new EditorTextBox(WindowManager);
+            selOverlayType.Name = nameof(selOverlayType) + i;
+            selOverlayType.X = lblOverlayType.X;
+            selOverlayType.Y = lblOverlayType.Bottom + Constants.UIVerticalSpacing;
+            selOverlayType.Width = 200;
+            AddChild(selOverlayType);
+            overlayNames[i] = selOverlayType;
 
-            var lblTileIndices = new XNALabel(WindowManager);
-            lblTileIndices.Name = nameof(lblTileIndices) + i;
-            lblTileIndices.X = selTileSet.Right + Constants.UIHorizontalSpacing;
-            lblTileIndices.Y = lblTileSet.Y;
-            lblTileIndices.Text = Translate(this, "OverlayIndices", "Indexes of frames to place (leave blank for all)");
-            AddChild(lblTileIndices);
+            var lblFrameIndices = new XNALabel(WindowManager);
+            lblFrameIndices.Name = nameof(lblFrameIndices) + i;
+            lblFrameIndices.X = selOverlayType.Right + Constants.UIHorizontalSpacing;
+            lblFrameIndices.Y = lblOverlayType.Y;
+            lblFrameIndices.Text = Translate(this, "OverlayIndices", "Indexes of frames to place (leave blank for all)");
+            AddChild(lblFrameIndices);
 
-            var tbTileIndices = new EditorTextBox(WindowManager);
-            tbTileIndices.Name = nameof(selTileSet) + i;
-            tbTileIndices.X = lblTileIndices.X;
-            tbTileIndices.Y = lblTileIndices.Bottom + Constants.UIVerticalSpacing;
-            tbTileIndices.Width = 280;
-            AddChild(tbTileIndices);
-            frameIndices[i] = tbTileIndices;
+            var tbFrameIndices = new EditorTextBox(WindowManager);
+            tbFrameIndices.Name = nameof(selOverlayType) + i;
+            tbFrameIndices.X = lblFrameIndices.X;
+            tbFrameIndices.Y = selOverlayType.Y;
+            tbFrameIndices.Width = 280;
+            AddChild(tbFrameIndices);
+            frameIndices[i] = tbFrameIndices;
 
             var lblOpenChance = new XNALabel(WindowManager);
             lblOpenChance.Name = nameof(lblOpenChance) + i;
-            lblOpenChance.X = tbTileIndices.Right + Constants.UIHorizontalSpacing;
-            lblOpenChance.Y = lblTileSet.Y;
+            lblOpenChance.X = tbFrameIndices.Right + Constants.UIHorizontalSpacing;
+            lblOpenChance.Y = lblOverlayType.Y;
             lblOpenChance.Text = Translate(this, "OpenCellChance", "Open cell chance:");
             AddChild(lblOpenChance);
 
             var tbOpenChance = new EditorNumberTextBox(WindowManager);
             tbOpenChance.Name = nameof(tbOpenChance) + i;
             tbOpenChance.X = lblOpenChance.X;
-            tbOpenChance.Y = selTileSet.Y;
+            tbOpenChance.Y = selOverlayType.Y;
             tbOpenChance.AllowDecimals = true;
             tbOpenChance.Width = 120;
             AddChild(tbOpenChance);
@@ -100,7 +100,7 @@ public class TerrainGeneratorOverlayGroupsPanel : EditorPanel
             var tbOccupiedChance = new EditorNumberTextBox(WindowManager);
             tbOccupiedChance.Name = nameof(tbOpenChance) + i;
             tbOccupiedChance.X = lblOccupiedChance.X;
-            tbOccupiedChance.Y = selTileSet.Y;
+            tbOccupiedChance.Y = selOverlayType.Y;
             tbOccupiedChance.AllowDecimals = true;
             tbOccupiedChance.Width = Width - tbOccupiedChance.X - Constants.UIEmptySideSpace;
             AddChild(tbOccupiedChance);

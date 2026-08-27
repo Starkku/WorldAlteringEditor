@@ -79,7 +79,7 @@ public class TerrainGeneratorTileGroupsPanel : EditorPanel
             var tbTileIndices = new EditorTextBox(WindowManager);
             tbTileIndices.Name = nameof(selTileSet) + i;
             tbTileIndices.X = lblTileIndices.X;
-            tbTileIndices.Y = lblTileIndices.Bottom + Constants.UIVerticalSpacing;
+            tbTileIndices.Y = selTileSet.Y;
             tbTileIndices.Width = 280;
             AddChild(tbTileIndices);
             tileIndices[i] = tbTileIndices;

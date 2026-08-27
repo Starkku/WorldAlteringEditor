@@ -51,7 +51,7 @@ public class TerrainGeneratorSmudgeGroupsPanel : EditorPanel
             tbSmudgeTypes.Name = nameof(tbSmudgeTypes) + i;
             tbSmudgeTypes.X = lblSmudgeTypes.X;
             tbSmudgeTypes.Y = lblSmudgeTypes.Bottom + Constants.UIVerticalSpacing;
-            tbSmudgeTypes.Width = (Width - 252) - tbSmudgeTypes.X - Constants.UIEmptySideSpace;
+            tbSmudgeTypes.Width = (Width - 272) - tbSmudgeTypes.X - Constants.UIEmptySideSpace;
             AddChild(tbSmudgeTypes);
             smudgeTypeTextBoxes[i] = tbSmudgeTypes;
 
@@ -67,7 +67,7 @@ public class TerrainGeneratorSmudgeGroupsPanel : EditorPanel
             tbOpenChance.X = lblOpenChance.X;
             tbOpenChance.Y = tbSmudgeTypes.Y;
             tbOpenChance.AllowDecimals = true;
-            tbOpenChance.Width = 120;
+            tbOpenChance.Width = 130;
             AddChild(tbOpenChance);
             smudgeTypeOpenChances[i] = tbOpenChance;
 
@@ -83,7 +83,7 @@ public class TerrainGeneratorSmudgeGroupsPanel : EditorPanel
             tbOccupiedChance.X = lblOccupiedChance.X;
             tbOccupiedChance.Y = tbSmudgeTypes.Y;
             tbOccupiedChance.AllowDecimals = true;
-            tbOccupiedChance.Width = 120;
+            tbOccupiedChance.Width = 130;
             AddChild(tbOccupiedChance);
             smudgeTypeOccupiedChances[i] = tbOccupiedChance;
 

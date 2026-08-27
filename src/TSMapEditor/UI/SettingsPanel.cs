@@ -195,18 +195,8 @@ public class SettingsPanel : INItializableWindow
         WindowManager.AddCallback(() =>
         {
             TranslatorSetup.SetActiveTranslation(((Translation)ddLanguage.SelectedItem.Tag).InternalName);
-            RefreshLayout();
 
-            if (TranslatorSetup.ActiveTranslation.UseSpriteFonts)
-            {
-                chkUseSpriteFonts.Checked = true;
-                chkUseSpriteFonts.AllowChecking = false;
-            }
-            else
-            {
-                chkUseSpriteFonts.Checked = false;
-                chkUseSpriteFonts.AllowChecking = true;
-            }
+            RefreshLayout();
         });
     }
 

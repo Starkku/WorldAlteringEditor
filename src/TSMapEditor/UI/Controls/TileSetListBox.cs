@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Rampastring.XNAUI;
 using Rampastring.XNAUI.XNAControls;
+using TSMapEditor.Settings;
 
 namespace TSMapEditor.UI.Controls;
 
@@ -18,18 +19,43 @@ public class TileSetListBox : XNAListBox
 
     private Texture2D favouriteTileSetTexture;
 
-    public bool IsTileSetFavourite(int tileSetIndex) => tileSetIsFavourite[tileSetIndex];
+    public bool IsTileSetFavourite(TileSet tileSet) => tileSetIsFavourite[tileSet.Index];
 
-    public void SetTileSetAsFavourite(int tileSetIndex) => tileSetIsFavourite[tileSetIndex] = true;
+    public void SetTileSetAsFavourite(TileSet tileSet)
+    {
+        if (!IsTileSetFavourite(tileSet))
+        {
+            tileSetIsFavourite[tileSet.Index] = true;
+            UserSettings.Instance.PinnedTileSets.Add(tileSet.SetName);
+            _ = UserSettings.Instance.SaveSettingsAsync();
+        }
+    }
 
-    public void ClearFavouriteStatus(int tileSetIndex) => tileSetIsFavourite[tileSetIndex] = false;
+    public void ClearFavouriteStatus(TileSet tileSet)
+    {
+        if (IsTileSetFavourite(tileSet))
+        {
+            tileSetIsFavourite[tileSet.Index] = false;
+            UserSettings.Instance.PinnedTileSets.Remove(tileSet.SetName);
+            _ = UserSettings.Instance.SaveSettingsAsync();
+        }
+    }
+
+    public void ClearAllFavourites()
+    {
+        for (int i = 0; i < tileSetIsFavourite.Length; i++)
+            tileSetIsFavourite[i] = false;
+
+        UserSettings.Instance.PinnedTileSets.ClearAll();
+        _ = UserSettings.Instance.SaveSettingsAsync();
+    }
 
     protected override void DrawListBoxItem(int index, int y)
     {
         base.DrawListBoxItem(index, y);
         var tileSet = (TileSet)Items[index].Tag;
 
-        if (!IsTileSetFavourite(tileSet.Index))
+        if (!IsTileSetFavourite(tileSet))
             return;
 
         int lineWidth = Width - 2 - (EnableScrollbar && ScrollBar.IsDrawn() ? ScrollBar.Width : 0);

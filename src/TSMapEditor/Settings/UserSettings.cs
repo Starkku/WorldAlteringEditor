@@ -2,6 +2,7 @@
 using Rampastring.Tools.IniSettings;
 using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace TSMapEditor.Settings;
@@ -34,18 +35,31 @@ public class UserSettings : IniSettings
         PopulateWithReflection();
         LoadAll();
         RecentFiles.ReadFromIniFile(SettingsIni);
+        PinnedTileSets.ReadFromIniFile(SettingsIni);
     }
 
     public void SaveSettings()
     {
         WriteAll();
         RecentFiles.WriteToIniFile(SettingsIni);
+        PinnedTileSets.WriteToIniFile(SettingsIni);
         SaveSettingsIni();
     }
 
+    private readonly SemaphoreSlim saveSemaphore = new(1, 1);
+
     public async Task SaveSettingsAsync()
     {
-        await Task.Factory.StartNew(SaveSettings);
+        await saveSemaphore.WaitAsync().ConfigureAwait(false);
+
+        try
+        {
+            await Task.Run(SaveSettings).ConfigureAwait(false);
+        }
+        finally
+        {
+            saveSemaphore.Release();
+        }
     }
 
     public static UserSettings Instance { get; private set; }
@@ -89,4 +103,5 @@ public class UserSettings : IniSettings
     public StringSetting Language { get; } = new StringSetting(General, nameof(Language), string.Empty);
 
     public RecentFiles RecentFiles { get; } = new RecentFiles();
+    public PinnedTileSets PinnedTileSets { get; } = new PinnedTileSets();
 }

@@ -7,6 +7,7 @@ using Rampastring.XNAUI.XNAControls;
 using System;
 using System.Linq;
 using TSMapEditor.Rendering;
+using TSMapEditor.Settings;
 using TSMapEditor.UI.Controls;
 using TSMapEditor.UI.CursorActions;
 
@@ -123,13 +124,18 @@ public class TileSelector : EditorWindow
         tileSetContextMenu.Name = nameof(tileSetContextMenu);
         tileSetContextMenu.Width = 200;
         tileSetContextMenu.AddItem(Translate(this, "Pin", "Pin"),
-            () => { lbTileSetList.SetTileSetAsFavourite(((TileSet)lbTileSetList.SelectedItem.Tag).Index); RefreshTileSets(); },
+            () => { lbTileSetList.SetTileSetAsFavourite((TileSet)lbTileSetList.SelectedItem.Tag); RefreshTileSets(); },
             null,
-            () => lbTileSetList.SelectedItem != null && !lbTileSetList.IsTileSetFavourite(((TileSet)lbTileSetList.SelectedItem.Tag).Index));
+            () => lbTileSetList.SelectedItem != null && !lbTileSetList.IsTileSetFavourite((TileSet)lbTileSetList.SelectedItem.Tag));
+
         tileSetContextMenu.AddItem(Translate(this, "Unpin", "Unpin"),
-            () => { lbTileSetList.ClearFavouriteStatus(((TileSet)lbTileSetList.SelectedItem.Tag).Index); RefreshTileSets(); },
+            () => { lbTileSetList.ClearFavouriteStatus((TileSet)lbTileSetList.SelectedItem.Tag); RefreshTileSets(); },
             null,
-            () => lbTileSetList.SelectedItem != null && lbTileSetList.IsTileSetFavourite(((TileSet)lbTileSetList.SelectedItem.Tag).Index));
+            () => lbTileSetList.SelectedItem != null && lbTileSetList.IsTileSetFavourite((TileSet)lbTileSetList.SelectedItem.Tag));
+
+        tileSetContextMenu.AddItem(Translate(this, "UnpinAll", "Unpin All"),
+            () => { lbTileSetList.ClearAllFavourites(); RefreshTileSets(); });
+
         tileSetContextMenu.AddItem(Translate(this, "Unselect", "Unselect"), () => lbTileSetList.SelectedIndex = -1);
         AddChild(tileSetContextMenu);
 
@@ -137,11 +143,24 @@ public class TileSelector : EditorWindow
 
         base.Initialize();
 
+        LoadPinnedTileSets();
         RefreshTileSets();
 
         KeyboardCommands.Instance.NextTileSet.Action = NextTileSet;
         KeyboardCommands.Instance.PreviousTileSet.Action = PreviousTileSet;
         WindowManager.RenderResolutionChanged += WindowManager_RenderResolutionChanged;
+    }
+
+    private void LoadPinnedTileSets()
+    {
+        UserSettings.Instance.PinnedTileSets.DoForAllEntries(pinnedTileSetName =>
+        {
+            var tileSet = theaterGraphics.Theater.TileSets.Find(ts => ts.AllowToPlace && ts.SetName == pinnedTileSetName);
+            if (tileSet != null)
+            {
+                lbTileSetList.SetTileSetAsFavourite(tileSet);
+            }
+        });
     }
 
     private void LbTileSetList_RightClick(object sender, EventArgs e)
@@ -264,7 +283,7 @@ public class TileSelector : EditorWindow
     private void RefreshTileSets()
     {
         lbTileSetList.Clear();
-        IOrderedEnumerable<TileSet> sortedTileSets = theaterGraphics.Theater.TileSets.OrderBy(ts => !lbTileSetList.IsTileSetFavourite(ts.Index));
+        IOrderedEnumerable<TileSet> sortedTileSets = theaterGraphics.Theater.TileSets.OrderBy(ts => !lbTileSetList.IsTileSetFavourite(ts));
 
         switch (TileSetSortMode)
         {

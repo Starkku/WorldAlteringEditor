@@ -54,6 +54,12 @@ public class PlaceWaypointWindow : INItializableWindow
         UIHelpers.AddColorOptionsToDropDown(Waypoint.SupportedColors, ddWaypointColor);
 
         chkDoNotSuggestMPStartingWaypoints.Checked = UserSettings.Instance.DoNotSuggestMPStartingWaypoints;
+        chkDoNotSuggestMPStartingWaypoints.CheckedChanged += ChkDoNotSuggestMPStartingWaypoints_CheckedChanged;
+    }
+
+    private void ChkDoNotSuggestMPStartingWaypoints_CheckedChanged(object sender, EventArgs e)
+    {
+        tbWaypointNumber.Value = GetAvailableWaypointNumber();
     }
 
     private void BtnPlace_LeftClick(object sender, EventArgs e)

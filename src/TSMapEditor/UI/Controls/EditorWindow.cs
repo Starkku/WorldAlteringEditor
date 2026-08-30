@@ -53,6 +53,7 @@ public class EditorWindow : XNAWindow
             backdropBlurEffect = AssetLoader.LoadEffect(BackdropBlurEffectPath);
         }
 
+        UIHelpers.AutoAssignTextBoxNextControls(this);
         base.Initialize();
     }
 

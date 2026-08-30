@@ -29,42 +29,7 @@ public class EditorPanel : XNAPanel
             isStockBackgroundTexture = true;
         }
 
-        AutoAssignTextBoxNextControls();
-    }
-
-    private void AutoAssignTextBoxNextControls()
-    {
-        var textBoxes = Children.OfType<XNATextBox>().ToList();
-
-        for (int i = 0; i < textBoxes.Count; i++)
-        {
-            var box = textBoxes[i];
-
-            if (box.NextControl != null)
-                continue;
-
-            var next = FindStartingFromIndex(textBoxes, i + 1, tb => tb.PreviousControl == null && tb.Y == box.Y);
-
-            if (next == null)
-                next = FindStartingFromIndex(textBoxes, i + 1, tb => tb.Y > box.Y);
-
-            if (next != null)
-            {
-                box.NextControl = next;
-                next.PreviousControl = box;
-            }
-        }
-    }
-
-    private T FindStartingFromIndex<T>(List<T> list, int startIndex, Func<T, bool> predicate)
-    {
-        for (int i = startIndex; i < list.Count; i++)
-        {
-            if (predicate(list[i]))
-                return list[i];
-        }
-
-        return default;
+        UIHelpers.AutoAssignTextBoxNextControls(this);
     }
 
     public override void Kill()

@@ -300,7 +300,7 @@ public class TileSelector : EditorWindow
             if (tileSet.NonMarbleMadness > -1)
                 continue;
 
-            if (tileSet.AllowToPlace && tileSet.LoadedTileCount > 0)
+            if (tileSet.AllowToPlace && tileSet.TilesInSet > 0)
             {
                 lbTileSetList.AddItem(new XNAListBoxItem()
                 {

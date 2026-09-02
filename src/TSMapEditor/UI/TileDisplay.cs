@@ -194,7 +194,7 @@ public class TileDisplay : XNAPanel
         int x = Constants.UIEmptySideSpace;
         int currentLineHeight = 0;
 
-        for (int i = 0; i < TileSet.TilesInSet; i++)
+        for (int i = 0; i < TileSet.LoadedTileCount; i++)
         {
             int tileIndex = TileSet.StartTileIndex + i;
             if (tileIndex > theaterGraphics.TileCount)

@@ -22,17 +22,16 @@ public class UserSettings : IniSettings
         Instance = this;
 
         string path = Path.Combine(Environment.CurrentDirectory, "MapEditorSettings.ini");
-        if (File.Exists(path))
-        {
-            SettingsIni = new IniFile(path);
-        }
-        else
-        {
-            SettingsIni = new IniFile(Path.Combine(Environment.CurrentDirectory, "Config", "DefaultSettings.ini"));
-            SettingsIni.FilePath = path;
-        }
+        SettingsIni = new IniFile(path);
 
         PopulateWithReflection();
+
+        if (!File.Exists(path))
+        {
+            var defaultSettingsIni = new IniFile(Path.Combine(Environment.CurrentDirectory, "Config", "DefaultSettings.ini"));
+            LoadDefaultValueOverrides(defaultSettingsIni);
+        }
+
         LoadAll();
         RecentFiles.ReadFromIniFile(SettingsIni);
         PinnedTileSets.ReadFromIniFile(SettingsIni);

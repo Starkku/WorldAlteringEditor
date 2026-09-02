@@ -140,6 +140,25 @@ public class EditorSidebar : EditorWindow
         WindowManager.RenderResolutionChanged += WindowManager_RenderResolutionChanged;
     }
 
+    protected override void OnClientRectangleUpdated()
+    {
+        if (lbSelection != null)
+        {
+            lbSelection.Width = Width;
+        }
+
+        if (modePanels != null)
+        {
+            foreach (var panel in modePanels)
+            {
+                panel.Height = Height - panel.Y;
+                panel.Width = Width;
+            }
+        }
+
+        base.OnClientRectangleUpdated();
+    }
+
     private void WindowManager_RenderResolutionChanged(object sender, EventArgs e)
     {
         Height = WindowManager.RenderResolutionY - Y;

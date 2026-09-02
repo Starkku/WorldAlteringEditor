@@ -259,6 +259,7 @@ class TopBarMenu : EditorPanel
         base.Initialize();
 
         Height = fileButton.Height;
+        Width = Math.Max(Width, scriptingButton.Right);
 
         menuButtons = new MenuButton[] { fileButton, editButton, viewButton, toolsButton, scriptingButton };
         Array.ForEach(menuButtons, b => b.MouseEnter += MenuButton_MouseEnter);

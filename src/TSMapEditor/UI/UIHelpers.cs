@@ -21,6 +21,28 @@ public static class UIHelpers
         control.AddChild(lblSearchTips);
         var tooltip = new ToolTip(control.WindowManager, lblSearchTips);
         tooltip.Text = Translate("UIHelpers.AddSearchTipsBoxToControl.SearchTip", "Search Tips\r\n\r\nWith the text box activated:\r\n- Press ENTER to move to next match in list\r\n- Press ESC to clear search query");
+        control.ClientRectangleUpdated += Control_ClientRectangleUpdated;
+        control.OnKilled += Control_OnKilled;
+    }
+
+    private static void Control_ClientRectangleUpdated(object sender, EventArgs e)
+    {
+        XNAControl senderControl = sender as XNAControl;
+        foreach (var item in senderControl.Children)
+        {
+            if (item.Name == "lblSearchTips")
+            {
+                item.X = senderControl.Width - Constants.UIEmptySideSpace - item.Width;
+                break;
+            }
+        }
+    }
+
+    private static void Control_OnKilled(object sender, EventArgs e)
+    {
+        XNAControl senderControl = sender as XNAControl;
+        senderControl.ClientRectangleUpdated -= Control_ClientRectangleUpdated;
+        senderControl.OnKilled -= Control_OnKilled;
     }
 
     public static T GetScrollItem<T>(List<T> list, T current, Cursor cursor, bool allowSelectionIfNull)

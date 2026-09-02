@@ -106,6 +106,26 @@ public abstract class ObjectListPanel : XNAPanel, ISearchBoxContainer
         Map.HouseColorChanged += (s, e) => RefreshHouseList();
     }
 
+    protected override void OnClientRectangleUpdated()
+    {
+        if (ddOwner != null)
+        {
+            ddOwner.Width = Width - Constants.UIEmptySideSpace - ddOwner.X;
+        }
+
+        if (SearchBox != null)
+        {
+            SearchBox.Width = Width - Constants.UIEmptySideSpace * 2;
+        }
+
+        if (ObjectTreeView != null)
+        {
+            ObjectTreeView.Width = Width;
+        }
+
+        base.OnClientRectangleUpdated();
+    }
+
     private void NextSidebarNode_Triggered(object sender, EventArgs e)
     {
         if (Enabled)

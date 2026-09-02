@@ -147,6 +147,24 @@ class UIManager : XNAControl, IWindowParentControl
         editorSidebar.Height = WindowManager.RenderResolutionY - editorSidebar.Y;
         AddChild(editorSidebar);
 
+        tileInfoDisplay = new TileInfoDisplay(WindowManager, map, theaterGraphics, editorState);
+        AddChild(tileInfoDisplay);
+        tileInfoDisplay.X = Width - tileInfoDisplay.Width;
+        mapUI.TileInfoDisplay = tileInfoDisplay;
+
+        InitNotificationManager();
+        windowController.Initialize(map, editorState, notificationManager, mapUI);
+
+        topBarMenu = new TopBarMenu(WindowManager, mutationManager, mapUI, map, windowController);
+        topBarMenu.Width = editorSidebar.Width;
+        topBarMenu.OnFileSelected += OpenMapWindow_OnFileSelected;
+        topBarMenu.MapWideOverlayLoadRequested += TopBarMenu_MapWideOverlayLoadRequested;
+        AddChild(topBarMenu);
+        if (topBarMenu.Width != editorSidebar.Width)
+        {
+            editorSidebar.Width = topBarMenu.Width;
+        }
+
         tileSelector = new TileSelector(WindowManager, map, theaterGraphics, placeTerrainCursorAction, editorState);
         tileSelector.X = editorSidebar.Right;
         tileSelector.Width = WindowManager.RenderResolutionX - tileSelector.X;
@@ -165,20 +183,6 @@ class UIManager : XNAControl, IWindowParentControl
         overlayFrameSelector.SelectedFrameChanged += OverlayFrameSelector_SelectedFrameChanged;
         overlayFrameSelector.ClientRectangleUpdated += UpdateTileAndOverlaySelectorArea;
         overlayFrameSelector.Disable();
-
-        tileInfoDisplay = new TileInfoDisplay(WindowManager, map, theaterGraphics, editorState);
-        AddChild(tileInfoDisplay);
-        tileInfoDisplay.X = Width - tileInfoDisplay.Width;
-        mapUI.TileInfoDisplay = tileInfoDisplay;
-
-        InitNotificationManager();
-        windowController.Initialize(map, editorState, notificationManager, mapUI);
-
-        topBarMenu = new TopBarMenu(WindowManager, mutationManager, mapUI, map, windowController);
-        topBarMenu.Width = editorSidebar.Width;
-        topBarMenu.OnFileSelected += OpenMapWindow_OnFileSelected;
-        topBarMenu.MapWideOverlayLoadRequested += TopBarMenu_MapWideOverlayLoadRequested;
-        AddChild(topBarMenu);
 
         var editorControlsPanel = new EditorControlsPanel(WindowManager, map, theaterGraphics,
             map.EditorConfig, editorState, windowController, placeTerrainCursorAction, placeWaypointCursorAction, mapUI);

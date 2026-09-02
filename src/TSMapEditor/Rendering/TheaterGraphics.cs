@@ -387,6 +387,7 @@ public class TheaterGraphics : ITheater, ITheaterTileData
             for (int i = 0; i < tileSet.TilesInSet; i++)
             {
                 var tileGraphics = new List<MGTileImage>();
+                bool tileLoaded = false;
 
                 // Handle graphics variation (clear00.tem, clear00a.tem, clear00b.tem etc.)
                 for (int v = 0; v < 'g' - 'a'; v++)
@@ -444,9 +445,12 @@ public class TheaterGraphics : ITheater, ITheaterTileData
 
                     // Add this variation to list of variations for this tile
                     tileGraphics.Add(new MGTileImage(tmpFile.CellsX, tmpFile.CellsY, tsId, i, currentTileIndex, tmpImages.ToArray()));
+                    tileLoaded = true;
                 }
 
-                tileSet.LoadedTileCount++;
+                if (tileLoaded)
+                    tileSet.LoadedTileCount++;
+
                 currentTileIndex++;
                 terrainGraphicsList.Add(tileGraphics.ToArray());
             }
@@ -482,24 +486,24 @@ public class TheaterGraphics : ITheater, ITheaterTileData
             if (tileSet.NonMarbleMadness > -1 || tileSet.MarbleMadness < 0 || tileSet.MarbleMadness >= Theater.TileSets.Count)
             {
                 // This is a MM tileset or a tileset with no MM graphics
-                for (int i = 0; i < tileSet.LoadedTileCount; i++)
+                for (int i = 0; i < tileSet.TilesInSet; i++)
                 {
                     mmTerrainGraphicsList.Add(terrainGraphicsList[tileIndex + i]);
                     hasMMGraphics.Add(tileSet.NonMarbleMadness > -1);
                 }
 
-                tileIndex += tileSet.LoadedTileCount;
+                tileIndex += tileSet.TilesInSet;
                 continue;
             }
 
             // For non-MM tilesets with MM graphics, fetch the MM tileset
             TileSet mmTileSet = Theater.TileSets[tileSet.MarbleMadness];
-            for (int i = 0; i < tileSet.LoadedTileCount; i++)
+            for (int i = 0; i < tileSet.TilesInSet; i++)
             {
                 mmTerrainGraphicsList.Add(terrainGraphicsList[mmTileSet.StartTileIndex + i]);
                 hasMMGraphics.Add(true);
             }
-            tileIndex += tileSet.LoadedTileCount;
+            tileIndex += tileSet.TilesInSet;
         }
 
         Logger.Log("Finished loading tile textures.");

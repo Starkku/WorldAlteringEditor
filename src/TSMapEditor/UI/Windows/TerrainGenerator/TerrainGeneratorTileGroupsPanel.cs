@@ -154,7 +154,7 @@ public class TerrainGeneratorTileGroupsPanel : EditorPanel
             {
                 string[] parts = tileIndicesText.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 tileIndexesInSet = parts.Select(str => Conversions.IntFromString(str, -1)).ToList();
-                int invalidElement = tileIndexesInSet.Find(index => index <= -1 || index >= tileSet.LoadedTileCount);
+                int invalidElement = tileIndexesInSet.Find(index => index <= -1 || index >= tileSet.TilesInSet);
 
                 if (invalidElement != 0) // this can never be 0 if an invalid element exists, because each valid tileset has at least 1 tile
                 {

@@ -1564,12 +1564,12 @@ public class MapView : IMapView, IMapScreenCropper
     public Rectangle GetMapLocalViewRectangle()
     {
         const int InitialHeight = 3; // TS engine assumes the first cell to be at this height
-        const double HeightAddition = 5.0; // TS engine adds this specified map height <3
+        const double HeightAddition = 4.5; // TS engine adds this specified map height <3
 
         int x = (int)(Map.LocalSize.X * Constants.CellSizeX);
         int y = (int)(Map.LocalSize.Y - InitialHeight) * Constants.CellSizeY + Constants.MapYBaseline;
         int width = (int)(Map.LocalSize.Width * Constants.CellSizeX);
-        int height = (int)(Map.LocalSize.Height + HeightAddition) * Constants.CellSizeY;
+        int height = (int)((Map.LocalSize.Height + HeightAddition) * Constants.CellSizeY);
 
         return new Rectangle(x, y, width, height);
     }

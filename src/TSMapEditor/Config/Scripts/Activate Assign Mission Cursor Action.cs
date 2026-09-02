@@ -373,7 +373,7 @@ Text=OK
         public void Perform()
         {
             selectMissionWindow = new SelectMissionWindow(ScriptDependencies.WindowManager, ScriptDependencies);
-            ScriptDependencies.WindowController.AddWindow(selectMissionWindow);
+            ScriptDependencies.WindowController.RegisterWindow(selectMissionWindow);
             selectMissionWindow.Closed += SelectMissionWindow_Closed;
             selectMissionWindow.Open();
         }
@@ -381,7 +381,7 @@ Text=OK
         private void SelectMissionWindow_Closed(object sender, EventArgs e)
         {
             selectMissionWindow.Closed -= SelectMissionWindow_Closed;
-            ScriptDependencies.WindowController.RemoveWindow(selectMissionWindow);
+            ScriptDependencies.WindowController.UnregisterWindow(selectMissionWindow);
         }
     }
 }

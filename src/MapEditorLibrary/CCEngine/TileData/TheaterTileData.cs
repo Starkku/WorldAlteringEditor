@@ -180,6 +180,7 @@ public class TheaterTileData : ITheater, ITheaterTileData
             for (int i = 0; i < tileSet.TilesInSet; i++)
             {
                 var tileImages = new List<UntexturedTileImage>();
+                bool tileLoaded = false;
 
                 // Handle graphics variation (clear00.tem, clear00a.tem, clear00b.tem etc.).
                 // Even though this class does not create textures, variations can still carry
@@ -226,9 +227,12 @@ public class TheaterTileData : ITheater, ITheaterTileData
                     }
 
                     tileImages.Add(new UntexturedTileImage(tmpFile.CellsX, tmpFile.CellsY, tsId, i, currentTileIndex, tmpImages.ToArray()));
+                    tileLoaded = true;
                 }
 
-                tileSet.LoadedTileCount++;
+                if (tileLoaded)
+                    tileSet.LoadedTileCount++;
+
                 currentTileIndex++;
                 terrainTileDataList.Add(tileImages.ToArray());
             }

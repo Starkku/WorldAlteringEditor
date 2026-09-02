@@ -445,7 +445,7 @@ internal class MapFacade
                 var tilesWithUsableGraphics = new List<TileIndexInfo>();
                 var tilesWithoutUsableGraphics = new List<TileIndexInfo>();
 
-                for (int tileIndexInTileSet = 0; tileIndexInTileSet < tileSet.LoadedTileCount; tileIndexInTileSet++)
+                for (int tileIndexInTileSet = 0; tileIndexInTileSet < tileSet.TilesInSet; tileIndexInTileSet++)
                 {
                     int absoluteTileIndex = tileSet.StartTileIndex + tileIndexInTileSet;
                     var tileIndexInfo = new TileIndexInfo(absoluteTileIndex, tileIndexInTileSet);
@@ -462,7 +462,7 @@ internal class MapFacade
                     tileSet.SetName,
                     tileSet.TranslatedName,
                     tileSet.StartTileIndex,
-                    tileSet.LoadedTileCount,
+                    tileSet.TilesInSet,
                     tileSet.Only1x1,
                     tilesWithUsableGraphics,
                     tilesWithoutUsableGraphics);
@@ -1494,10 +1494,10 @@ internal class MapFacade
         if (!IsTileSetPlaceable(tileSet))
             throw new MapFacadeValidationException($"Tile set '{tileSet.SetName}' is not available for placement in the editor.");
 
-        if (tileIndexInTileSet < 0 || tileIndexInTileSet >= tileSet.LoadedTileCount)
+        if (tileIndexInTileSet < 0 || tileIndexInTileSet >= tileSet.TilesInSet)
         {
             throw new MapFacadeValidationException(
-                $"Tile index {tileIndexInTileSet} is outside tile set '{tileSet.SetName}', which contains {tileSet.LoadedTileCount} tiles.");
+                $"Tile index {tileIndexInTileSet} is outside tile set '{tileSet.SetName}', which contains {tileSet.TilesInSet} tiles.");
         }
 
         // Use an existing brush size instance if preconfigured. If not, create a new one.
@@ -2232,20 +2232,20 @@ internal class MapFacade
             TerrainGeneratorTileGroup group = configuration.TileGroups[i];
             ValidateTerrainGeneratorChances(group.OpenChance, group.OverlapChance, $"Tile group {i}", errors);
 
-            if (group.TileSet == null || !group.TileSet.AllowToPlace || group.TileSet.LoadedTileCount <= 0)
+            if (group.TileSet == null || !group.TileSet.AllowToPlace || group.TileSet.TilesInSet <= 0)
             {
                 errors.Add($"Tile group {i} does not reference a loaded, placeable tile set.");
                 continue;
             }
 
             IEnumerable<int> tileIndices = group.TileIndicesInSet == null || group.TileIndicesInSet.Count == 0
-                ? Enumerable.Range(0, group.TileSet.LoadedTileCount)
+                ? Enumerable.Range(0, group.TileSet.TilesInSet)
                 : group.TileIndicesInSet;
             bool hasUsableTile = false;
 
             foreach (int tileIndexInSet in tileIndices)
             {
-                if (tileIndexInSet < 0 || tileIndexInSet >= group.TileSet.LoadedTileCount)
+                if (tileIndexInSet < 0 || tileIndexInSet >= group.TileSet.TilesInSet)
                 {
                     errors.Add($"Tile group {i} references invalid relative tile index {tileIndexInSet} in tile set '{group.TileSet.SetName}'.");
                     continue;
@@ -2335,12 +2335,12 @@ internal class MapFacade
         foreach (TerrainGeneratorTileGroup group in configuration.TileGroups)
         {
             IEnumerable<int> tileIndices = group.TileIndicesInSet == null || group.TileIndicesInSet.Count == 0
-                ? Enumerable.Range(0, group.TileSet.LoadedTileCount)
+                ? Enumerable.Range(0, group.TileSet.TilesInSet)
                 : group.TileIndicesInSet;
 
             foreach (int tileIndexInSet in tileIndices)
             {
-                if (tileIndexInSet < 0 || tileIndexInSet >= group.TileSet.LoadedTileCount)
+                if (tileIndexInSet < 0 || tileIndexInSet >= group.TileSet.TilesInSet)
                     continue;
 
                 ITileImage tile = mutationTarget.TheaterGraphicsData.GetTile(group.TileSet.StartTileIndex + tileIndexInSet);
@@ -2428,7 +2428,7 @@ internal class MapFacade
 
             foreach (int tileIndexInSet in connectedTile.IndicesInTileSet)
             {
-                if (tileIndexInSet < 0 || tileIndexInSet >= tileSet.LoadedTileCount ||
+                if (tileIndexInSet < 0 || tileIndexInSet >= tileSet.TilesInSet ||
                     mutationTarget.TheaterGraphicsData.GetTile(tileSet.StartTileIndex + tileIndexInSet) == null)
                 {
                     throw new MapFacadeValidationException(
@@ -2706,7 +2706,7 @@ internal class MapFacade
 
     private static bool IsTileSetPlaceable(TileSet tileSet)
     {
-        return tileSet.AllowToPlace && tileSet.LoadedTileCount > 0 && tileSet.NonMarbleMadness < 0;
+        return tileSet.AllowToPlace && tileSet.TilesInSet > 0 && tileSet.NonMarbleMadness < 0;
     }
 
     private static bool HasUsableTileGraphics(ITileImage tile)

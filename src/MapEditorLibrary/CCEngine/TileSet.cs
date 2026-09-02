@@ -45,7 +45,7 @@ public class TileSet : INIDefineable
     /// index exists within this tile set.
     /// </summary>
     /// <param name="tileIndex">The index of the tile.</param>
-    public bool ContainsTile(int tileIndex) => tileIndex >= StartTileIndex && tileIndex < StartTileIndex + LoadedTileCount;
+    public bool ContainsTile(int tileIndex) => tileIndex >= StartTileIndex && tileIndex < StartTileIndex + TilesInSet;
 
     public Dictionary<TiberiumType, OverlayType> TiberiumGraphicsOverrides { get; set; }
     public List<(string tiberiumTypeName, string graphicalOverlayName)> ParsedTiberiumGraphicsOverrides { get; set; }
